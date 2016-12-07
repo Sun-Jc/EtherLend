@@ -9,7 +9,9 @@ contract smallVote is Vote{
 
   bool svVote;
 
-  function smallVote(address _sv, bool _defaultSV){
+  Timer timer;
+
+  function smallVote(address _sv, bool _defaultSV, Timer _timer){
     count = 0;
     superVoter = _sv;
     svVote = _defaultSV;
@@ -26,8 +28,11 @@ contract smallVote is Vote{
     return count;
   }
 
-  function voteEnd() onlyOwner{
-      selfdestruct(msg.sender);
+  function endVote(){
+    if(msg.sender != timer){
+      throw;
+    }
+    okayToEnd = true;  
   }
 
 }
