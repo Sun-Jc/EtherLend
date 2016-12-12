@@ -231,13 +231,13 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.new = function() {
     if (this.currentProvider == null) {
-      throw new Error("membered error: Please call setProvider() first before calling new().");
+      throw new Error("Auction error: Please call setProvider() first before calling new().");
     }
 
     var args = Array.prototype.slice.call(arguments);
 
     if (!this.unlinked_binary) {
-      throw new Error("membered error: contract binary not set. Can't deploy new instance.");
+      throw new Error("Auction error: contract binary not set. Can't deploy new instance.");
     }
 
     var regex = /__[^_]+_+/g;
@@ -256,7 +256,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         return name != arr[index + 1];
       }).join(", ");
 
-      throw new Error("membered contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of membered: " + unlinked_libraries);
+      throw new Error("Auction contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of Auction: " + unlinked_libraries);
     }
 
     var self = this;
@@ -297,7 +297,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.at = function(address) {
     if (address == null || typeof address != "string" || address.length != 42) {
-      throw new Error("Invalid address passed to membered.at(): " + address);
+      throw new Error("Invalid address passed to Auction.at(): " + address);
     }
 
     var contract_class = this.web3.eth.contract(this.abi);
@@ -308,7 +308,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.deployed = function() {
     if (!this.address) {
-      throw new Error("Cannot find deployed address: membered not deployed or address not set.");
+      throw new Error("Cannot find deployed address: Auction not deployed or address not set.");
     }
 
     return this.at(this.address);
@@ -350,6 +350,32 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   "default": {
     "abi": [
       {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "_blindBid",
+            "type": "bytes32"
+          }
+        ],
+        "name": "Bid",
+        "outputs": [],
+        "payable": true,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "_bid",
+            "type": "uint256"
+          }
+        ],
+        "name": "ShowBid",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      },
+      {
         "constant": true,
         "inputs": [],
         "name": "manager",
@@ -364,16 +390,32 @@ var SolidityEvent = require("web3/lib/web3/event.js");
       },
       {
         "constant": false,
-        "inputs": [
-          {
-            "name": "_agent",
-            "type": "address"
-          }
-        ],
-        "name": "isAMember",
+        "inputs": [],
+        "name": "BidResult",
         "outputs": [
           {
-            "name": "ism",
+            "name": "suc",
+            "type": "bool"
+          },
+          {
+            "name": "addr",
+            "type": "address"
+          },
+          {
+            "name": "ammount",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [],
+        "name": "Refund",
+        "outputs": [
+          {
+            "name": "",
             "type": "bool"
           }
         ],
@@ -416,7 +458,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
       }
     ],
     "events": {},
-    "updated_at": 1481556971940
+    "updated_at": 1481556971899
   }
 };
 
@@ -501,7 +543,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     Contract.links[name] = address;
   };
 
-  Contract.contract_name   = Contract.prototype.contract_name   = "membered";
+  Contract.contract_name   = Contract.prototype.contract_name   = "Auction";
   Contract.generated_with  = Contract.prototype.generated_with  = "3.2.0";
 
   // Allow people to opt-in to breaking changes now.
@@ -541,6 +583,6 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   } else {
     // There will only be one version of this contract in the browser,
     // and we can use that.
-    window.membered = Contract;
+    window.Auction = Contract;
   }
 })();

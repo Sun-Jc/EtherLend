@@ -366,6 +366,36 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         "constant": false,
         "inputs": [
           {
+            "name": "_recordId",
+            "type": "bytes32"
+          },
+          {
+            "name": "_agent",
+            "type": "address"
+          },
+          {
+            "name": "_amount",
+            "type": "uint256"
+          },
+          {
+            "name": "_insuranceId",
+            "type": "uint256"
+          }
+        ],
+        "name": "pay",
+        "outputs": [
+          {
+            "name": "ok",
+            "type": "bool"
+          }
+        ],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
             "name": "_agent",
             "type": "address"
           }
@@ -401,40 +431,6 @@ var SolidityEvent = require("web3/lib/web3/event.js");
           {
             "name": "",
             "type": "address"
-          }
-        ],
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "name": "insuranceId",
-            "type": "uint256"
-          },
-          {
-            "name": "_recordId",
-            "type": "bytes32"
-          },
-          {
-            "name": "_agent",
-            "type": "address"
-          },
-          {
-            "name": "_amount",
-            "type": "uint256"
-          },
-          {
-            "name": "_insuranceId",
-            "type": "uint256"
-          }
-        ],
-        "name": "pay",
-        "outputs": [
-          {
-            "name": "ok",
-            "type": "bool"
           }
         ],
         "payable": false,
@@ -481,7 +477,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
       }
     ],
     "events": {},
-    "updated_at": 1481550869865
+    "updated_at": 1481556971906
   }
 };
 

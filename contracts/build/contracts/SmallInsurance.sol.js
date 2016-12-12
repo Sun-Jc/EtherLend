@@ -231,13 +231,13 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.new = function() {
     if (this.currentProvider == null) {
-      throw new Error("membered error: Please call setProvider() first before calling new().");
+      throw new Error("SmallInsurance error: Please call setProvider() first before calling new().");
     }
 
     var args = Array.prototype.slice.call(arguments);
 
     if (!this.unlinked_binary) {
-      throw new Error("membered error: contract binary not set. Can't deploy new instance.");
+      throw new Error("SmallInsurance error: contract binary not set. Can't deploy new instance.");
     }
 
     var regex = /__[^_]+_+/g;
@@ -256,7 +256,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         return name != arr[index + 1];
       }).join(", ");
 
-      throw new Error("membered contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of membered: " + unlinked_libraries);
+      throw new Error("SmallInsurance contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of SmallInsurance: " + unlinked_libraries);
     }
 
     var self = this;
@@ -297,7 +297,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.at = function(address) {
     if (address == null || typeof address != "string" || address.length != 42) {
-      throw new Error("Invalid address passed to membered.at(): " + address);
+      throw new Error("Invalid address passed to SmallInsurance.at(): " + address);
     }
 
     var contract_class = this.web3.eth.contract(this.abi);
@@ -308,7 +308,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.deployed = function() {
     if (!this.address) {
-      throw new Error("Cannot find deployed address: membered not deployed or address not set.");
+      throw new Error("Cannot find deployed address: SmallInsurance not deployed or address not set.");
     }
 
     return this.at(this.address);
@@ -366,6 +366,36 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         "constant": false,
         "inputs": [
           {
+            "name": "_recordId",
+            "type": "bytes32"
+          },
+          {
+            "name": "_agent",
+            "type": "address"
+          },
+          {
+            "name": "_amount",
+            "type": "uint256"
+          },
+          {
+            "name": "_insuranceId",
+            "type": "uint256"
+          }
+        ],
+        "name": "pay",
+        "outputs": [
+          {
+            "name": "ok",
+            "type": "bool"
+          }
+        ],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
             "name": "_agent",
             "type": "address"
           }
@@ -375,6 +405,19 @@ var SolidityEvent = require("web3/lib/web3/event.js");
           {
             "name": "ism",
             "type": "bool"
+          }
+        ],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [],
+        "name": "askPrice",
+        "outputs": [
+          {
+            "name": "charge",
+            "type": "uint256"
           }
         ],
         "payable": false,
@@ -391,6 +434,24 @@ var SolidityEvent = require("web3/lib/web3/event.js");
           }
         ],
         "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "_guarantee",
+            "type": "uint256"
+          }
+        ],
+        "name": "buy",
+        "outputs": [
+          {
+            "name": "id",
+            "type": "uint256"
+          }
+        ],
+        "payable": true,
         "type": "function"
       },
       {
@@ -413,10 +474,19 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         "outputs": [],
         "payable": false,
         "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "name": "_creditRecorder",
+            "type": "address"
+          }
+        ],
+        "type": "constructor"
       }
     ],
     "events": {},
-    "updated_at": 1481556971940
+    "updated_at": 1481553863890
   }
 };
 
@@ -501,7 +571,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     Contract.links[name] = address;
   };
 
-  Contract.contract_name   = Contract.prototype.contract_name   = "membered";
+  Contract.contract_name   = Contract.prototype.contract_name   = "SmallInsurance";
   Contract.generated_with  = Contract.prototype.generated_with  = "3.2.0";
 
   // Allow people to opt-in to breaking changes now.
@@ -541,6 +611,6 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   } else {
     // There will only be one version of this contract in the browser,
     // and we can use that.
-    window.membered = Contract;
+    window.SmallInsurance = Contract;
   }
 })();

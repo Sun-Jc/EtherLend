@@ -15,7 +15,7 @@ contract owned {
 
     function owned(address _manager) {
         owner = msg.sender;
-        okayToEnd = false;
+        okayToEnd = true; // should be false defaultly
         manager = _manager;
     }
 
@@ -66,19 +66,19 @@ contract Vote is owned{
 
   function voteFor(bool _vote);
 
-  function countVote() onlyOwner returns (int count);
+  function countVote() onlyOwner returns (uint count);
 }
 
 // auction
-contract Auciton is owned{
+contract Auction is owned{
 
-  function Bid(bytes32 _blindedBid) payable;
+  function Bid(bytes32 _blindBid) payable;
 
   function ShowBid(uint _bid);
 
-  function Refund();
+  function Refund() returns (bool);
 
-  function BidResult() returns (address addr,uint ammount);
+  function BidResult() returns (bool suc, address addr,uint ammount);
 }
 
 // credit recorder
@@ -96,7 +96,7 @@ contract Insurance is membered{
 
   function buy(uint _guarantee) payable onlyMember returns (uint id);
 
-  function pay(uint insuranceId, bytes32 _recordId, address _agent, uint _amount, uint _insuranceId) onlyMember returns (bool ok);
+  function pay(bytes32 _recordId, address _agent, uint _amount, uint _insuranceId) onlyMember returns (bool ok);
 }
 
 // timer
@@ -128,4 +128,6 @@ contract Meeting is membered{
   function withdraw() onlyMember; //must pulled by user, cannot push
 
   function push();
+
+  function failAuction(address _agent, uint _amount);
 }

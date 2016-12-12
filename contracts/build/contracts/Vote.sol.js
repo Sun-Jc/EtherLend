@@ -369,7 +369,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         "outputs": [
           {
             "name": "count",
-            "type": "int256"
+            "type": "uint256"
           }
         ],
         "payable": false,
@@ -424,7 +424,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
       }
     ],
     "events": {},
-    "updated_at": 1481550869885
+    "updated_at": 1481556971936
   }
 };
 
