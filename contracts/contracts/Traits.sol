@@ -1,3 +1,8 @@
+pragma solidity ^0.4.2;
+
+contract Traits{
+
+}
 
 // owned
 contract owned {
@@ -39,7 +44,7 @@ contract owned {
 // membered
 contract membered is owned {
 
-  mapping[address => bool] isMember;
+  mapping(address => bool) isMember;
 
   modifier onlyMember {
       if ( !isMember[msg.sender] ) throw;
@@ -50,7 +55,7 @@ contract membered is owned {
     isMember[_agent] = true;
   }
 
-  function isMember(address _agent) bool onlyMember{
+  function isAMember(address _agent) onlyMember returns(bool ism){
     return isMember[_agent];
   }
 
@@ -61,7 +66,7 @@ contract Vote is owned{
 
   function voteFor(bool _vote);
 
-  function countVote() int onlyOwner;
+  function countVote() onlyOwner returns (int count);
 }
 
 // auction
@@ -73,25 +78,25 @@ contract Auciton is owned{
 
   function Refund();
 
-  function BidResult() (address,uint);
+  function BidResult() returns (address addr,uint ammount);
 }
 
 // credit recorder
 contract CreditRecorder is membered{
 
-  function addBadRecord(address _agent,uint _amount, uint _insuranceId) bytes32 onlyMember;
+  function addBadRecord(address _agent,uint _amount, uint _insuranceId) onlyMember returns(bytes32 id);
 
-  function retriveRecord(bytes32 _recordId) (address _agent,uint _amount, uint _insuranceId);
+  function retriveRecord(bytes32 _recordId) returns (address _agent,uint _amount, address reporter, uint _insuranceId);
 }
 
 // insurance company
 contract Insurance is membered{
 
-  function askPrice() uint onlyMember;
+  function askPrice() onlyMember returns(uint charge);
 
-  function buy(uint _guarantee) payable uint onlyMember;
+  function buy(uint _guarantee) payable onlyMember returns (uint id);
 
-  function pay(uint insuranceId, bytes32 _recordId, address _agent, uint _amount, uint _insuranceId) bool onlyMember;
+  function pay(uint insuranceId, bytes32 _recordId, address _agent, uint _amount, uint _insuranceId) onlyMember returns (bool ok);
 }
 
 // timer
@@ -99,12 +104,12 @@ contract Timer is owned{
 
   function trigger();
 
-  function register payable(uint _after, uint _before, string _method, address _address, uint _gasLimit);
+  function register(uint _after, uint _before, string _method, address _address, uint _gasLimit) payable returns(bool ok);
 }
 
 // master
 contract EthLendService is membered{
-  function applyMeeting() address;
+  function applyMeeting() returns (address newAddr);
 }
 
 // meeting
@@ -116,9 +121,11 @@ contract Meeting is membered{
 
   function suggestAttr(uint _period, uint _times) onlyMember;
 
-  function getMsg() (uint, string, address) onlyMember; // -x: x's auction; +x: x's offer; 0: voting for string
+  function getMsg() onlyMember returns (uint, string, address) ; // -x: x's auction; +x: x's offer; 0: voting for string
 
   function offer(uint _money) onlyMember;
 
   function withdraw() onlyMember; //must pulled by user, cannot push
+
+  function push();
 }

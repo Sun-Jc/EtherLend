@@ -231,13 +231,13 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.new = function() {
     if (this.currentProvider == null) {
-      throw new Error("PongvalRetriever error: Please call setProvider() first before calling new().");
+      throw new Error("Meeting error: Please call setProvider() first before calling new().");
     }
 
     var args = Array.prototype.slice.call(arguments);
 
     if (!this.unlinked_binary) {
-      throw new Error("PongvalRetriever error: contract binary not set. Can't deploy new instance.");
+      throw new Error("Meeting error: contract binary not set. Can't deploy new instance.");
     }
 
     var regex = /__[^_]+_+/g;
@@ -256,7 +256,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         return name != arr[index + 1];
       }).join(", ");
 
-      throw new Error("PongvalRetriever contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of PongvalRetriever: " + unlinked_libraries);
+      throw new Error("Meeting contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of Meeting: " + unlinked_libraries);
     }
 
     var self = this;
@@ -297,7 +297,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.at = function(address) {
     if (address == null || typeof address != "string" || address.length != 42) {
-      throw new Error("Invalid address passed to PongvalRetriever.at(): " + address);
+      throw new Error("Invalid address passed to Meeting.at(): " + address);
     }
 
     var contract_class = this.web3.eth.contract(this.abi);
@@ -308,7 +308,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.deployed = function() {
     if (!this.address) {
-      throw new Error("Cannot find deployed address: PongvalRetriever not deployed or address not set.");
+      throw new Error("Cannot find deployed address: Meeting not deployed or address not set.");
     }
 
     return this.at(this.address);
@@ -352,20 +352,159 @@ var SolidityEvent = require("web3/lib/web3/event.js");
       {
         "constant": false,
         "inputs": [],
-        "name": "getPongvalTransactional",
+        "name": "withdraw",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [],
+        "name": "manager",
         "outputs": [
           {
             "name": "",
-            "type": "int8"
+            "type": "address"
           }
         ],
         "payable": false,
         "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "_agent",
+            "type": "address"
+          }
+        ],
+        "name": "isAMember",
+        "outputs": [
+          {
+            "name": "ism",
+            "type": "bool"
+          }
+        ],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "_money",
+            "type": "uint256"
+          }
+        ],
+        "name": "offer",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [],
+        "name": "push",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "_period",
+            "type": "uint256"
+          },
+          {
+            "name": "_times",
+            "type": "uint256"
+          }
+        ],
+        "name": "suggestAttr",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+          {
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [],
+        "name": "getMsg",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          },
+          {
+            "name": "",
+            "type": "string"
+          },
+          {
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [],
+        "name": "join",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "_duration",
+            "type": "uint256"
+          }
+        ],
+        "name": "setDecisionTime",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [],
+        "name": "end",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "newOwner",
+            "type": "address"
+          }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
       }
     ],
-    "unlinked_binary": "0x60606040526000805460ff191681556042908190601b90396000f3606060405260e060020a6000350463fb5d57298114601c575b6002565b3460025760356000805460ff191660ff17808255900b90565b60000b6060908152602090f3",
     "events": {},
-    "updated_at": 1481531611143
+    "updated_at": 1481550869876
   }
 };
 
@@ -450,7 +589,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     Contract.links[name] = address;
   };
 
-  Contract.contract_name   = Contract.prototype.contract_name   = "PongvalRetriever";
+  Contract.contract_name   = Contract.prototype.contract_name   = "Meeting";
   Contract.generated_with  = Contract.prototype.generated_with  = "3.2.0";
 
   // Allow people to opt-in to breaking changes now.
@@ -490,6 +629,6 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   } else {
     // There will only be one version of this contract in the browser,
     // and we can use that.
-    window.PongvalRetriever = Contract;
+    window.Meeting = Contract;
   }
 })();

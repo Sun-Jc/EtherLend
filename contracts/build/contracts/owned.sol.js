@@ -231,13 +231,13 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.new = function() {
     if (this.currentProvider == null) {
-      throw new Error("PongvalRetriever error: Please call setProvider() first before calling new().");
+      throw new Error("owned error: Please call setProvider() first before calling new().");
     }
 
     var args = Array.prototype.slice.call(arguments);
 
     if (!this.unlinked_binary) {
-      throw new Error("PongvalRetriever error: contract binary not set. Can't deploy new instance.");
+      throw new Error("owned error: contract binary not set. Can't deploy new instance.");
     }
 
     var regex = /__[^_]+_+/g;
@@ -256,7 +256,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         return name != arr[index + 1];
       }).join(", ");
 
-      throw new Error("PongvalRetriever contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of PongvalRetriever: " + unlinked_libraries);
+      throw new Error("owned contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of owned: " + unlinked_libraries);
     }
 
     var self = this;
@@ -297,7 +297,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.at = function(address) {
     if (address == null || typeof address != "string" || address.length != 42) {
-      throw new Error("Invalid address passed to PongvalRetriever.at(): " + address);
+      throw new Error("Invalid address passed to owned.at(): " + address);
     }
 
     var contract_class = this.web3.eth.contract(this.abi);
@@ -308,7 +308,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.deployed = function() {
     if (!this.address) {
-      throw new Error("Cannot find deployed address: PongvalRetriever not deployed or address not set.");
+      throw new Error("Cannot find deployed address: owned not deployed or address not set.");
     }
 
     return this.at(this.address);
@@ -350,22 +350,65 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   "default": {
     "abi": [
       {
-        "constant": false,
+        "constant": true,
         "inputs": [],
-        "name": "getPongvalTransactional",
+        "name": "manager",
         "outputs": [
           {
             "name": "",
-            "type": "int8"
+            "type": "address"
           }
         ],
         "payable": false,
         "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+          {
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [],
+        "name": "end",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "newOwner",
+            "type": "address"
+          }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "name": "_manager",
+            "type": "address"
+          }
+        ],
+        "type": "constructor"
       }
     ],
-    "unlinked_binary": "0x60606040526000805460ff191681556042908190601b90396000f3606060405260e060020a6000350463fb5d57298114601c575b6002565b3460025760356000805460ff191660ff17808255900b90565b60000b6060908152602090f3",
+    "unlinked_binary": "0x606060405260405160208061017b8339506080604052516000805460a060020a60ff0219600160a060020a031991821633171690915560018054909116821790555061012c8061004f6000396000f3606060405260e060020a6000350463481c6a75811461003f5780638da5cb5b14610056578063efbe1c1c1461006d578063f2fde38b14610090575b610002565b34610002576100b6600154600160a060020a031681565b34610002576100b6600054600160a060020a031681565b34610002576100d360005433600160a060020a039081169116146100d557610002565b34610002576100d360043560005433600160a060020a0390811691161461010a57610002565b60408051600160a060020a03929092168252519081900360200190f35b005b60005474010000000000000000000000000000000000000000900460ff1615156100fe57610002565b33600160a060020a0316ff5b6000805473ffffffffffffffffffffffffffffffffffffffff1916821790555056",
     "events": {},
-    "updated_at": 1481531611143
+    "updated_at": 1481550869888
   }
 };
 
@@ -450,7 +493,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     Contract.links[name] = address;
   };
 
-  Contract.contract_name   = Contract.prototype.contract_name   = "PongvalRetriever";
+  Contract.contract_name   = Contract.prototype.contract_name   = "owned";
   Contract.generated_with  = Contract.prototype.generated_with  = "3.2.0";
 
   // Allow people to opt-in to breaking changes now.
@@ -490,6 +533,6 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   } else {
     // There will only be one version of this contract in the browser,
     // and we can use that.
-    window.PongvalRetriever = Contract;
+    window.owned = Contract;
   }
 })();
