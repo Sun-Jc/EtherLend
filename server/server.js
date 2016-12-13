@@ -1,10 +1,16 @@
 //Lets require/import the HTTP module
 var http = require('http');
 var HttpDispatcher = require('httpdispatcher');
-var dispatcher     = new HttpDispatcher();
+var dispatcher = new HttpDispatcher();
+
+var Web3 = require('web3');
+var web3 = new Web3();
+
+var provider = 'http://localhost:8545'
+web3.setProvider(new web3.providers.HttpProvider(provider));
 
 //Lets define a port we want to listen to
-const PORT=8080; 
+const PORT=8085; 
 
 //We need a function which handles requests and send response
 function handleRequest(request, response){
@@ -26,6 +32,13 @@ dispatcher.setStatic('resources');
 dispatcher.onGet("/page1", function(req, res) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end('Page One');
+});    
+
+dispatcher.onGet("/balance", function(req, res) {
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    var account = web3.eth.accounts[0];
+    var balance = web3.eth.getBalance(account);
+    res.end(balance.toString());
 });    
 
 //A sample POST request

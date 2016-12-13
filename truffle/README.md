@@ -1,3 +1,5 @@
+## Truffle
+
 [demo-video](https://www.youtube.com/watch?v=GPP6uAq15d8#t=382.565145).
 
 * `https://www.ethereum.org/token`
@@ -19,15 +21,17 @@ truffle compile
 
 ```
 sudo npm install -g ethereumjs-testrpc
+# pip install testrpc
 testrpc
 ```
+
+Remember to add your contract to `migrate/` before `truffle serve`.
 
 ```
 truffle migrate
 truffle build
+truffle serve
 ```
-
-[interacting](http://truffleframework.com/docs/getting_started/contracts)
 
 ```
 truffle test
@@ -36,3 +40,8 @@ truffle test
 ```
 truffle console
 ```
+
+## Interaction
+
+* web3 API: [https://github.com/ethereum/wiki/wiki/JavaScript-API](https://github.com/ethereum/wiki/wiki/JavaScript-API).
+* MetaCoin:[http://truffleframework.com/docs/getting_started/contracts](http://truffleframework.com/docs/getting_started/contracts)
