@@ -38,7 +38,7 @@ dispatcher.onGet("/balance", function(req, res) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
     var account = web3.eth.accounts[0];
     var balance = web3.eth.getBalance(account);
-    res.end(balance.toString());
+    res.end(JSON.stringify({'balance': balance.toString()}));
 });    
 
 //A sample POST request
