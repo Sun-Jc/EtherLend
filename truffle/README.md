@@ -1,3 +1,16 @@
+## Interaction
+
+* web3 API: [https://github.com/ethereum/wiki/wiki/JavaScript-API](https://github.com/ethereum/wiki/wiki/JavaScript-API).
+* MetaCoin:[http://truffleframework.com/docs/getting_started/contracts](http://truffleframework.com/docs/getting_started/contracts)
+
+Here is how you would test the `greeter`:
+* `$ vim contracts/mortal.sol`
+* `$ vim migrations/3_deploy_mortal.js`
+* `$ truffle migrate`
+* refresh your browser with address `localhost:8090`(the port you set with `truffle serve -p 8090`)
+* in the console(after you press `F12` in browser): `greeter = greeter.deployed(); greeter.greet.call().then(function(response) {console.log(response)})`
+* wait a second, you can see `hello`
+
 ## Truffle
 
 [demo-video](https://www.youtube.com/watch?v=GPP6uAq15d8#t=382.565145).
@@ -6,32 +19,43 @@
 * `https://www.ethereum.org/crowdsale`
 * `https://solidity.readthedocs.io/en/latest/introduction-to-smart-contracts.html`
 
+### install
+
 ```
-curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
-sudo apt-get install -y nodejs
-sudo npm install -g truffle
+apt-get install --user nodejs
+npm install truffle
 ```
 
 [documentation](https://truffle.readthedocs.io/en/latest/).
 
 ```
 truffle init
-truffle compile
 ```
 
+### testrpc
+
 ```
-sudo npm install -g ethereumjs-testrpc
-# pip install testrpc
+npm install ethereumjs-testrpc
 testrpc
 ```
 
-Remember to add your contract to `migrate/` before `truffle serve`.
+### deploy contract
+
+Remember to write a new migrate about your contract in `migrations/`.
 
 ```
+truffle compile
 truffle migrate
-truffle build
-truffle serve
 ```
+
+### server
+
+```
+truffle build
+truffle serve -p 8090
+```
+
+### test
 
 ```
 truffle test
@@ -40,8 +64,3 @@ truffle test
 ```
 truffle console
 ```
-
-## Interaction
-
-* web3 API: [https://github.com/ethereum/wiki/wiki/JavaScript-API](https://github.com/ethereum/wiki/wiki/JavaScript-API).
-* MetaCoin:[http://truffleframework.com/docs/getting_started/contracts](http://truffleframework.com/docs/getting_started/contracts)
