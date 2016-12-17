@@ -1,2 +1,5 @@
+*.swp
 ethereum-android-lib/
 ethereum-android-sample/
+truffle/build/
+contracts/build/

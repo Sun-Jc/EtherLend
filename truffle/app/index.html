@@ -20,12 +20,31 @@
   <br><br>
   <span id="status"></span>
 
+  <script>console.log('hi, there')</script>
+
   <script>
     var Web3 = require('web3');
     var web3 = new Web3();
-    web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
+    
+    var provider = 'http://taoli.tsinghuax.org:8545'
+    web3.setProvider(new web3.providers.HttpProvider(provider));
+    //var TestRPC = require("ethereumjs-testrpc");
+    //web3.setProvider(TestRPC.provider());
+    var meta = MetaCoin.deployed();
+    var account_one = web3.eth.accounts[0];
 
+    var balance = web3.eth.getBalance(account_one);
+    console.log(balance.toNumber());
 
+    /*
+    meta.getBalance.call(account_one, {from: account_one}).then(function(balance) {
+      // If this callback is called, the call was successfully executed.
+      // Note that this returns immediately without any waiting.
+      // Let's print the return value.
+      console.log(balance.toNumber());
+    }).catch(function(e) {
+      // There was an error! Handle it.
+    })*/
   </script>
 </body>
 </html>

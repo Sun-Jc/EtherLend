@@ -231,13 +231,13 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.new = function() {
     if (this.currentProvider == null) {
-      throw new Error("Pong error: Please call setProvider() first before calling new().");
+      throw new Error("greeter error: Please call setProvider() first before calling new().");
     }
 
     var args = Array.prototype.slice.call(arguments);
 
     if (!this.unlinked_binary) {
-      throw new Error("Pong error: contract binary not set. Can't deploy new instance.");
+      throw new Error("greeter error: contract binary not set. Can't deploy new instance.");
     }
 
     var regex = /__[^_]+_+/g;
@@ -256,7 +256,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         return name != arr[index + 1];
       }).join(", ");
 
-      throw new Error("Pong contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of Pong: " + unlinked_libraries);
+      throw new Error("greeter contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of greeter: " + unlinked_libraries);
     }
 
     var self = this;
@@ -297,7 +297,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.at = function(address) {
     if (address == null || typeof address != "string" || address.length != 42) {
-      throw new Error("Invalid address passed to Pong.at(): " + address);
+      throw new Error("Invalid address passed to greeter.at(): " + address);
     }
 
     var contract_class = this.web3.eth.contract(this.abi);
@@ -308,7 +308,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.deployed = function() {
     if (!this.address) {
-      throw new Error("Cannot find deployed address: Pong not deployed or address not set.");
+      throw new Error("Cannot find deployed address: greeter not deployed or address not set.");
     }
 
     return this.at(this.address);
@@ -351,45 +351,6 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     "abi": [
       {
         "constant": false,
-        "inputs": [
-          {
-            "name": "_pongval",
-            "type": "int8"
-          }
-        ],
-        "name": "setPongval",
-        "outputs": [],
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [],
-        "name": "getAddress",
-        "outputs": [
-          {
-            "name": "",
-            "type": "address"
-          }
-        ],
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [],
-        "name": "getPongvalConstant",
-        "outputs": [
-          {
-            "name": "",
-            "type": "int8"
-          }
-        ],
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "constant": false,
         "inputs": [],
         "name": "kill",
         "outputs": [],
@@ -399,24 +360,11 @@ var SolidityEvent = require("web3/lib/web3/event.js");
       {
         "constant": true,
         "inputs": [],
-        "name": "getPongvalTxRetrievalAttempted",
+        "name": "greet",
         "outputs": [
           {
             "name": "",
-            "type": "int8"
-          }
-        ],
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "constant": false,
-        "inputs": [],
-        "name": "getPongvalTransactional",
-        "outputs": [
-          {
-            "name": "",
-            "type": "int8"
+            "type": "string"
           }
         ],
         "payable": false,
@@ -425,16 +373,18 @@ var SolidityEvent = require("web3/lib/web3/event.js");
       {
         "inputs": [
           {
-            "name": "_pongval",
-            "type": "int8"
+            "name": "_greeting",
+            "type": "string"
           }
         ],
+        "payable": false,
         "type": "constructor"
       }
     ],
-    "unlinked_binary": "0x606060408190526000805460a860020a60ff021916905560208061020183395060806040525133600060006101000a815481600160a060020a030219169083021790555080600060146101000a81548160ff02191690837f0100000000000000000000000000000000000000000000000000000000000000908102040217905550506101728061008f6000396000f3606060405236156100565760e060020a600035046323a1c271811461005b57806338cc48311461009357806340193d17146100a057806341c0e1b5146100ba578063a396541e146100e7578063fb5d572914610101575b610002565b34610002576000805474ff0000000000000000000000000000000000000000191660f860020a60043581020460a060020a021790555b005b346100025761013d305b90565b34610002576101596000805460a060020a9004900b61009d565b346100025761009160005433600160a060020a039081169116141561017057600054600160a060020a0316ff5b34610002576101596000805460a860020a9004900b61009d565b34610002576101596000805475ff000000000000000000000000000000000000000000191660a860020a1780825560a060020a9004900b61009d565b60408051600160a060020a039092168252519081900360200190f35b6040805160009290920b8252519081900360200190f35b56",
+    "unlinked_binary": "0x60606040523461000057604051610284380380610284833981016040528051015b5b60008054600160a060020a0319166c01000000000000000000000000338102041790555b8060019080519060200190828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061009157805160ff19168380011785556100be565b828001600101855582156100be579182015b828111156100be5782518255916020019190600101906100a3565b5b506100df9291505b808211156100db57600081556001016100c7565b5090565b50505b505b610192806100f26000396000f3606060405260e060020a600035046341c0e1b58114610029578063cfae321714610038575b610000565b34610000576100366100b3565b005b34610000576100456100f5565b60405180806020018281038252838181518152602001915080519060200190808383829060006004602084601f0104600302600f01f150905090810190601f1680156100a55780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b6000543373ffffffffffffffffffffffffffffffffffffffff908116911614156100f25760005473ffffffffffffffffffffffffffffffffffffffff16ff5b5b565b604080516020808201835260008252600180548451600282841615610100026000190190921691909104601f8101849004840282018401909552848152929390918301828280156101875780601f1061015c57610100808354040283529160200191610187565b820191906000526020600020905b81548152906001019060200180831161016a57829003601f168201915b505050505090505b9056",
     "events": {},
-    "updated_at": 1481634471353,
+    "updated_at": 1481634471369,
+    "address": "0xf866c2efcd5a10f16be1501f5fffa619fd3c77d0",
     "links": {}
   }
 };
@@ -520,7 +470,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     Contract.links[name] = address;
   };
 
-  Contract.contract_name   = Contract.prototype.contract_name   = "Pong";
+  Contract.contract_name   = Contract.prototype.contract_name   = "greeter";
   Contract.generated_with  = Contract.prototype.generated_with  = "3.2.0";
 
   // Allow people to opt-in to breaking changes now.
@@ -560,6 +510,6 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   } else {
     // There will only be one version of this contract in the browser,
     // and we can use that.
-    window.Pong = Contract;
+    window.greeter = Contract;
   }
 })();

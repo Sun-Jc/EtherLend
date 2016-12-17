@@ -231,13 +231,13 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.new = function() {
     if (this.currentProvider == null) {
-      throw new Error("Pong error: Please call setProvider() first before calling new().");
+      throw new Error("mortal error: Please call setProvider() first before calling new().");
     }
 
     var args = Array.prototype.slice.call(arguments);
 
     if (!this.unlinked_binary) {
-      throw new Error("Pong error: contract binary not set. Can't deploy new instance.");
+      throw new Error("mortal error: contract binary not set. Can't deploy new instance.");
     }
 
     var regex = /__[^_]+_+/g;
@@ -256,7 +256,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         return name != arr[index + 1];
       }).join(", ");
 
-      throw new Error("Pong contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of Pong: " + unlinked_libraries);
+      throw new Error("mortal contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of mortal: " + unlinked_libraries);
     }
 
     var self = this;
@@ -297,7 +297,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.at = function(address) {
     if (address == null || typeof address != "string" || address.length != 42) {
-      throw new Error("Invalid address passed to Pong.at(): " + address);
+      throw new Error("Invalid address passed to mortal.at(): " + address);
     }
 
     var contract_class = this.web3.eth.contract(this.abi);
@@ -308,7 +308,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.deployed = function() {
     if (!this.address) {
-      throw new Error("Cannot find deployed address: Pong not deployed or address not set.");
+      throw new Error("Cannot find deployed address: mortal not deployed or address not set.");
     }
 
     return this.at(this.address);
@@ -351,45 +351,6 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     "abi": [
       {
         "constant": false,
-        "inputs": [
-          {
-            "name": "_pongval",
-            "type": "int8"
-          }
-        ],
-        "name": "setPongval",
-        "outputs": [],
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [],
-        "name": "getAddress",
-        "outputs": [
-          {
-            "name": "",
-            "type": "address"
-          }
-        ],
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [],
-        "name": "getPongvalConstant",
-        "outputs": [
-          {
-            "name": "",
-            "type": "int8"
-          }
-        ],
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "constant": false,
         "inputs": [],
         "name": "kill",
         "outputs": [],
@@ -397,44 +358,15 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         "type": "function"
       },
       {
-        "constant": true,
         "inputs": [],
-        "name": "getPongvalTxRetrievalAttempted",
-        "outputs": [
-          {
-            "name": "",
-            "type": "int8"
-          }
-        ],
         "payable": false,
-        "type": "function"
-      },
-      {
-        "constant": false,
-        "inputs": [],
-        "name": "getPongvalTransactional",
-        "outputs": [
-          {
-            "name": "",
-            "type": "int8"
-          }
-        ],
-        "payable": false,
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "name": "_pongval",
-            "type": "int8"
-          }
-        ],
         "type": "constructor"
       }
     ],
-    "unlinked_binary": "0x606060408190526000805460a860020a60ff021916905560208061020183395060806040525133600060006101000a815481600160a060020a030219169083021790555080600060146101000a81548160ff02191690837f0100000000000000000000000000000000000000000000000000000000000000908102040217905550506101728061008f6000396000f3606060405236156100565760e060020a600035046323a1c271811461005b57806338cc48311461009357806340193d17146100a057806341c0e1b5146100ba578063a396541e146100e7578063fb5d572914610101575b610002565b34610002576000805474ff0000000000000000000000000000000000000000191660f860020a60043581020460a060020a021790555b005b346100025761013d305b90565b34610002576101596000805460a060020a9004900b61009d565b346100025761009160005433600160a060020a039081169116141561017057600054600160a060020a0316ff5b34610002576101596000805460a860020a9004900b61009d565b34610002576101596000805475ff000000000000000000000000000000000000000000191660a860020a1780825560a060020a9004900b61009d565b60408051600160a060020a039092168252519081900360200190f35b6040805160009290920b8252519081900360200190f35b56",
+    "unlinked_binary": "0x606060405234610000575b60008054600160a060020a0319166c01000000000000000000000000338102041790555b5b60698061003c6000396000f3606060405260e060020a600035046341c0e1b58114601c575b6000565b3460005760266028565b005b6000543373ffffffffffffffffffffffffffffffffffffffff9081169116141560665760005473ffffffffffffffffffffffffffffffffffffffff16ff5b5b56",
     "events": {},
-    "updated_at": 1481634471353,
+    "updated_at": 1481634471375,
+    "address": "0xbf2cc179dfc85c1becc61093247f26230e14ddb9",
     "links": {}
   }
 };
@@ -520,7 +452,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     Contract.links[name] = address;
   };
 
-  Contract.contract_name   = Contract.prototype.contract_name   = "Pong";
+  Contract.contract_name   = Contract.prototype.contract_name   = "mortal";
   Contract.generated_with  = Contract.prototype.generated_with  = "3.2.0";
 
   // Allow people to opt-in to breaking changes now.
@@ -560,6 +492,6 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   } else {
     // There will only be one version of this contract in the browser,
     // and we can use that.
-    window.Pong = Contract;
+    window.mortal = Contract;
   }
 })();
