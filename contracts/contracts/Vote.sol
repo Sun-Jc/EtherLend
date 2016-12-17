@@ -3,9 +3,13 @@ pragma solidity ^0.4.2;
 import "Traits.sol";
 
 // voting, must be called by membered. vote one by one, total is fixed
-contract smallVote is Vote{
+contract SmallVote is Vote{
 
-  uint count;
+  uint AYEcount = 0;
+
+  uint NAYcount = 0;
+
+  mapping(address => bool) voted;
 
   address superVoter;
 
@@ -22,21 +26,28 @@ contract smallVote is Vote{
     endTime = _endTime;
   }
 
-  function voteFor(bool _vote){
-    if ( !membered(owner).isAMember(msg.sender) || !ended ){ // only onwer's member can vote
-      throw;
-    }
-    count = count + 1;
-  }
-
-  function countVote() onlyOwner returns (uint){
-    return count;
-  }
-
-  function endVote(){
+  function voteFor(address _agent, bool _vote) onlyOwner{
     if(now > endTime){
       ended = true;
     }
+
+    if(ended){
+      throw;
+    }
+    if(voted[_agent]){
+      throw;
+    }
+    voted[_agent] = true;
+    if (_vote){
+      AYEcount += 1;
+    }else{
+      NAYcount += 1;
+    }
+    return true;
+  }
+
+  function countVote() onlyOwner returns (bool ended, uint aye,uint nay, bool sv){
+    return (ended, AYEcount, NAYcount, svVote);
   }
 
 }

@@ -13,10 +13,13 @@ contract owned {
 
     address public manager;
 
-    function owned(address _manager) {
+    function owned() {
         owner = msg.sender;
         okayToEnd = true; // should be false defaultly
-        manager = _manager;
+    }
+
+    function yingdian(address _manager){
+      manager = _manager;
     }
 
     modifier onlyOwner {
@@ -33,11 +36,11 @@ contract owned {
         owner = newOwner;
     }
 
-    function end() onlyOwner{
+    function end(address _toWho) onlyOwner{
         if( !okayToEnd){
           throw;
         }
-        selfdestruct(msg.sender);
+        selfdestruct(_toWho);
     }
 }
 
@@ -51,11 +54,11 @@ contract membered is owned {
       _;
   }
 
-  function addMember(address _agent) internal{
+  function addMember(address _agent) onlyOwner{
     isMember[_agent] = true;
   }
 
-  function isAMember(address _agent) onlyMember returns(bool ism){
+  function isAMember(address _agent) returns(bool ism){
     return isMember[_agent];
   }
 
@@ -64,21 +67,24 @@ contract membered is owned {
 // vote, must be called by membered. vote one by one, total is fixed
 contract Vote is owned{
 
-  function voteFor(bool _vote);
+  function voteFor(address _agent, bool _vote) onlyOwner returns (bool);
 
-  function countVote() onlyOwner returns (uint count);
+  function countVote() onlyOwner returns (bool ended, uint aye,uint nay, bool sv);
 }
 
 // auction
 contract Auction is owned{
 
-  function Bid(bytes32 _blindBid) payable;
+  function tryEnd();
 
-  function ShowBid(uint _bid);
+  function Bid(address _address, bytes32 _blindBid, uint _desposit) onlyOwner returns(bool);
 
-  function Refund() returns (bool);
+  function ShowBid(address _address, uint _bid) onlyOwner returns (bool);
 
   function BidResult() returns (bool suc, address addr,uint ammount);
+
+  function checkBidderAfterEnded(address _agent) returns(bool noblindbid, bool noreveal, bool lessGuarantee,uint amount);
+  
 }
 
 // credit recorder
@@ -119,15 +125,16 @@ contract Meeting is membered{
 
   function setDecisionTime(uint _duration) onlyManager;
 
+  function setAuctionTime(uint _duration) onlyManager;
+
   function suggestAttr(uint _period, uint _times) onlyMember;
 
-  function getMsg() onlyMember returns (uint, string, address) ; // -x: x's auction; +x: x's offer; 0: voting for string
-
-  function offer(uint _money) onlyMember;
+  function getMsg() onlyMember; // -x: x's auction; +x: x's offer; 0: voting for string
 
   function withdraw() onlyMember; //must pulled by user, cannot push
 
   function push();
 
-  function failAuction(address _agent, uint _amount);
+  function check(address _who) returns(bool);
+
 }
