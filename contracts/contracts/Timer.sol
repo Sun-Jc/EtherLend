@@ -11,7 +11,7 @@ Usage: user schedule a calling by register();
 */
 
 
-
+/*
 // concrete timer
 contract SmallTimer is Timer{
 
@@ -113,20 +113,6 @@ contract SmallTimer is Timer{
       return true;
   }
 
-  /*function binarySearch( mapping(int64=>uint) startTime, int64 begin, int64 next, uint time) private returns(int64){
-    int64 a = begin;
-    int64 b = next;
-    while(a < b){
-      int64 mi = (a + b)/2;
-      uint vm = startTime[mi];
-      if( vm >= time ){
-        b = mi;
-      }else{
-        a = mi;
-      }
-    }
-    return mi;
-  }*/
 
   function trigger(){
     if(head>=next){
@@ -145,3 +131,4 @@ contract SmallTimer is Timer{
     }
   }
 }
+*/

@@ -1,6 +1,8 @@
 pragma solidity ^0.4.2;
 
 import "Traits.sol";
+import "Vote.sol";
+import "Auction.sol";
 
 contract SmallEthLendService is EthLendService{
   function applyMeeting() returns (address newAddr){
@@ -9,11 +11,11 @@ contract SmallEthLendService is EthLendService{
     return r;
   }
 
-  function destroyOneMeeting(address _meeting) onlyOwner{
+  function destroyOneMeeting(address _meeting, address _receiver) onlyOwner{
     if(!isAMember(_meeting)){
       throw;
     }
-    Meeting(_meeting).end();
+    Meeting(_meeting).end(_receiver);
   }
 }
 
@@ -59,11 +61,11 @@ contract SmallMeeting is Meeting{
 
   event Debug(string error);
 
-  uint Stage = 0; // -3: error, -2:waiting for setting recruit time, -1: recuriting, 0: setting times,  1,2,3...N: period
+  int64 stage = 0; // -3: error, -2:waiting for setting recruit time, -1: recuriting, 0: setting times,  1,2,3...N: period
 
   bool finishedOrVoting = false; // 0 on auction, 1 finished or on voting
 
-  SmallAuction cuurentAuction;
+  SmallAuction currentAuction;
 
   uint auctionStage;
 
@@ -105,11 +107,11 @@ contract SmallMeeting is Meeting{
 
   function SmallMeeting(address _manager){
     yingdian(_manager);
-    Established(startTime, _manager)
+    Established(startTime, _manager);
   }
 
   function processVote() internal{
-    var c = currentVote.countVote();
+    var (c,cn) = currentVote.countVote();
     if(c > membersArray.length / 2){
       stage = 1;
       period = period_s;
@@ -126,22 +128,16 @@ contract SmallMeeting is Meeting{
       if(!check(checked)){
         wrong();
       }
-      var agent = membersArray[checked];
-      if(balance[agent] > 0){
-        if(agent.send(balance[agent])){
-          balance[agent] = 0;
-        }
-      }
       checked += 1;
     }else if(checked == N){
-      var (suc,addr,amount) =  cuurentAuction.BidResult();
+      var (suc,addr,amount) =  currentAuction.BidResult();
       if(!suc){
         wrong();
       }
       else{
         borrowed[addr] = true;
         interest[auctionStage] = amount - base;
-        b = balance[addr] + base + (base - (amount - base)) * (N - auctionStage) ;
+        var b = balance[addr] + base + (base - (amount - base)) * (N - auctionStage) ;
         if(addr.send(b)){
           GiveBid(addr,b);
           balance[addr] = 0;
@@ -155,8 +151,7 @@ contract SmallMeeting is Meeting{
         }
       }
     }else if(doubleChecked < N){
-      var agent = membersArray[checked];
-      var (noblindbid, noreveal, lessGuarantee, amount, checkedbefore) = currentAuction.checkBidderAfterEnded(agent);
+      var agent = membersArray[doubleChecked];
       if(!borrowed[agent]){
         balance[agent] += interest[auctionStage];
       }
@@ -173,7 +168,7 @@ contract SmallMeeting is Meeting{
   function check(uint _i) internal returns(bool){
     var agent = membersArray[_i];
     var (noblindbid, noreveal, lessGuarantee, amount, checkedbefore) = currentAuction.checkBidderAfterEnded(agent);
-    var (suc,addr,sucAmount) =  cuurentAuction.BidResult();
+    var (suc,addr,sucAmount) =  currentAuction.BidResult();
     if(noblindbid){
       BadAgent(agent,auctionStage,1,base);
       return false;
@@ -197,7 +192,7 @@ contract SmallMeeting is Meeting{
     Wrong();
   }
 
-  function checkFinished() internal{
+  function checkFinished() internal returns(bool){
     if(stage>0 && finishedOrVoting && doubleChecked >= membersArray.length){
       return true;
     }else{
@@ -207,7 +202,7 @@ contract SmallMeeting is Meeting{
 
   function newAuction() internal{
     currentAuction = new SmallAuction();
-    auctionStage = stage;
+    auctionStage = uint(stage);
     BeginAuction(auctionStage);
   }
 
@@ -223,7 +218,7 @@ contract SmallMeeting is Meeting{
         }
         if(borrowed[msg.sender]){
           balance[msg.sender] = msg.value - base;
-          if(currentAuction.bid(msg.sender,sha3(base,msg.sender),base)){
+          if(currentAuction.Bid(msg.sender,sha3(base,msg.sender),base)){
             Bidded(msg.sender,auctionStage);
           }else{
             Debug("fail to bid");
@@ -232,7 +227,7 @@ contract SmallMeeting is Meeting{
           if(msg.value == base){
             throw;
           }
-          if(currentAuction.bid(msg.sender,blindBid,msg.value)){
+          if(currentAuction.Bid(msg.sender,_blindBid,msg.value)){
             Bidded(msg.sender,auctionStage);
           }else{
             Debug("fail to bid");
@@ -244,7 +239,7 @@ contract SmallMeeting is Meeting{
     }
   }
 
-  function showBid(uint _amount) onlyMember{
+  function showBid(uint _amount, uint _stage) onlyMember{
     if(stage>0 && !finishedOrVoting){
       trypush();
       if(stage>0 && !finishedOrVoting){
@@ -289,10 +284,10 @@ contract SmallMeeting is Meeting{
       if(finishedOrVoting){
         cur = 2;
       }
-      var s = stage;
+      var s = (uint)(stage);
 
       var real = 0;
-      if(t > firstAuctionTime + (s+1) * (period+auctionVoteDuration) ){
+      if(t > firstAuctionTime + ( s + 1) * (period+auctionVoteDuration) ){
         real = 5;
       }else if(t > firstAuctionTime + s * (period+auctionVoteDuration) + auctionVoteDuration ){
         real = 4;
@@ -315,7 +310,7 @@ contract SmallMeeting is Meeting{
           checkAuction();
         }else{
           if (checkFinished()){
-            stage = s + 1;
+            stage = (int64)(s) + 1;
             finishedOrVoting = false;
             newAuction();
             checked = 0;
@@ -332,12 +327,12 @@ contract SmallMeeting is Meeting{
       throw;
     }
 
-    if(isAMember[msg.sender]){
+    if(isAMember(msg.sender) || pendingMember[msg.sender] ){
       throw;
     }
 
-    pendingMember(msg.sender) = true;
-    intro(msg.sender) = _intro;
+    pendingMember[msg.sender] = true;
+    intro[msg.sender] = _intro;
     JoinApplied(msg.sender,_intro);
   }
 
@@ -349,19 +344,23 @@ contract SmallMeeting is Meeting{
     if(pendingMember[_address]){
       pendingMember[_address] = false;
       addMember(_address);
-      membersArray.push(_address)
+      membersArray.push(_address);
       NewMember(_address);
     }
   }
 
-  function setRecuritAndVoteAuctionTime(uint _recuritDuration, uint _decisionDuration) onlyManager{
+  function setRecuritAndVoteAuctionTime(uint _recuritEndtime, uint _decisionDuration) onlyManager{
     if(stage != -2){
       throw;
     }
 
-    recuritingDuration = _recuritDuration;
+    if(_recuritEndtime <= startTime){
+      throw;
+    }
+
+    recuritingEndTime = _recuritEndtime;
     auctionVoteDuration = _decisionDuration;
-    RecruitTimeSet( startTime + _recuritDuration, _decisionDuration);
+    RecruitAndDecisionTimeSet( _recuritEndtime, _decisionDuration);
 
     stage = -1;
   }
@@ -373,8 +372,8 @@ contract SmallMeeting is Meeting{
     period = _period;
     stage = 1;
     firstAuctionTime = now;
-    FormSet(_period,_times,_base);
-    BeginAuction(stage);
+    FormSet(_period,_base);
+    BeginAuction(1);
   }
 
   function suggestAttr(uint _period, uint _base) onlyMember{

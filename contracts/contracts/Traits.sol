@@ -119,7 +119,7 @@ contract EthLendService is membered{
 // meeting
 contract Meeting is membered{
 
-  function join();
+/*  function join();
 
   function setDecisionTime(uint _duration) onlyManager;
 
@@ -133,6 +133,6 @@ contract Meeting is membered{
 
   function push();
 
-  function check(address _who) returns(bool);
+  function check(address _who) returns(bool);*/
 
 }

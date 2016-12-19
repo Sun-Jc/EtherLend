@@ -3,7 +3,7 @@ pragma solidity ^0.4.2;
 import "Traits.sol";
 
 
-contract SmallAuciton is Auction{
+contract SmallAuction is Auction{
 
   mapping(address => bytes32) bidBlind;
   mapping(address => uint) bid;
@@ -36,7 +36,7 @@ contract SmallAuciton is Auction{
   }
 
   function ShowBid(address _address, uint _bid) onlyOwner returns (bool){
-    if(!bidded[] || revealed[_address]){
+    if(!bidded[_address] || revealed[_address]){
       throw;
     }
 
@@ -69,16 +69,16 @@ contract SmallAuciton is Auction{
 
   function checkBidderAfterEnded(address _agent) returns(bool noblindbid, bool noreveal, bool lessGuarantee,uint amount, bool checkedbefore){
     if(!bidded[_agent]){
-      return (true,false,false,0);
+      return (true,false,false,0,false);
     }
     if(!revealed[_agent]){
-      return (false,true,false,0);
+      return (false,true,false,0,false);
     }
     if(bid[_agent] >= balance[_agent]){
-      return (false,false,true,bid[_agent]);
+      return (false,false,true,bid[_agent],false);
     }
     if(!checked[_agent]){
-      checked = true;
+      checked[_agent] = true;
       return (false,false,false,balance[_agent],false);
     }else{
       return (false,false,false,balance[_agent],true);
