@@ -1,9 +1,40 @@
 ## server.js
 
-1. run testrpc: `testrpc`, at `taoli.tsinghuax.org:8545`
-2. deploy current contracts to testrpc: `cd truffle && truffle migrate`, at `taoli.tsinghuax.org:8090`
-3. run server: `cd server && nodemon server.js`, at `taoli.tsinghuax.org:8085`
-4. find public ip: `curl ipinfo.io/ip`
+1. run testrpc as a private chain: 
+
+```
+testrpc
+```
+
+now we have a rpc listening at port `8545`.
+
+2. we can use truffle to deploy current contracts to the private chain (testrpc):
+
+```
+cd truffle && truffle migrate
+```
+
+Also, if you run 
+
+```
+truffle serve
+```
+
+you have a truffle application serving at port `8090`
+
+3. run a node.js server to receive http request from Android app, interact with testrpc by web3.js, return the result to Android
+
+```
+cd server && nodemon server.js
+```
+
+now we have a node.js serving at port `8085`.
+
+4. the Android app can now send http request to the node.js server and wait for response.
+
+## public ip
+
+`curl ipinfo.io/ip`
 
 ## node-debug
 
