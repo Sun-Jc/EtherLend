@@ -11,29 +11,7 @@ contract SmallVote is Vote{
 
   mapping(address => bool) voted;
 
-  address superVoter;
-
-  bool svVote;
-
-  uint endTime;
-
-  bool ended = false;
-
-  function smallVote(address _sv, bool _defaultSV, uint _endTime){
-    count = 0;
-    superVoter = _sv;
-    svVote = _defaultSV;
-    endTime = _endTime;
-  }
-
-  function voteFor(address _agent, bool _vote) onlyOwner{
-    if(now > endTime){
-      ended = true;
-    }
-
-    if(ended){
-      throw;
-    }
+  function voteFor(address _agent, bool _vote) onlyOwner returns(bool){
     if(voted[_agent]){
       throw;
     }
@@ -46,8 +24,8 @@ contract SmallVote is Vote{
     return true;
   }
 
-  function countVote() onlyOwner returns (bool ended, uint aye,uint nay, bool sv){
-    return (ended, AYEcount, NAYcount, svVote);
+  function countVote() onlyOwner returns (uint aye,uint nay){
+    return (AYEcount, NAYcount);
   }
 
 }

@@ -67,15 +67,13 @@ contract membered is owned {
 // vote, must be called by membered. vote one by one, total is fixed
 contract Vote is owned{
 
-  function voteFor(address _agent, bool _vote) onlyOwner returns (bool);
+  function voteFor(address _agent, bool _vote) onlyOwner returns(bool);
 
-  function countVote() onlyOwner returns (bool ended, uint aye,uint nay, bool sv);
+  function countVote() onlyOwner returns (uint aye,uint nay);
 }
 
 // auction
 contract Auction is owned{
-
-  function tryEnd();
 
   function Bid(address _address, bytes32 _blindBid, uint _desposit) onlyOwner returns(bool);
 
@@ -83,8 +81,8 @@ contract Auction is owned{
 
   function BidResult() returns (bool suc, address addr,uint ammount);
 
-  function checkBidderAfterEnded(address _agent) returns(bool noblindbid, bool noreveal, bool lessGuarantee,uint amount);
-  
+  function checkBidderAfterEnded(address _agent) returns(bool noblindbid, bool noreveal, bool lessGuarantee,uint amount, bool checkedbefore);
+
 }
 
 // credit recorder

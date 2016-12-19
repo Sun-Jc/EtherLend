@@ -10,10 +10,7 @@ contract SmallAuciton is Auction{
   mapping(address => bool) bidded;
   mapping(address => bool) revealed;
   mapping(address => uint) balance;
-
-  bool ended = false;
-
-  uint endTime;
+  mapping(address => bool) checked;
 
   address firstBidder;
   uint firstBid = 0;
@@ -21,23 +18,8 @@ contract SmallAuciton is Auction{
   address secondBidder;
   uint secondBid = 0;
 
-  function SmallAuction(uint _endTime){
-    endTime = _endTime;
-  }
-
-  function tryEnd(){
-    if(now >= endTime){
-      ended = true;
-    }
-  }
 
   function Bid(address _address, bytes32 _blindBid, uint _desposit) onlyOwner returns(bool){
-    tryEnd();
-
-    if (ended){
-      throw;
-    }
-
     if (revealed[_address] == true){
       throw;
     }
@@ -54,12 +36,6 @@ contract SmallAuciton is Auction{
   }
 
   function ShowBid(address _address, uint _bid) onlyOwner returns (bool){
-    tryEnd();
-
-    if (ended){
-      throw;
-    }
-
     if(!bidded[] || revealed[_address]){
       throw;
     }
@@ -84,10 +60,6 @@ contract SmallAuciton is Auction{
   }
 
   function BidResult() returns (bool suc, address addr,uint ammount){
-    tryEnd();
-    if ( !ended ){
-      throw;
-    }
     if(secondBid == 0){
       return (false,msg.sender,0);
     }else{
@@ -95,11 +67,7 @@ contract SmallAuciton is Auction{
     }
   }
 
-  function checkBidderAfterEnded(address _agent) returns(bool noblindbid, bool noreveal, bool lessGuarantee,uint amount){
-    tryEnd();
-    if(!ended){
-      throw;
-    }
+  function checkBidderAfterEnded(address _agent) returns(bool noblindbid, bool noreveal, bool lessGuarantee,uint amount, bool checkedbefore){
     if(!bidded[_agent]){
       return (true,false,false,0);
     }
@@ -109,6 +77,11 @@ contract SmallAuciton is Auction{
     if(bid[_agent] >= balance[_agent]){
       return (false,false,true,bid[_agent]);
     }
-    return true;
+    if(!checked[_agent]){
+      checked = true;
+      return (false,false,false,balance[_agent],false);
+    }else{
+      return (false,false,false,balance[_agent],true);
+    }
   }
 }
