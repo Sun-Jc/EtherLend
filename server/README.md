@@ -12,6 +12,12 @@ now we have a rpc listening at port `8545`.
 
 ### contract deploy
 
+first you need to create new migrate file in `truffle/migrations/`.
+
+```
+vi truffle/migrations/3_deploy_greeter.js
+```
+
 we can use truffle to deploy current contracts to the private chain (testrpc):
 
 ```

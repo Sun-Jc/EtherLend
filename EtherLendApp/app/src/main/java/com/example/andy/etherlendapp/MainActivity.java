@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 // Perform action on click
-                String url = "http://101.5.81.72:8085/balance";
+                String url = "http://taoli.tsinghuax.org:8085/balance";
 
                 JsonObjectRequest jsObjRequest = new JsonObjectRequest
                         (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
