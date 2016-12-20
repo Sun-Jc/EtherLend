@@ -1,7 +1,7 @@
 var accounts;
 var account;
 
-function setStatus(message) {
+/*function setStatus(message) {
   var status = document.getElementById("status");
   status.innerHTML = message;
 };
@@ -34,7 +34,7 @@ function sendCoin() {
     setStatus("Error sending coin; see log.");
   });
 };
-
+*/
 window.onload = function() {
   web3.eth.getAccounts(function(err, accs) {
     if (err != null) {
@@ -50,6 +50,6 @@ window.onload = function() {
     accounts = accs;
     account = accounts[0];
 
-    refreshBalance();
+    //refreshBalance();
   });
 }

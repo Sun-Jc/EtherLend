@@ -113,7 +113,7 @@ contract Timer is owned{
 
 // master
 contract EthLendService is membered{
-  function applyMeeting() returns (address newAddr);
+  //function applyMeeting();
 }
 
 // meeting

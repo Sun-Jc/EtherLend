@@ -1,23 +1,8 @@
 pragma solidity ^0.4.2;
 
 import "Traits.sol";
-import "Vote.sol";
-import "Auction.sol";
-
-contract SmallEthLendService is EthLendService{
-  function applyMeeting() returns (address newAddr){
-    var r = new SmallMeeting(msg.sender);
-    addMember(r);
-    return r;
-  }
-
-  function destroyOneMeeting(address _meeting, address _receiver) onlyOwner{
-    if(!isAMember(_meeting)){
-      throw;
-    }
-    Meeting(_meeting).end(_receiver);
-  }
-}
+import "SmallVote.sol";
+import "SmallAuction.sol";
 
 contract SmallMeeting is Meeting{
 
