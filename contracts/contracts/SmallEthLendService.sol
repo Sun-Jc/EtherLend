@@ -4,13 +4,13 @@ import "Traits.sol";
 import "SmallMeeting.sol";
 
 contract SmallEthLendService is EthLendService{
-  //event NewMeeting(address newContract, address manager);
-  event Debug();
+  event NewMeeting(address newContract, address manager);
+  //event Debug();
 
   function applyMeeting(){
-    //var r = new SmallMeeting(msg.sender);
-    //NewMeeting(0x00000000000, msg.sender);
-    Debug();
+    SmallMeeting r = new SmallMeeting(msg.sender);
+    NewMeeting(r,msg.sender);
+    //Debug();
   }
 
   function destroyOneMeeting(address _meeting, address _receiver) onlyOwner{

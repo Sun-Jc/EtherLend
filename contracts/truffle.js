@@ -10,7 +10,7 @@ module.exports = {
     "images/": "images/"
   },
   rpc: {
-    host: "taoli.tsinghuax.org",
+    host: "localhost",
     port: 8545
   }
 };

@@ -46,7 +46,7 @@ contract SmallMeeting is Meeting{
 
   event Debug(string error);
 
-  int64 stage = 0; // -3: error, -2:waiting for setting recruit time, -1: recuriting, 0: setting times,  1,2,3...N: period
+  int64 stage = -2; // -3: error, -2:waiting for setting recruit time, -1: recuriting, 0: setting times,  1,2,3...N: period
 
   bool finishedOrVoting = false; // 0 on auction, 1 finished or on voting
 
@@ -93,6 +93,7 @@ contract SmallMeeting is Meeting{
   function SmallMeeting(address _manager){
     yingdian(_manager);
     Established(startTime, _manager);
+    stage = -2;
   }
 
   function processVote() internal{
@@ -308,6 +309,7 @@ contract SmallMeeting is Meeting{
   }
 
   function join(string _intro){
+    trypush();
     if(stage != -1){
       throw;
     }
@@ -322,6 +324,7 @@ contract SmallMeeting is Meeting{
   }
 
   function accept(address _address) onlyManager{
+    trypush();
     if(stage != -1){
       throw;
     }
@@ -332,6 +335,25 @@ contract SmallMeeting is Meeting{
       membersArray.push(_address);
       NewMember(_address);
     }
+  }
+
+  function bytes32ToString (bytes32 data) constant returns (string) {
+    bytes memory bytesString = new bytes(32);
+    for (uint j=0; j<32; j++) {
+        byte char = byte(bytes32(uint(data) * 2 ** (8 * j)));
+        if (char != 0) {
+            bytesString[j] = char;
+          }
+    }
+    return string(bytesString);
+  }
+
+  function getState() returns (uint, bool){//, int64) { //, uint, uint, uint, uint , uint, uint, uint, uint, uint, uint, uint){
+    //Debug(bytes32ToString(bytes32(stage)));
+    //return (finishedOrVoting, 1000 );
+    return(123,false);
+
+    // auctionStage, 1000/*startTime*/, recuritingEndTime, firstAuctionTime, thisVoteEndTime, period, base, period_s, base_s, auctionVoteDuration, checked, doubleChecked);
   }
 
   function setRecuritAndVoteAuctionTime(uint _recuritEndtime, uint _decisionDuration) onlyManager{
@@ -371,6 +393,7 @@ contract SmallMeeting is Meeting{
           period_s = _period;
           base_s = _base;
           finishedOrVoting = true;
+          thisVoteEndTime = now + auctionVoteDuration;
           Suggested(_period, _base);
         }
     }
