@@ -102,7 +102,14 @@ contract SmallMeeting is Meeting{
       stage = 1;
       period = period_s;
       base = base_s;
+      firstAuctionTime = now;
+      auctionVoteDuration = auctionVoteDuration * 30;
       FormSet(period,base);
+
+      newAuction();
+      checked = 0;
+      doubleChecked = 0;
+
     }else{
       FailSuggest();
     }
@@ -193,6 +200,7 @@ contract SmallMeeting is Meeting{
   }
 
   function bid(uint _stage, bytes32 _blindBid) payable onlyMember{
+    Debug(bytes32ToString(_blindBid));
     if(stage>0 && !finishedOrVoting){
       trypush();
       if(stage>0 && !finishedOrVoting){
@@ -204,7 +212,7 @@ contract SmallMeeting is Meeting{
         }
         if(borrowed[msg.sender]){
           balance[msg.sender] = msg.value - base;
-          if(currentAuction.Bid(msg.sender,sha3(base,msg.sender),base)){
+          if(currentAuction.Bid(msg.sender,sha3(base),base)){
             Bidded(msg.sender,auctionStage);
           }else{
             Debug("fail to bid");
@@ -226,6 +234,7 @@ contract SmallMeeting is Meeting{
   }
 
   function showBid(uint _amount, uint _stage) onlyMember{
+    //Debug(bytes32ToString(sha3(_amount)));
     if(stage>0 && !finishedOrVoting){
       trypush();
       if(stage>0 && !finishedOrVoting){
@@ -324,6 +333,7 @@ contract SmallMeeting is Meeting{
   }
 
   function accept(address _address) onlyManager{
+    Debug("acce?");
     trypush();
     if(stage != -1){
       throw;
@@ -385,7 +395,7 @@ contract SmallMeeting is Meeting{
       throw;
     }else{
         trypush();
-        if(stage!=0 || finishedOrVoting){
+        if(stage==0 || !finishedOrVoting){
           currentVote = new SmallVote();
           period_s = _period;
           base_s = _base;
@@ -401,7 +411,7 @@ contract SmallMeeting is Meeting{
       throw;
     }else{
       trypush();
-      if(stage!=0 || !finishedOrVoting){
+      if(stage==0 || finishedOrVoting){
         if(currentVote.voteFor(msg.sender,_ayeOrNay)){
           Voted(msg.sender);
         }else{

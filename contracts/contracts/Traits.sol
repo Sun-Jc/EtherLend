@@ -54,7 +54,7 @@ contract membered is owned {
       _;
   }
 
-  function addMember(address _agent) onlyOwner{
+  function addMember(address _agent) onlyManager{
     isMember[_agent] = true;
   }
 

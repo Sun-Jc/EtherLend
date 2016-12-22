@@ -17,7 +17,6 @@ service.applyMeeting({from:account, gas:3000000}).then(function(){console.log('f
 
 
 
-var meeting = web3.eth.contract(SmallMeeting.abi).at(lastEvent.args.newContract);
 
 var events1 = meeting.allEvents({fromBlock: 0, toBlock: 'latest'});
 events1.watch(function(error, result){

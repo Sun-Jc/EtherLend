@@ -40,7 +40,7 @@ contract SmallAuction is Auction{
       throw;
     }
 
-    if(sha3(_bid,_address) == bidBlind[_address]){
+    if(sha3(_bid) == bidBlind[_address]){
       revealed[_address] = true;
       bid[_address] = _bid;
       if(_bid > firstBid){ // only first people get the bid
