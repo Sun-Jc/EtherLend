@@ -50,6 +50,7 @@ function new_meeting(){
       console.log(result);
       lastEvent = result;
     }else{
+      console.log("wrong");
       console.error(error);
     }
   });
@@ -69,6 +70,7 @@ function new_meeting(){
           console.log(result);
           lastEvent = result;
         }else{
+          console.log("wrongs");
           console.error(error);
         }
       });
@@ -83,12 +85,14 @@ function set_recurit_vote_auction_time(){
 function get_stage(){
   meeting.getState({from:account}).then(
     function(v){
-      //var a = ["stage", "finishedOrVoting", "auctionStage", "startTime", "recuritingEndTime", "firstAuctionTime", "thisVoteEndTime", "period", "base", "period_s", "base_s", "auctionVoteDuration", "checked", "doubleChecked"]
-      //for(var i = 0;i<a.length;i++){
-      //  console.log(a[i].toString()+": "+v[i].toString());
-      //}
-      console.log(v.toString());
-    }).catch(function(e){console.error(e);});
+      var a = ["stage", "finishedOrVoting", "auctionStage", "startTime", "recuritingEndTime", "firstAuctionTime", "thisVoteEndTime", "period", "base", "period_s", "base_s", "auctionVoteDuration", "checked", "doubleChecked"]
+      for(var i = 0;i<a.length;i++){
+        console.log(a[i].toString()+": "+v[i].toString());
+      }
+      //console.log(v.toString());
+    }).catch(function(e){
+      console.log("bad");
+      console.error(e);});
 }
 
 

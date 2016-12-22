@@ -348,12 +348,9 @@ contract SmallMeeting is Meeting{
     return string(bytesString);
   }
 
-  function getState() returns (uint, bool){//, int64) { //, uint, uint, uint, uint , uint, uint, uint, uint, uint, uint, uint){
-    //Debug(bytes32ToString(bytes32(stage)));
-    //return (finishedOrVoting, 1000 );
-    return(123,false);
-
-    // auctionStage, 1000/*startTime*/, recuritingEndTime, firstAuctionTime, thisVoteEndTime, period, base, period_s, base_s, auctionVoteDuration, checked, doubleChecked);
+  function getState() constant returns (int64, bool, uint, uint, uint, uint , uint, uint, uint, uint, uint, uint, uint,uint){
+    //Debug("suc");
+    return (stage, finishedOrVoting,  auctionStage, startTime , recuritingEndTime, firstAuctionTime, thisVoteEndTime, period, base, period_s, base_s, auctionVoteDuration, checked, doubleChecked);
   }
 
   function setRecuritAndVoteAuctionTime(uint _recuritEndtime, uint _decisionDuration) onlyManager{
