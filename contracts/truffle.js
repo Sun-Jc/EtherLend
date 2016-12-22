@@ -4,6 +4,9 @@ module.exports = {
     "app.js": [
       "javascripts/app.js"
     ],
+    "bundle.js" :[
+      "javascripts/bundle.js"
+    ],
     "app.css": [
       "stylesheets/app.css"
     ],

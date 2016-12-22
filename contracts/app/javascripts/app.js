@@ -79,7 +79,7 @@ function new_meeting(){
 
 function set_recurit_vote_auction_time(){
   startTime = lastEvent.args.startTime;
-  meeting.setRecuritAndVoteAuctionTime(startTime.toNumber() + 5, 10,{from:account, gas:3000000});
+  meeting.setRecuritAndVoteAuctionTime(startTime.toNumber() + 5, 5,{from:account, gas:3000000});
 }
 
 function join_all(){
@@ -95,7 +95,7 @@ function accept_all(){
 }
 
 function suggest1(){
-  meeting.suggestAttr(60,100,{from:accounts[1], gas:3000000});
+  meeting.suggestAttr(600,100,{from:accounts[1], gas:3000000});
 }
 
 function vote_all(){
@@ -107,15 +107,23 @@ function vote_all(){
 var round = 1;
 
 function bid_next(){
-  meeting.bid(round,web3.toBigNumber(web3.sha3('130')),{from:accounts[1], gas:3000000, value: 130});
-  meeting.bid(round,web3.toBigNumber(web3.sha3('110')),{from:accounts[3], gas:3000000, value: 110});
-  meeting.bid(round,web3.toBigNumber(web3.sha3('120')),{from:accounts[2], gas:3000000, value: 120});
+  meeting.bid(round,web3.sha3(toUint256(130),{encoding:'hex'}),{from:accounts[1], gas:3000000, value: 130});
+  meeting.bid(round,web3.sha3(toUint256(110),{encoding:'hex'}),{from:accounts[3], gas:3000000, value: 110});
+  meeting.bid(round,web3.sha3(toUint256(120),{encoding:'hex'}),{from:accounts[2], gas:3000000, value: 120});
+}
+
+function toUint256(x){
+  var y = x.toString(16);
+  var z = "";
+  var n = y.length;
+  for(var i =n ;i<64;i++){z += "0";}
+  return "0x"+z+y;
 }
 
 function reveal_next(){
-  meeting.showBid(130,round,{from:accounts[1], gas:9000000});
-  meeting.showBid(110,round,{from:accounts[3], gas:9000000});
-  meeting.showBid(120,round,{from:accounts[2], gas:9000000});
+  meeting.showBid(130,round,{from:accounts[1], gas:4000000}).then(function(){console.log("revealed");});
+  meeting.showBid(110,round,{from:accounts[3], gas:4000000}).then(function(){console.log("revealed");});
+  meeting.showBid(120,round,{from:accounts[2], gas:4000000}).then(function(){console.log("revealed");});
 }
 
 function push_try(){

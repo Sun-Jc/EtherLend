@@ -46,6 +46,8 @@ contract SmallMeeting is Meeting{
 
   event Debug(string error);
 
+  event Debug2(bytes32 error);
+
   int64 stage = -2; // -3: error, -2:waiting for setting recruit time, -1: recuriting, 0: setting times,  1,2,3...N: period
 
   bool finishedOrVoting = false; // 0 on auction, 1 finished or on voting
@@ -199,8 +201,16 @@ contract SmallMeeting is Meeting{
     BeginAuction(auctionStage);
   }
 
+  function stringToBytes32(string memory source) constant internal returns (bytes32 result) {
+      assembly {
+          result := mload(add(source, 32))
+      }
+  }
+
+
   function bid(uint _stage, bytes32 _blindBid) payable onlyMember{
-    Debug(bytes32ToString(_blindBid));
+    bytes32 bb = _blindBid;//stringToBytes32(_blindBid);
+    Debug2(_blindBid);
     if(stage>0 && !finishedOrVoting){
       trypush();
       if(stage>0 && !finishedOrVoting){
@@ -221,7 +231,7 @@ contract SmallMeeting is Meeting{
           if(msg.value == base){
             throw;
           }
-          if(currentAuction.Bid(msg.sender,_blindBid,msg.value)){
+          if(currentAuction.Bid(msg.sender,bb,msg.value)){
             Bidded(msg.sender,auctionStage);
           }else{
             Debug("fail to bid");
@@ -233,8 +243,10 @@ contract SmallMeeting is Meeting{
     }
   }
 
+
   function showBid(uint _amount, uint _stage) onlyMember{
-    //Debug(bytes32ToString(sha3(_amount)));
+    Debug2(sha3(_amount));
+
     if(stage>0 && !finishedOrVoting){
       trypush();
       if(stage>0 && !finishedOrVoting){
@@ -244,10 +256,14 @@ contract SmallMeeting is Meeting{
         if(borrowed[msg.sender]){
           if(currentAuction.ShowBid(msg.sender, base)){
             Revealed(msg.sender,auctionStage);
+          }else{
+            //throw;
           }
         }else{
           if(currentAuction.ShowBid(msg.sender, _amount)){
             Revealed(msg.sender,auctionStage);
+          }else{
+            //throw;
           }
         }
       }
@@ -347,16 +363,7 @@ contract SmallMeeting is Meeting{
     }
   }
 
-  function bytes32ToString (bytes32 data) constant returns (string) {
-    bytes memory bytesString = new bytes(32);
-    for (uint j=0; j<32; j++) {
-        byte char = byte(bytes32(uint(data) * 2 ** (8 * j)));
-        if (char != 0) {
-            bytesString[j] = char;
-          }
-    }
-    return string(bytesString);
-  }
+
 
   function getState() constant returns (int64, bool, uint, uint, uint, uint , uint, uint, uint, uint, uint, uint, uint,uint){
     //Debug("suc");
@@ -421,4 +428,37 @@ contract SmallMeeting is Meeting{
     }
   }
 
+
+
+  /**UTILS*/
+    function uintToBytes(uint v) internal constant returns (bytes32 ret) {
+      if (v == 0) {
+        ret = '0';
+      }
+      else {
+        while (v > 0) {
+            ret = bytes32(uint(ret) / (2 ** 8));
+            ret |= bytes32(((v % 10) + 48) * 2 ** (8 * 31));
+            v /= 10;
+        }
+      }
+      return ret;
+    }
+
+    function bytes32ToString(bytes32 data) internal constant returns (string) {
+      bytes memory bytesString = new bytes(32);
+      for (uint j=0; j<32; j++) {
+        byte char = byte(bytes32(uint(data) * 2 ** (8 * j)));
+        if (char != 0) {
+            bytesString[j] = char;
+        }
+      }
+      return string(bytesString);
+    }
+
+    function uintToString(uint _x) internal constant returns(string){
+      bytes32 data = uintToBytes(_x);
+      string memory x = bytes32ToString(data);
+      return x;
+    }
 }
