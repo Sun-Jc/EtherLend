@@ -1,5 +1,9 @@
 # EtherLend
 
+# Interaction through web
+
+contract/app/index.html
+
 #Smart Contracts
 
 There are 7 kind of contracts (,some of which is abstract). The APIs between contract and users are roughly as follows:
