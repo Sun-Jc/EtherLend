@@ -12,10 +12,10 @@ contract SmallAuction is Auction{
   mapping(address => uint) balance;
   mapping(address => bool) checked;
 
-  address firstBidder;
+  address firstBidder = 0x0000000000000000000000000000000000000000;
   uint firstBid = 0;
 
-  address secondBidder;
+  address secondBidder = 0x0000000000000000000000000000000000000000;
   uint secondBid = 0;
 
 
@@ -61,10 +61,10 @@ contract SmallAuction is Auction{
   }
 
   function BidResult() returns (bool suc, address addr,uint ammount){
-    if(secondBid == 0){
+    if(secondBidder == 0x0000000000000000000000000000000000000000 || firstBidder == 0x0000000000000000000000000000000000000000 ){
       return (false,msg.sender,0);
     }else{
-      return (true,secondBidder,secondBid);
+      return (true,firstBidder,secondBid);
     }
   }
 
