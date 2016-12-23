@@ -125,38 +125,63 @@ contract SmallMeeting is Meeting{
       }
       checked += 1;
     }else if(checked == N){
-      var (suc,addr,amount) =  currentAuction.BidResult();
-      if(!suc){
-        wrong();
-      }
-      else{
-        borrowed[addr] = true;
-        interest[auctionStage] = amount - base;
-        var b = balance[addr] + base + (base - (amount - base)) * (N - auctionStage) ;
-        if(addr.send(b)){
-          GiveBid(addr,b);
-          balance[addr] = 0;
+      if(auctionStage == N){
 
-          doubleChecked = 0;
-          checked += 1;
-          AuctionSuccess(addr,amount,auctionStage);
-        }else{
-          balance[addr] = b;
-          Debug("failed sending winner value");
+        doubleChecked = 0;
+        checked += 1;
+
+      }else{
+        var (suc,addr,amount) =  currentAuction.BidResult();
+        if(!suc){
+          wrong();
+        }
+        else{
+          borrowed[addr] = true;
+          interest[auctionStage] = amount - base;
+          var b = balance[addr] + base + (base - (amount - base)) * (N - auctionStage) ;
+          if(addr.send(b)){
+            GiveBid(addr,b);
+            balance[addr] = 0;
+
+            doubleChecked = 0;
+            checked += 1;
+            AuctionSuccess(addr,amount,auctionStage);
+          }else{
+            balance[addr] = b;
+            Debug("failed sending winner value");
+          }
         }
       }
     }else if(doubleChecked < N){
-      var agent = membersArray[doubleChecked];
-      if(!borrowed[agent]){
-        balance[agent] += interest[auctionStage];
-      }
-      if(agent.send(balance[agent])){
-        RefundBid(agent,balance[agent]);
-        balance[agent] = 0;
-        doubleChecked += 1;
+      if(auctionStage == N){
+        var agent = membersArray[doubleChecked];
+        if(!borrowed[agent]){
+          balance[agent] += base * N;
+        }
+        if(agent.send(balance[agent])){
+          RefundBid(agent,balance[agent]);
+          balance[agent] = 0;
+          doubleChecked += 1;
+        }else{
+          Debug("failed refunding");
+        }
+        
       }else{
-        Debug("failed refunding");
+
+        var agent = membersArray[doubleChecked];
+        if(!borrowed[agent]){
+          balance[agent] += interest[auctionStage];
+        }
+        if(agent.send(balance[agent])){
+          RefundBid(agent,balance[agent]);
+          balance[agent] = 0;
+          doubleChecked += 1;
+        }else{
+          Debug("failed refunding");
+        }
+
       }
+
     }
   }
 
