@@ -75,7 +75,7 @@ contract SmallAuction is Auction{
     if(!revealed[_agent]){
       return (false,true,false,0,false);
     }
-    if(bid[_agent] >= balance[_agent]){
+    if(bid[_agent] > balance[_agent]){
       return (false,false,true,bid[_agent],false);
     }
     if(!checked[_agent]){

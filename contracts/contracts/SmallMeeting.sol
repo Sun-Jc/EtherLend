@@ -105,7 +105,7 @@ contract SmallMeeting is Meeting{
       period = period_s;
       base = base_s;
       firstAuctionTime = now;
-      auctionVoteDuration = auctionVoteDuration * 30;
+      auctionVoteDuration = auctionVoteDuration;
       FormSet(period,base);
 
       newAuction();
