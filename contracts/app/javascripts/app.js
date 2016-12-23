@@ -185,7 +185,7 @@ function accept_all(){
 }
 
 function suggest1(){
-  js_suggest(meeting, accounts[1], 600, 10);
+  js_suggest(meeting, accounts[1], 60, 10);
 }
 
 function vote_all(){

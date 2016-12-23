@@ -138,7 +138,7 @@ contract SmallMeeting is Meeting{
         else{
           borrowed[addr] = true;
           interest[auctionStage] = amount - base;
-          var b = balance[addr] + base + (base - (amount - base)) * (N - auctionStage) ;
+          var b = balance[addr] + base + base * (auctionStage-1) + (base - (amount - base)) * (N - auctionStage) ;
           if(addr.send(b)){
             GiveBid(addr,b);
             balance[addr] = 0;
@@ -374,7 +374,7 @@ contract SmallMeeting is Meeting{
   }
 
   function accept(address _address) onlyManager{
-    Debug("acce?");
+  //  Debug("acce?");
     trypush();
     if(stage != -1){
       throw;
