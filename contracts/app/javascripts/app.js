@@ -123,6 +123,30 @@ function toUint256(x){
   return "0x"+z+y;
 }
 
+function js_getService(){
+  return SmallEthLendService.deployed();
+}
+
+function js_getAccount(_i){
+  var ac;
+  web3.eth.getAccounts(function(err, accs) {
+    if (err != null) {
+      alert("There was an error fetching your accounts.");
+      return;
+    }
+
+    if (accs.length == 0) {
+      alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
+      return;
+    }
+
+    ac = accs[_i];
+
+    //refreshBalance();
+  });
+  return ac;
+}
+
 ////////
 
 function new_meeting(){
