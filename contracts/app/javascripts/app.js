@@ -33,83 +33,86 @@ function sendCoin() {
 };
 */
 
-var lastEvent;
 var meetingAddr;
 var meeting;
+
 var startTime;
+
 var accounts;
 var account;
 
-function new_meeting(){
-  var service = SmallEthLendService.deployed();
+var round = 1;
 
-  var events = service.allEvents({fromBlock: 0, toBlock: 'latest'});
+
+/**
+*/
+
+function js_applyMeeting(_service, _managerSelf){
+  return _service.applyMeeting({from:_managerSelf, gas:3000000})
+}
+
+// when: seconds
+function js_setBasicTime(_meeting, _managerSelf, _whenEndRecruiting, _howLongAuctionVote){
+  _meeting.setRecuritAndVoteAuctionTime(_whenEndRecruiting , _howLongAuctionVote , {from:_managerSelf, gas:3000000});
+}
+
+function js_join(_meeting, _memberSelf, _selfIntro){
+  return _meeting.join(_selfIntro,{from:_memberSelf, gas:3000000});
+}
+
+function js_accept(_meeting, _member, _managerSelf){
+  return _meeting.accept(_member,{from:_managerSelf, gas:3000000});
+}
+
+// how long: seconds
+function js_suggest(_meeting, _account, _howLong, _howMuch){
+  return _meeting.suggestAttr(_howLong, web3.toBigNumber(web3.toWei(_howMuch)),{from:_account, gas:3000000});
+}
+
+function js_voteFor(_meeting, _account, _ayeOrNay){
+  return _meeting.vote(_ayeOrNay,{from:_account, gas:3000000});
+}
+
+function js_bidEther(_meeting, _account, _round, _bidHowMuch, _payHowMuch){
+  return _meeting.bid(_round,web3.sha3(toUint256(web3.toBigNumber(web3.toWei(_bidHowMuch))),{encoding:'hex'} ),{from:_account, gas:3000000, value: web3.toBigNumber(web3.toWei(_payHowMuch)) } );
+}
+
+function js_showBidEther(_meeting,_account, _round, _revealHowMuch){
+  return _meeting.showBid(web3.toBigNumber(web3.toWei(_revealHowMuch)),_round,{from:_account, gas:4000000});
+}
+
+function js_push(_meeting,_account){
+  return _meeting.trypush({from:_account, gas:3000000})
+}
+
+
+var js_events = new Array();
+
+function js_allEvents(_contract, _whichJsEvents, _logOut){
+  js_events[_whichJsEvents] = new Array();
+
+  var events = _contract.allEvents({fromBlock: 0, toBlock: 'latest'});
+
   events.watch(function(error, result){
-    console.log('event')
     if (!error){
-      console.log(result);
-      lastEvent = result;
+      if(_logOut){
+        console.log('event at '+_contract)
+        console.log(result);
+      }
+      js_events[_whichJsEvents].push(result);
     }else{
-      console.log("wrong");
+      console.log("wrong event at "+_contract);
       console.error(error);
     }
   });
-
-  service.applyMeeting({from:account, gas:3000000}).then(
-    function(){
-      console.log('new meeting got');
-
-      meetingAddr = lastEvent.args.newContract;
-      console.log(meetingAddr);
-
-      meeting = SmallMeeting.at(meetingAddr);
-      var events1 = meeting.allEvents({fromBlock: 0, toBlock: 'latest'});
-      events1.watch(function(error, result){
-        console.log('events')
-        if (!error){
-          console.log(result);
-          lastEvent = result;
-        }else{
-          console.log("wrongs");
-          console.error(error);
-        }
-      });
-  }).catch(function(e){console.error(e)});
 }
 
-function set_recurit_vote_auction_time(){
-  startTime = lastEvent.args.startTime;
-  meeting.setRecuritAndVoteAuctionTime(startTime.toNumber() + 5, 5,{from:account, gas:3000000});
+function js_lastEventsOf(_whichJsEvent){
+  return js_events[_whichJsEvent][js_events[_whichJsEvent].length-1]
 }
 
-function join_all(){
-  meeting.join("I AM FIRST",{from:accounts[1], gas:3000000});
-  meeting.join("I AM SECOND",{from:accounts[2], gas:3000000});
-  meeting.join("I AM THIRD",{from:accounts[3], gas:3000000});
-}
-
-function accept_all(){
-  meeting.accept(accounts[1],{from:account, gas:3000000});
-  meeting.accept(accounts[2],{from:account, gas:3000000});
-  meeting.accept(accounts[3],{from:account, gas:3000000});
-}
-
-function suggest1(){
-  meeting.suggestAttr(600,100,{from:accounts[1], gas:3000000});
-}
-
-function vote_all(){
-  meeting.vote(true,{from:accounts[1], gas:3000000});
-  meeting.vote(true,{from:accounts[2], gas:3000000});
-  meeting.vote(true,{from:accounts[3], gas:3000000});
-}
-
-var round = 1;
-
-function bid_next(){
-  meeting.bid(round,web3.sha3(toUint256(130),{encoding:'hex'}),{from:accounts[1], gas:3000000, value: 130});
-  meeting.bid(round,web3.sha3(toUint256(110),{encoding:'hex'}),{from:accounts[3], gas:3000000, value: 110});
-  meeting.bid(round,web3.sha3(toUint256(120),{encoding:'hex'}),{from:accounts[2], gas:3000000, value: 120});
+function js_whoseEther(_who){
+  return web3.eth.getBalance(_who).toString()/(web3.toBigNumber(web3.toWei(1)));
 }
 
 function toUint256(x){
@@ -120,14 +123,68 @@ function toUint256(x){
   return "0x"+z+y;
 }
 
+////////
+
+function new_meeting(){
+  var service = SmallEthLendService.deployed();
+
+  js_allEvents(service,0,true);
+
+  js_applyMeeting(service,account).then(
+    function(){
+      console.log('new meeting got');
+
+      meetingAddr = js_lastEventsOf(0).args.newContract;
+      console.log(meetingAddr);
+
+      meeting = SmallMeeting.at(meetingAddr);
+
+      js_allEvents(meeting,1,true);
+  }).catch(function(e){console.error(e)});
+}
+
+function set_recurit_vote_auction_time(){
+  startTime = js_lastEventsOf(1).args.startTime;
+  js_setBasicTime(meeting, account, startTime.toNumber() + 5 , 5);
+}
+
+function join_all(){
+  js_join(meeting, accounts[1], "I AM FIRST");
+  js_join(meeting, accounts[2], "I AM SECOND");
+  js_join(meeting, accounts[3], "I AM THIRD");
+}
+
+function accept_all(){
+  js_accept(meeting, accounts[1], account);
+  js_accept(meeting, accounts[2], account);
+  js_accept(meeting, accounts[3], account);
+}
+
+function suggest1(){
+  js_suggest(meeting, accounts[1], 600, 10);
+}
+
+function vote_all(){
+  js_voteFor(meeting, accounts[1], true);
+  js_voteFor(meeting, accounts[2], true);
+  js_voteFor(meeting, accounts[3], true);
+}
+
+function bid_next(){
+  js_bidEther(meeting,accounts[1],round,13,13);
+  js_bidEther(meeting,accounts[3],round,11,11);
+  js_bidEther(meeting,accounts[2],round,12,12);
+}
+
 function reveal_next(){
-  meeting.showBid(130,round,{from:accounts[1], gas:4000000}).then(function(){console.log("revealed");});
-  meeting.showBid(110,round,{from:accounts[3], gas:4000000}).then(function(){console.log("revealed");});
-  meeting.showBid(120,round,{from:accounts[2], gas:4000000}).then(function(){console.log("revealed");});
+  js_showBidEther(meeting,accounts[1], round, 13).then(function(){console.log("revealed");});
+  js_showBidEther(meeting,accounts[3], round, 11).then(function(){console.log("revealed");});
+  js_showBidEther(meeting,accounts[2], round, 12).then(function(){console.log("revealed");});
+  round ++;
 }
 
 function push_try(){
-  meeting.trypush({from:account, gas:3000000})
+  js_push(meeting,account);
 }
 
 function get_stage(){
