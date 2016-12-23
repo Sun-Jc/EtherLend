@@ -38,9 +38,6 @@ var meeting;
 
 var startTime;
 
-var accounts;
-var account;
-
 var round = 1;
 
 
@@ -107,6 +104,15 @@ function js_allEvents(_contract, _whichJsEvents, _logOut){
   });
 }
 
+/*function js_sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}*/
+
 function js_lastEventsOf(_whichJsEvent){
   return js_events[_whichJsEvent][js_events[_whichJsEvent].length-1]
 }
@@ -127,8 +133,12 @@ function js_getService(){
   return SmallEthLendService.deployed();
 }
 
+var accounts;
+var account;
 function js_getAccount(_i){
-  var ac;
+  return accounts[_i];
+}
+function js_getAccounts(){
   web3.eth.getAccounts(function(err, accs) {
     if (err != null) {
       alert("There was an error fetching your accounts.");
@@ -140,11 +150,9 @@ function js_getAccount(_i){
       return;
     }
 
-    ac = accs[_i];
-
-    //refreshBalance();
+    accounts = accs;
+    account = accounts[0];
   });
-  return ac;
 }
 
 ////////
@@ -232,20 +240,5 @@ function push_get(){
 
 
 window.onload = function() {
-  web3.eth.getAccounts(function(err, accs) {
-    if (err != null) {
-      alert("There was an error fetching your accounts.");
-      return;
-    }
-
-    if (accs.length == 0) {
-      alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-      return;
-    }
-
-    accounts = accs;
-    account = accounts[0];
-
-    //refreshBalance();
-  });
+  js_getAccounts();
 }
