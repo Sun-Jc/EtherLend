@@ -154,18 +154,18 @@ contract SmallMeeting is Meeting{
       }
     }else if(doubleChecked < N){
       if(auctionStage == N){
-        var agent = membersArray[doubleChecked];
-        if(!borrowed[agent]){
-          balance[agent] += base * N;
+        var agent1 = membersArray[doubleChecked];
+        if(!borrowed[agent1]){
+          balance[agent1] += base * N;
         }
-        if(agent.send(balance[agent])){
-          RefundBid(agent,balance[agent]);
-          balance[agent] = 0;
+        if(agent1.send(balance[agent1])){
+          RefundBid(agent1,balance[agent1]);
+          balance[agent1] = 0;
           doubleChecked += 1;
         }else{
           Debug("failed refunding");
         }
-        
+
       }else{
 
         var agent = membersArray[doubleChecked];
