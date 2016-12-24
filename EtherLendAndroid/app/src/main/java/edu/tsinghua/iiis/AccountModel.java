@@ -153,7 +153,7 @@ public class AccountModel{
         return 0;
     }
 
-    private void _join(int whichM, String intro){
+    private void _join(String intro){
         //TODO
     }
 
@@ -212,6 +212,10 @@ public class AccountModel{
         //TODO
     }
 
+    private void _vote(){
+        //TODO
+    }
+
     private void _accept(String who){
         //TODO
 
@@ -238,7 +242,6 @@ public class AccountModel{
         _getService();
         obj.updateService(this.serviceAddr);
     }
-
 
     public void loadAccounts(Updatable obj){
         if(serviceAddr.equals("") ){
@@ -272,8 +275,8 @@ public class AccountModel{
         loadMeetings(obj);
     }
 
-    public void joinMeeting(int whichM, String intro , Updatable obj){
-        _join(whichM,intro);
+    public void joinMeeting(String intro , Updatable obj){
+        _join(intro);
         obj.message("joined");
     }
 
@@ -335,4 +338,13 @@ public class AccountModel{
         obj.membersGot(_getUsers());
     }
 
+    public String who(){
+        //return accounts[whichAccount];
+        return "0xe4a5ab5a8e89bc9f34de5bd21bc51a11d5071dd2";
+    }
+
+    public void vote(Updatable obj){
+        _vote();
+        obj.message("voted");
+    }
 }

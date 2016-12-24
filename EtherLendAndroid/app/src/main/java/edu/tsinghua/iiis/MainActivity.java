@@ -5,13 +5,31 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.Toast;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.rey.material.app.Dialog;
+
+
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import static edu.tsinghua.iiis.SimpleScannerActivity.TAG;
 
 public class MainActivity extends Activity implements Updatable, SimpleScannerActivity.qrNeeded {
+
+    private static final int WIDTH = 500;
 
     private ChooseAccount accountsChoosing;
     ChoosingMeeting meetingChoosing;
@@ -30,6 +48,7 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
 
        // Log.d(TAG,AccountModel.readFile("x",getBaseContext()));
         getAccounts1();
+        displayQR();
     }
 
     void getAccounts1(){
@@ -112,26 +131,90 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
         meetingManage.setAdapter(adpter,getBaseContext());
     }
 
-    public void accountChosen(int which) {
-        model.chooseAccount(which);
-        getMeetings2();
+    public void accountChosen(final int which) {
+        (new Runnable() {
+            @Override
+            public void run() {
+                model.chooseAccount(which);
+                getMeetings2();
+            }
+        }).run();
     }
 
-    public void meetingChosen(int which) {
-        model.chooseMeeting(which);
+    public void check(){
         model.checkMeeting(this);
     }
 
+    public void meetingChosen(final int which) {
+        (new Runnable() {
+            @Override
+            public void run() {
+                model.chooseMeeting(which);
+                check();
+            }
+        }).run();
+    }
+
+    public void displayQR(){
+        Dialog settingsDialog = new Dialog(this);
+        //settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        View v = getLayoutInflater().inflate(R.layout.image_layout, null);
+        final ImageView img = (ImageView) v.findViewById(R.id.img);
+        settingsDialog.setContentView(v);
+        settingsDialog.show();
+        try {
+            Bitmap b = encodeAsBitmap(model.who());
+            img.setImageBitmap(b);
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    Bitmap encodeAsBitmap(String str) throws WriterException {
+        BitMatrix result;
+        try {
+            result = new MultiFormatWriter().encode(str,
+                    BarcodeFormat.QR_CODE, WIDTH, WIDTH, null);
+        } catch (IllegalArgumentException iae) {
+            // Unsupported format
+            return null;
+        }
+        int w = result.getWidth();
+        int h = result.getHeight();
+        int[] pixels = new int[w * h];
+        for (int y = 0; y < h; y++) {
+            int offset = y * w;
+            for (int x = 0; x < w; x++) {
+                pixels[offset + x] = result.get(x, y) ? getResources().getColor(R.color.colorAccent):getResources().getColor(R.color.cardview_light_background);
+            }
+        }
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        bitmap.setPixels(pixels, 0, 500, 0, 0, w, h);
+        return bitmap;
+    } /// end of this method
+
+
 
     public void startScanner() {
+        SimpleScannerActivity.setCallback(this);
         Intent startScanner = new Intent(this, SimpleScannerActivity.class);
         startActivity(startScanner);
     }
 
+    public void accept(String resultText){
+        model.accept(resultText,this);
+    }
+
     @Override
-    public void qrGot(String resultText) {
+    public void qrGot(final String resultText) {
         if(currentPage == meetingManage){
-            model.accept(resultText,this);
+            (new Runnable() {
+                @Override
+                public void run() {
+                    accept(resultText);
+                }
+            }).run();
         }
     }
 }

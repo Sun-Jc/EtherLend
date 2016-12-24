@@ -90,9 +90,15 @@ public class ManageMeeting extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long auctime = Long.parseLong(howLongAuc.getText().toString());
-                long recrutime = Long.parseLong(howLongRec.getText().toString());
-                callback.model.set(recrutime,auctime,callback);
+                final long auctime = Long.parseLong(howLongAuc.getText().toString());
+                final long recrutime = Long.parseLong(howLongRec.getText().toString());
+                (new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.model.set(recrutime,auctime,callback);
+                    }
+                }).run();
+
             }
         });
 
@@ -100,8 +106,13 @@ public class ManageMeeting extends Fragment {
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.model.getMembers(callback);
-                callback.model.checkMeeting(callback);
+                (new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.model.getMembers(callback);
+                        callback.check();
+                    }
+                }).run();
             }
         });
 
@@ -122,13 +133,13 @@ public class ManageMeeting extends Fragment {
         );
 
         (new Runnable() {
-
             @Override
             public void run() {
                 callback.model.getMembers(callback);
                 callback.model.checkMeeting(callback);
             }
         }).run();
+
 
 
         return mRootView;

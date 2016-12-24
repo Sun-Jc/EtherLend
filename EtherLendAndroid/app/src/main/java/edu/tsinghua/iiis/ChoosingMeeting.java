@@ -68,7 +68,12 @@ public class ChoosingMeeting extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        callback.model.applyMeeting(callback);
+                        (new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.model.applyMeeting(callback);
+                            }
+                        }).run();
                     }
                 }
 

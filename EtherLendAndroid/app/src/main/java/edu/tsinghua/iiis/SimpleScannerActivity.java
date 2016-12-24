@@ -17,8 +17,8 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
         void qrGot(String resultText);
     }
 
-    private qrNeeded callback;
-    public void setCallback(qrNeeded c){
+    static private qrNeeded callback;
+    static public void setCallback(qrNeeded c){
         callback =c;
     }
 
@@ -51,7 +51,8 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
 
         callback.qrGot(rawResult.getText());
         // If you would like to resume scanning, call this method below:
-        mScannerView.resumeCameraPreview(this);
+       // mScannerView.resumeCameraPreview(this);
+        finish();
     }
 
 }

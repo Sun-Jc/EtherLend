@@ -1,0 +1,54 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="edu.tsinghua.iiis.PlayMeeting">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading Service"
+            android:id="@+id/ser" android:layout_gravity="center_horizontal|top"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Loading Address"
+              android:id="@+id/acc" android:layout_gravity="center_horizontal|top"
+              android:layout_marginTop="30dp"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Loading Balance"
+              android:id="@+id/balance" android:layout_gravity="center_horizontal|top"
+              android:layout_marginTop="60dp"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Loading Meeting"
+              android:id="@+id/m" android:layout_gravity="center_horizontal|top" android:layout_marginTop="90dp"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/period" android:layout_gravity="left|center_vertical" android:text="How Long"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/base" android:layout_gravity="left|center_vertical" android:layout_marginTop="30dp"
+            android:text="How Much"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Suggest"
+            android:id="@+id/suggest" android:layout_gravity="center"/>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="VOte"
+            android:id="@+id/vote" android:layout_gravity="right|center_vertical"/>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bid"
+            android:id="@+id/bid" android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="60dp"/>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Reveal"
+            android:id="@+id/reveal" android:layout_gravity="right|bottom" android:layout_marginBottom="60dp"/>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="check"
+            android:id="@+id/chk" android:layout_gravity="left|bottom" android:layout_marginBottom="60dp"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bid Before"
+              android:id="@+id/nexttime" android:layout_gravity="center_horizontal|top" android:layout_marginTop="120dp"/>
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Join"
+            android:id="@+id/join" android:layout_gravity="right|center_vertical"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/intro"
+              android:layout_gravity="left|center_vertical" android:text="Self Intro" android:layout_marginBottom="30dp"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Message"
+              android:id="@+id/msg" android:layout_gravity="center"
+              android:layout_marginTop="0dp" android:layout_marginBottom="40dp"/>
+</FrameLayout>
