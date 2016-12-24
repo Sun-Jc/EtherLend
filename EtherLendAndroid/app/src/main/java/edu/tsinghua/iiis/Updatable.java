@@ -4,17 +4,17 @@ package edu.tsinghua.iiis;
  * Created by SunJc on 24/12/16.
  */
 public interface Updatable {
-    public void updateService(String service);
+    void updateService(String service);
 
-    public void updateAccounts(
+    void updateAccounts(
             String service,String[] accounts);
 
-    public void updateMeetings(
+    void updateMeetings(
             String service,
             String address, long balance,
             String[] meetings, boolean[] isManager);
 
-    public void updateSingle(
+    void updateSingle(
             String service,
             String address, long balance,
             String meeting,  boolean isManager,
@@ -28,7 +28,9 @@ public interface Updatable {
                     long[] interests,
                     long toEarns,
                     long nextddl,
-                    int whatTodo,boolean changed);
+                    int whatTodo,boolean changed,int stage);
 
-    public void message(String msg);
+    void message(String msg);
+
+    void membersGot(String[] members);
 }

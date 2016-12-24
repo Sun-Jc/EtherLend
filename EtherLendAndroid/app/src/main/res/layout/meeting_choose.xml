@@ -27,7 +27,11 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Loading Balance"
             android:id="@+id/bal" android:layout_gravity="center_horizontal|top" android:layout_marginTop="100dp"/>
-
+    <com.rey.material.widget.FloatingActionButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|bottom"
+            android:id="@+id/apply"/>
 
 </FrameLayout>
 

@@ -11,16 +11,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.rey.material.widget.FloatingActionButton;
 
 
 public class ChoosingMeeting extends Fragment {
 
     private View mRootView;
 
-    public TextView serviceAddr;
-    public TextView accountAddr;
-    public TextView balance;
-    public RecyclerView mRecyclerView;
+    private TextView serviceAddr;
+    private TextView accountAddr;
+    private TextView balance;
+    public void setServiceAccountBalance(String service,String address,long balance){
+        serviceAddr.setText("service: "+service);
+        accountAddr.setText("account: "+address);
+        this.balance.setText("balance: "+balance);
+    }
+    private RecyclerView mRecyclerView;
+    MainActivity callback;
+    public void setCallback(MainActivity activity){
+        callback = activity;
+    }
+    public void setAdapter(MyAdapter adpter,Context context){
+        mRecyclerView.setAdapter(adpter);
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        callback.meetingChosen(position);
+                    }
+                })
+        );
+    }
     private RecyclerView.LayoutManager mLayoutManager;
 
 
@@ -42,6 +62,27 @@ public class ChoosingMeeting extends Fragment {
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this.getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        FloatingActionButton appBtn = (FloatingActionButton)mRootView.findViewById(R.id.apply);
+        appBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        callback.model.applyMeeting(callback);
+                    }
+                }
+
+        );
+
+        (new Runnable() {
+
+            @Override
+            public void run() {
+                callback.model.loadMeetings(callback);
+            }
+        }).run();
+
+
         return mRootView;
     }
 }

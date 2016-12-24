@@ -3,6 +3,8 @@ package edu.tsinghua.iiis;
 import android.content.Context;
 import android.location.Address;
 import android.support.v4.content.res.TypedArrayUtils;
+import android.util.Log;
+import com.google.android.gms.nearby.messages.internal.Update;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +21,7 @@ public class AccountModel{
 
     private static final String accountFile = "accounts";
     static final String serviceFile = "service";
+    private static final String TAG = "SunjcDEbug";
 
     private String serviceAddr ="";
 
@@ -156,6 +159,8 @@ public class AccountModel{
 
     private void _getMeetings(){
         //TODO
+        if(this.meetings!=null && this.meetings.length>0)
+            return;
         this.meetings= new String[]{
                 "0x883eb0952dc97dd1b62c98fa77363b8af597556a",
                 "0x18a7e513a0d114062489dcaa260c3256e8d424ed",
@@ -164,6 +169,12 @@ public class AccountModel{
     }
 
     private void _applyMeeting(){
+        this.meetings = new String[]{
+                "0x883eb0952dc97dd1b62c98fa77363b8af597556a",
+                "0x18a7e513a0d114062489dcaa260c3256e8d424ed",
+                "0x7b39df9b93f3fad5dcea72bbde34f99c5445c807",
+                "0x7b39df9b93f3fad5dcea72bbde34f99c5445cNEW"
+        };
         //TODO
     }
 
@@ -179,12 +190,24 @@ public class AccountModel{
         //TODO
     }
 
+    private void _accept(String who){
+        //TODO
+    };
+
     private void _bid(long howMuch){
         //TODO
     }
 
     private void _reveal(long howMuch){
         //TODO
+    }
+
+    private String[] _getUsers(){
+        return  new String[]{
+                "0x1db0a93276a3819cec2b37a0e010e517465d7d68",
+                "0x54399b39acf443788351abb3a98606219e697bf6",
+                "0xe4a5ab5a8e89bc9f34de5bd21bc51a11d5071dd2",
+                "0xcb6d552cb12b67d77037b8ae5c5a967f7d967713"};
     }
 
 
@@ -205,6 +228,7 @@ public class AccountModel{
 
     public void chooseAccount(int i){
         this.whichAccount = i;
+        Log.d(TAG,"choose "+i);
     }
 
 
@@ -228,7 +252,15 @@ public class AccountModel{
     public void joinMeeting(int whichM, String intro , Updatable obj){
         _join(whichM,intro);
         obj.message("joined");
-        loadMeetings(obj);
+    }
+
+    public void accept(String agent, Updatable obj){
+        _accept(agent);
+        obj.message("accepted");
+    }
+
+    public void chooseMeeting(int which){
+        this.whichMeeting = which;
     }
 
     public void checkMeeting(Updatable obj){
@@ -249,7 +281,7 @@ public class AccountModel{
             interests,
             toEarns,
             nextddl,
-            whatTodo,changed);
+            whatTodo,changed,stage);
     }
 
     public void set(long whenEndR, long howLongAuc, Updatable obj){
@@ -258,22 +290,26 @@ public class AccountModel{
         checkMeeting(obj);
     }
 
-    private void suggest(long period, long base, Updatable obj){
+    public void suggest(long period, long base, Updatable obj){
         _suggest(period,base);
         obj.message("suggest");
         checkMeeting(obj);
     }
 
-    private void bid(long howMuch, Updatable obj){
+    public void bid(long howMuch, Updatable obj){
         _bid(howMuch);
         obj.message("bid");
         checkMeeting(obj);
     }
 
-    private void reveal(long howMuch, Updatable obj){
+    public void reveal(long howMuch, Updatable obj){
         _reveal(howMuch);
         obj.message("reveal");
         checkMeeting(obj);
+    }
+
+    public void getMembers(Updatable obj){
+        obj.membersGot(_getUsers());
     }
 
 }

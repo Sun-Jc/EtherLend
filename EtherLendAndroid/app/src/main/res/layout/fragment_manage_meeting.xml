@@ -1,0 +1,73 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="edu.tsinghua.iiis.ManageMeeting">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Loading Service"
+            android:id="@+id/service2" android:layout_gravity="center_horizontal|top" android:layout_marginTop="0dp"
+            android:textSize="@dimen/abc_text_size_small_material"/>
+
+
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/members"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="201dp" android:layout_gravity="center_horizontal|bottom"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Loading Account"
+            android:id="@+id/ac2" android:layout_gravity="center_horizontal|top" android:layout_marginTop="30dp"
+            android:textSize="@dimen/abc_text_size_small_material"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Loading Meeting"
+            android:id="@+id/meeting" android:layout_gravity="center_horizontal|top" android:layout_marginTop="60dp"
+            android:textSize="@dimen/abc_text_size_small_material"/>
+    <com.rey.material.widget.FloatingActionButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|bottom"
+            android:id="@+id/accept"/>
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/auctime" android:layout_gravity="left|center_vertical" android:text="How long to decide"/>
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number"
+              android:ems="10" android:id="@+id/recend" android:layout_gravity="left|center_vertical"
+              android:layout_marginBottom="50dp" android:text="When end recruiting"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="set"
+            android:id="@+id/submit" android:layout_gravity="right|center_vertical"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:textAppearance="?android:attr/textAppearanceLarge" android:text="Loading Starttime"
+              android:id="@+id/startTime" android:layout_gravity="center_horizontal|top" android:layout_marginTop="90dp"
+              android:textSize="@dimen/abc_text_size_small_material"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:textAppearance="?android:attr/textAppearanceLarge" android:text="Loading Next Time"
+              android:id="@+id/nextTime" android:layout_gravity="center_horizontal|top" android:layout_marginTop="120dp"
+              android:textSize="@dimen/abc_text_size_small_material"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:textAppearance="?android:attr/textAppearanceLarge" android:text="Loading Stage"
+              android:id="@+id/stage" android:layout_gravity="center_horizontal|top"
+              android:layout_marginTop="150dp" android:textSize="@dimen/abc_text_size_small_material"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Check"
+            android:id="@+id/check" android:layout_gravity="center"/>
+
+</FrameLayout>

@@ -13,6 +13,10 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
 
     private ZXingScannerView mScannerView;
 
+    interface qrNeeded{
+        void qrGot(String resultText);
+    }
+
 
     @Override
     public void onCreate(Bundle state) {

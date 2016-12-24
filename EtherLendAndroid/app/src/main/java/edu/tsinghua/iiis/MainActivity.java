@@ -4,20 +4,20 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import static edu.tsinghua.iiis.SimpleScannerActivity.TAG;
 
-public class MainActivity extends Activity implements MyAdapter.Clickable, Updatable {
-
-    private final int numOfPages = 9;
+public class MainActivity extends Activity implements Updatable, SimpleScannerActivity.qrNeeded {
 
     private ChooseAccount accountsChoosing;
     ChoosingMeeting meetingChoosing;
+    ManageMeeting meetingManage;
 
-    AccountModel model = new AccountModel();
+    public AccountModel model = new AccountModel();
 
     private Fragment currentPage = accountsChoosing;
 
@@ -38,20 +38,17 @@ public class MainActivity extends Activity implements MyAdapter.Clickable, Updat
     }
 
     void getMeetings2(){
+        meetingChoosing.setCallback(this);
         showPage(meetingChoosing);
-
     }
 
-    void getaccounts(){
-        model.loadService(this);
-        //model.loadAccounts(this);
-    }
-
-    void getmeetings(){
-        model.loadMeetings(this);
+    void manageMeeting3(){
+        meetingManage.setCallback(this);
+        showPage(meetingManage);
     }
 
     private void showPage(Fragment i){
+        currentPage = i;
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.mainContainer, i);
         ft.commit();
@@ -61,6 +58,7 @@ public class MainActivity extends Activity implements MyAdapter.Clickable, Updat
     private void registerPages(){
         accountsChoosing = new ChooseAccount();
         meetingChoosing = new ChoosingMeeting();
+        meetingManage = new ManageMeeting();
     }
 
 
@@ -71,24 +69,33 @@ public class MainActivity extends Activity implements MyAdapter.Clickable, Updat
 
     @Override
     public void updateAccounts(String service, String[] accounts) {
-        MyAdapter adpter = new MyAdapter(accounts,1,this);
+        MyAdapter adpter = new MyAdapter(accounts);
         accountsChoosing.changeService("service: "+service);
-        accountsChoosing.mRecyclerView.setAdapter(adpter);
+        accountsChoosing.setAdapter(adpter,getBaseContext());
     }
 
     @Override
     public void updateMeetings(String service, String address, long balance, String[] meetings, boolean[] isManager) {
-        meetingChoosing.serviceAddr.setText("service: "+service);
-        meetingChoosing.accountAddr.setText("account: "+address);
-        meetingChoosing.balance.setText("balance: "+balance);
-        MyAdapter adpter = new MyAdapter(meetings,2,this);
-        meetingChoosing.mRecyclerView.setAdapter(adpter);
+        meetingChoosing.setServiceAccountBalance(service,address,balance);
+        MyAdapter adpter = new MyAdapter(meetings);
+        meetingChoosing.setAdapter(adpter,getBaseContext());
     }
 
     @Override
-    public void updateSingle(String service, String address, long balance, String meeting, boolean isManager, long startTimes, long auctionVoteDur, long numOfMembers, long fristAuctionTime, long base, long period, int whenBorrow, long[] interests, long toEarns, long nextddl, int whatTodo, boolean changed) {
-
+    public void updateSingle(String service, String address, long balance, String meeting, boolean isManager, long startTimes, long auctionVoteDur, long numOfMembers, long fristAuctionTime, long base, long period, int whenBorrow, long[] interests, long toEarns, long nextddl, int whatTodo, boolean changed, int stage) {
+        if(currentPage == meetingChoosing){
+            if(isManager){
+                manageMeeting3();
+            }
+        }else if(currentPage == meetingManage){
+            meetingManage.setServiceAccountMeetingStartTimeNextTimeStage(service,address,meeting,startTimes,nextddl,stage);
+            if(stage>0){
+                meetingManage.setted();
+            }
+        }
     }
+
+
 
     @Override
     public void message(String msg) {
@@ -100,13 +107,31 @@ public class MainActivity extends Activity implements MyAdapter.Clickable, Updat
     }
 
     @Override
+    public void membersGot(String[] members) {
+        MyAdapter adpter = new MyAdapter(members);
+        meetingManage.setAdapter(adpter,getBaseContext());
+    }
+
     public void accountChosen(int which) {
         model.chooseAccount(which);
         getMeetings2();
     }
 
-    @Override
     public void meetingChosen(int which) {
+        model.chooseMeeting(which);
+        model.checkMeeting(this);
+    }
 
+
+    public void startScanner() {
+        Intent startScanner = new Intent(this, SimpleScannerActivity.class);
+        startActivity(startScanner);
+    }
+
+    @Override
+    public void qrGot(String resultText) {
+        if(currentPage == meetingManage){
+            model.accept(resultText,this);
+        }
     }
 }

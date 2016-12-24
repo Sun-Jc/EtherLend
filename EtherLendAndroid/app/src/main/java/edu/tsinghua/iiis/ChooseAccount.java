@@ -29,7 +29,19 @@ public class ChooseAccount extends Fragment{
     public void changeService(String str){
         serviceAddr.setText(str);
     }
-    public RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
+    public void setAdapter(MyAdapter adpter,Context context){
+        mLayoutManager = new LinearLayoutManager(callback);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(adpter);
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        callback.accountChosen(position);
+                    }
+                })
+        );
+    }
     private RecyclerView.LayoutManager mLayoutManager;
 
     public ChooseAccount() {
@@ -46,8 +58,6 @@ public class ChooseAccount extends Fragment{
 
         mRecyclerView = (RecyclerView)mRootView.findViewById(R.id.accounts);
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this.getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
 
         Log.d("sunjc",serviceAddr.getText().toString());
 
@@ -55,7 +65,8 @@ public class ChooseAccount extends Fragment{
 
             @Override
             public void run() {
-                callback.getaccounts();
+                callback.model.loadService(callback);
+                callback.model.loadAccounts(callback);
             }
         }).run();
 
@@ -66,11 +77,6 @@ public class ChooseAccount extends Fragment{
 
     public void setCallback(MainActivity activity){
         callback = activity;
-    }
-
-    private void startScanner() {
-        Intent startScanner = new Intent(this.getActivity(), SimpleScannerActivity.class);
-        startActivity(startScanner);
     }
 }
 
