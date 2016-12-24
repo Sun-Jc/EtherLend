@@ -1,3 +1,5 @@
+To run the server, just type `./run.sh`
+
 ## truffle
 
 * copy the functions part from truffle here: `cp ../contracts/app/javascripts/app.js .`
