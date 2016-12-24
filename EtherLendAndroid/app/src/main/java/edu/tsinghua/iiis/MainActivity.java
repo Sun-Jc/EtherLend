@@ -25,6 +25,9 @@ import com.rey.material.app.Dialog;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static edu.tsinghua.iiis.AccountModel.BID;
+import static edu.tsinghua.iiis.AccountModel.SUGGEST;
+import static edu.tsinghua.iiis.AccountModel.VOTE;
 import static edu.tsinghua.iiis.SimpleScannerActivity.TAG;
 
 public class MainActivity extends Activity implements Updatable, SimpleScannerActivity.qrNeeded {
@@ -34,6 +37,7 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
     private ChooseAccount accountsChoosing;
     ChoosingMeeting meetingChoosing;
     ManageMeeting meetingManage;
+    PlayMeeting meetingPlay;
 
     public AccountModel model = new AccountModel();
 
@@ -48,7 +52,6 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
 
        // Log.d(TAG,AccountModel.readFile("x",getBaseContext()));
         getAccounts1();
-        displayQR();
     }
 
     void getAccounts1(){
@@ -66,6 +69,11 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
         showPage(meetingManage);
     }
 
+    void playMeetings3(){
+        meetingPlay.setCallback(this);
+        showPage(meetingPlay);
+    }
+
     private void showPage(Fragment i){
         currentPage = i;
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -78,6 +86,7 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
         accountsChoosing = new ChooseAccount();
         meetingChoosing = new ChoosingMeeting();
         meetingManage = new ManageMeeting();
+        meetingPlay = new PlayMeeting();
     }
 
 
@@ -101,15 +110,30 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
     }
 
     @Override
-    public void updateSingle(String service, String address, long balance, String meeting, boolean isManager, long startTimes, long auctionVoteDur, long numOfMembers, long fristAuctionTime, long base, long period, int whenBorrow, long[] interests, long toEarns, long nextddl, int whatTodo, boolean changed, int stage) {
+    public void updateSingle(String service, String address, long balance, String meeting, boolean isManager, long startTimes, long auctionVoteDur, long numOfMembers, long fristAuctionTime, long base, long period, int whenBorrow, long[] interests, long toEarns, long nextddl, int whatTodo, boolean isMember, int stage) {
         if(currentPage == meetingChoosing){
             if(isManager){
                 manageMeeting3();
+            }else{
+                playMeetings3();
             }
         }else if(currentPage == meetingManage){
             meetingManage.setServiceAccountMeetingStartTimeNextTimeStage(service,address,meeting,startTimes,nextddl,stage);
             if(stage>0){
                 meetingManage.setted();
+            }
+        }else if(currentPage == meetingPlay){
+            meetingPlay.updateSerAccBalMeetNtMsg(service,address,balance,meeting,nextddl,"");
+            if(stage==-1){
+                meetingPlay.toJoin();
+            }else if(stage==0 && whatTodo == VOTE){
+                meetingPlay.toVote();
+            }else if(stage == 0 && whatTodo == SUGGEST){
+              meetingPlay.toSuggest();
+            }else if(stage>1 && whatTodo == BID){
+                meetingPlay.toBid();
+            }else if(stage > -1 &&!isMember){
+                meetingPlay.NotJoinable();
             }
         }
     }

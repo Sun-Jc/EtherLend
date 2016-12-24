@@ -23,6 +23,17 @@ public class AccountModel{
     static final String serviceFile = "service";
     private static final String TAG = "SunjcDEbug";
 
+
+    // what to do
+    public static final int SET = 1;
+    public static final int WAITtoACCEPT = 2;
+    public static final int WAITtoJOIN = 3;
+    public static final int WAITtoBeACCEPT = 4;
+    public static final int SUGGEST = 5;
+    public static final int VOTE = 6;
+    public static final int BID = 7;
+    public static final int PUSH = 9;
+
     private String serviceAddr ="";
 
     private String[] accounts;
@@ -46,7 +57,7 @@ public class AccountModel{
     private long nextddl;
     private int whatTodo;
 
-    private boolean changed;
+    private boolean isMember;
 
     /*public static void writeFile(String str, String fileName, Context context){
         try{
@@ -181,8 +192,8 @@ public class AccountModel{
 
     private void _updateMeeting(){
         //TODO
-        if(stage != -1) {
-            isManager[whichMeeting] = true;
+        //if(stage != -1) {
+            isManager[whichMeeting] = false;
             startTimes = 2016;
 
 
@@ -196,9 +207,9 @@ public class AccountModel{
             toEarns = 0;
             nextddl = 10;
             whatTodo = 0;
-            changed = false;
-            stage = -2;
-        }
+            isMember = false;
+            stage = -1;
+        //}
     }
 
     private void _set(long whenEndR, long howLongAuc){
@@ -307,7 +318,7 @@ public class AccountModel{
             interests,
             toEarns,
             nextddl,
-            whatTodo,changed,stage);
+            whatTodo,isMember,stage);
     }
 
     public void set(long whenEndR, long howLongAuc, Updatable obj){

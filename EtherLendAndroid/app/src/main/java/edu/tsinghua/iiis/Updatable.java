@@ -28,7 +28,7 @@ public interface Updatable {
                     long[] interests,
                     long toEarns,
                     long nextddl,
-                    int whatTodo,boolean changed,int stage);
+                    int whatTodo,boolean isMember,int stage);
 
     void message(String msg);
 

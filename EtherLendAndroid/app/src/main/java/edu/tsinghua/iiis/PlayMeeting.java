@@ -1,14 +1,14 @@
 package edu.tsinghua.iiis;
 
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
-import com.rey.material.widget.Button;
-import com.rey.material.widget.TextView;
+import android.widget.TextView;
 
 
 /**
@@ -29,12 +29,31 @@ public class PlayMeeting extends Fragment {
     EditText period;
     EditText base;
 
-    Button suggest;
-    Button join;
-    Button bid;
-    Button reveal;
-    Button check;
-    Button vote;
+    Button   suggest;
+    Button   join;
+    Button   bid;
+    Button   reveal;
+    Button   check;
+    Button   vote;
+
+    public void updateSerAccBalMeetNtMsg(
+            String serviceAddr,
+            String accountAddr,
+            long balance,
+            String meeting,
+            long nextTime,
+            String msg
+    ){
+        this.serviceAddr.setText("service: "+serviceAddr);
+        this.accountAddr.setText("account: "+accountAddr);
+        this.balance.setText("balance: "+balance);
+        this.meeting.setText("meeting: "+meeting);
+        this.nextTime.setText("Bid before "+nextTime);
+        if(!msg.equals(""))
+            this.msg.setText(msg);
+
+    }
+
 
     MainActivity callback;
     public void setCallback(MainActivity c){
@@ -46,12 +65,78 @@ public class PlayMeeting extends Fragment {
         // Required empty public constructor
     }
 
+    public void NotJoinable(){
+        nextTime.setVisibility(View.INVISIBLE);
+        msg.setText("cannot join this meeting");
+        selfIntro.setVisibility(View.INVISIBLE);;
+        period.setVisibility(View.INVISIBLE);;
+        base.setVisibility(View.INVISIBLE);;
+        suggest.setVisibility(View.INVISIBLE);;
+        join.setVisibility(View.INVISIBLE);;
+        bid.setVisibility(View.INVISIBLE);;
+        reveal.setVisibility(View.INVISIBLE);;
+        check.setVisibility(View.INVISIBLE);;
+        vote.setVisibility(View.INVISIBLE);;
+    }
+
+    public void toJoin(){
+        msg.setText("input self intro and join");
+
+        join.setVisibility(View.VISIBLE);
+        selfIntro.setVisibility(View.VISIBLE);
+
+        period.setVisibility(View.INVISIBLE);
+        base.setVisibility(View.INVISIBLE);;
+        suggest.setVisibility(View.INVISIBLE);;
+        bid.setVisibility(View.INVISIBLE);;
+        reveal.setVisibility(View.INVISIBLE);;
+        check.setVisibility(View.INVISIBLE);;
+        vote.setVisibility(View.INVISIBLE);;
+    }
+
+    public void toSuggest(){
+        msg.setText("Suggest");
+        period.setVisibility(View.VISIBLE);
+        base.setVisibility(View.VISIBLE);
+
+        selfIntro.setVisibility(View.INVISIBLE);
+        join.setVisibility(View.INVISIBLE);;
+        bid.setVisibility(View.INVISIBLE);;
+        reveal.setVisibility(View.INVISIBLE);;
+        check.setVisibility(View.INVISIBLE);;
+        vote.setVisibility(View.INVISIBLE);;
+    }
+
+    public void toVote(){
+        selfIntro.setVisibility(View.INVISIBLE);
+        period.setVisibility(View.INVISIBLE);;
+        base.setVisibility(View.INVISIBLE);;
+        suggest.setVisibility(View.INVISIBLE);;
+        join.setVisibility(View.INVISIBLE);;
+        bid.setVisibility(View.INVISIBLE);;
+        reveal.setVisibility(View.INVISIBLE);;
+        check.setVisibility(View.INVISIBLE);;
+        vote.setVisibility(View.VISIBLE);;
+    }
+
+    public void toBid(){
+        selfIntro.setVisibility(View.INVISIBLE);
+        period.setVisibility(View.INVISIBLE);;
+        base.setVisibility(View.VISIBLE);;
+        suggest.setVisibility(View.INVISIBLE);;
+        join.setVisibility(View.INVISIBLE);;
+        bid.setVisibility(View.VISIBLE);;
+        reveal.setVisibility(View.VISIBLE);;
+        check.setVisibility(View.INVISIBLE);;
+        vote.setVisibility(View.VISIBLE);;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mRootView = inflater.inflate(R.layout.fragment_manage_meeting, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_play_meeting, container, false);
 
         serviceAddr = (TextView) mRootView.findViewById(R.id.ser);
         accountAddr= (TextView) mRootView.findViewById(R.id.acc);
@@ -153,7 +238,13 @@ public class PlayMeeting extends Fragment {
         });
 
 
+        new Runnable(){
 
+            @Override
+            public void run() {
+                callback.check();
+            }
+        }.run();
 
         return mRootView;
     }
