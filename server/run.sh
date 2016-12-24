@@ -1,1 +1,1 @@
-node-debug server.js
+nodemon server.js

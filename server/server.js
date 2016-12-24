@@ -138,8 +138,10 @@ function toUint256(x){
   return "0x"+z+y;
 }
 
-function js_getService(){
-  return SmallEthLendService.deployed();
+function js_getService(req, res){
+  //return SmallEthLendService.deployed();
+  console.log(SmallEthLendService.deployed().address)
+  res.end(JSON.stringify({'deployedAddress': SmallEthLendService.deployed().address}));
 }
 
 var accounts;
@@ -147,7 +149,7 @@ var account;
 function js_getAccount(_i){
   return accounts[_i];
 }
-function js_getAccounts(){
+function js_getAccounts(req, res){
   web3.eth.getAccounts(function(err, accs) {
     if (err != null) {
       alert("There was an error fetching your accounts.");
@@ -257,12 +259,14 @@ function push_get(){
 //For all your static (js/css/images/etc.) set the directory name (relative path).
 dispatcher.setStatic('resources');
 
-dispatcher.onGet("/balance", function(req, res) {
+dispatcher.onGet("/getBalance", function(req, res) {
     var account = web3.eth.accounts[0];
     var balance = web3.eth.getBalance(account);
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end(JSON.stringify({'balance': balance.toString()}));
 });    
+
+dispatcher.onGet("/getService", function(req, res) {js_getService(req, res)})
 
 dispatcher.onGet("/newMeeting", function(req, res) {new_meeting(req, res)})
 dispatcher.onGet("/check", function(req, res) {get_stage()})
@@ -279,9 +283,7 @@ dispatcher.onGet("/reaveal", function(req, res) {reveal_next()})
 //dispatcher.onGet("/push_get", function(req, res) {push_get()})
 dispatcher.onGet("/push", function(req, res) {push_try()})
 
-dispatcher.onGet("/get_accounts", function(req, res) {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    js_getAccounts();
+dispatcher.onGet("/getAccounts", function(req, res) {
     res.end(JSON.stringify({'accounts': accounts}));
 })
 
