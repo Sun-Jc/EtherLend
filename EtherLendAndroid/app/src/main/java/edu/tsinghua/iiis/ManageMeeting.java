@@ -78,7 +78,7 @@ public class ManageMeeting extends Fragment {
         accountAddr = (TextView)mRootView.findViewById(R.id.ac2);
         meeting = (TextView)mRootView.findViewById(R.id.meeting);
         startTime = (TextView)mRootView.findViewById(R.id.startTime);
-        meeting = (TextView)mRootView.findViewById(R.id.nextTime);
+        nextTime = (TextView)mRootView.findViewById(R.id.nextTime);
         stage = (TextView)mRootView.findViewById(R.id.stage);
 
 

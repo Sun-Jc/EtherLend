@@ -166,6 +166,7 @@ public class AccountModel{
                 "0x18a7e513a0d114062489dcaa260c3256e8d424ed",
                 "0x7b39df9b93f3fad5dcea72bbde34f99c5445c807"
         };
+        this.isManager = new boolean[meetings.length];
     }
 
     private void _applyMeeting(){
@@ -180,10 +181,31 @@ public class AccountModel{
 
     private void _updateMeeting(){
         //TODO
+        if(stage != -1) {
+            isManager[whichMeeting] = true;
+            startTimes = 2016;
+
+
+            auctionVoteDur = -1;
+            numOfMembers = 0;
+            fristAuctionTime = -1;
+            base = -1;
+            period = -1;
+            whenBorrow = -1;
+            interests = new long[0];
+            toEarns = 0;
+            nextddl = 10;
+            whatTodo = 0;
+            changed = false;
+            stage = -2;
+        }
     }
 
     private void _set(long whenEndR, long howLongAuc){
         //TODO
+        nextddl = whenEndR;
+        auctionVoteDur = howLongAuc;
+        stage = -1;
     }
 
     private void _suggest(long period, long base){
@@ -192,7 +214,8 @@ public class AccountModel{
 
     private void _accept(String who){
         //TODO
-    };
+
+    }
 
     private void _bid(long howMuch){
         //TODO
@@ -256,7 +279,7 @@ public class AccountModel{
 
     public void accept(String agent, Updatable obj){
         _accept(agent);
-        obj.message("accepted");
+        obj.message("accepted:"+agent);
     }
 
     public void chooseMeeting(int which){

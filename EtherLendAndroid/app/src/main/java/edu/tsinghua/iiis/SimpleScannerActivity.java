@@ -17,6 +17,11 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
         void qrGot(String resultText);
     }
 
+    private qrNeeded callback;
+    public void setCallback(qrNeeded c){
+        callback =c;
+    }
+
 
     @Override
     public void onCreate(Bundle state) {
@@ -44,6 +49,7 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
         Log.v(TAG, rawResult.getText()); // Prints scan results
         Log.v(TAG, rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
 
+        callback.qrGot(rawResult.getText());
         // If you would like to resume scanning, call this method below:
         mScannerView.resumeCameraPreview(this);
     }
