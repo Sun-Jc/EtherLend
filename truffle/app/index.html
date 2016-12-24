@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MetaCoin - Default Truffle App</title>
+  <title>EtherLend</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link href="./app.css" rel='stylesheet' type='text/css'>
-  <script src="./app.js"></script>
-  <script src="https://raw.githubusercontent.com/ethereum/web3.js/develop/dist/web3.min.js"></script>
+
+
+   <!--<script src="./bundle.js"></script>-->
+
+   <script src="./app.js"></script>
 </head>
 <body>
-  <h1>MetaCoin</h1>
-  <h2>Example Truffle Dapp</h2>
-  <h3>You have <span class="black"><span id="balance"></span> META</span></h3>
+  <h1>EtherLend</h1>
+  <h2>Testing</h2>
+  <!--<h3>You have <span class="black"><span id="balance"></span> META</span></h3>
 
   <br>
   <h1>Send</h1>
@@ -19,32 +22,27 @@
   <br><br><button id="send" onclick="sendCoin()">Send MetaCoin</button>
   <br><br>
   <span id="status"></span>
+  -->
+  <br/>
+  <button id="newMeeting" onclick="new_meeting()"> New Meeting</button><br/>
+  <button id="check" onclick="get_stage()"> Get State</button><br/>
+<br/>
+  <button id="set1" onclick="set_recurit_vote_auction_time()"> set recruit vote auction time</button><br/>
+  <button id="check" onclick="get_stage()"> Get State</button><br/>
+<br/>
+  <button id="join_all" onclick="join_all()"> join, all</button><br/>
+  <button id="accept_all" onclick="accept_all()"> accept_all</button><br/>
+  <button id="push_get" onclick="push_get()">push ang get</button><br/>
+<br/>
+  <button id="suggest1" onclick="suggest1()"> suggest1</button><br/>
+  <button id="vote" onclick="vote_all()"> vote for, all</button><br/>
+  <button id="push_get" onclick="push_get()">push ang get</button><br/>
+<br/>
+  <button id="bid" onclick="bid_next()"> bid, all</button><br/>
+  <button id="reaveal" onclick="reveal_next()"> reveal, all</button><br/>
+  <button id="push_get" onclick="push_get()">push ang get</button><br/>
+  <button id="push" onclick="push_try()">try push</button><br/>
 
-  <script>console.log('hi, there')</script>
 
-  <script>
-    var Web3 = require('web3');
-    var web3 = new Web3();
-    
-    var provider = 'http://taoli.tsinghuax.org:8545'
-    web3.setProvider(new web3.providers.HttpProvider(provider));
-    //var TestRPC = require("ethereumjs-testrpc");
-    //web3.setProvider(TestRPC.provider());
-    var meta = MetaCoin.deployed();
-    var account_one = web3.eth.accounts[0];
-
-    var balance = web3.eth.getBalance(account_one);
-    console.log(balance.toNumber());
-
-    /*
-    meta.getBalance.call(account_one, {from: account_one}).then(function(balance) {
-      // If this callback is called, the call was successfully executed.
-      // Note that this returns immediately without any waiting.
-      // Let's print the return value.
-      console.log(balance.toNumber());
-    }).catch(function(e) {
-      // There was an error! Handle it.
-    })*/
-  </script>
 </body>
 </html>

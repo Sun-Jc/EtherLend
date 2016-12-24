@@ -1,3 +1,12 @@
+## truffle
+
+* copy the functions part from truffle here: `cp ../contracts/app/javascripts/app.js .`
+* copy the contracts require part from `../contracts/build/app.js`
+* copy the button and onclick part from `../contracts/app/index.html`
+* integrate the functions and contracts to our `server.js`
+* config url to functions
+* run the nodejs server
+
 ## server.js
 
 ### private chain
