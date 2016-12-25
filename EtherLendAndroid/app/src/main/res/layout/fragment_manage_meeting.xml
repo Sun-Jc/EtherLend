@@ -1,73 +1,106 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="edu.tsinghua.iiis.ManageMeeting">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
+
+<!-- TODO: Update blank fragment layout -->
+    <View
+            android:id="@+id/bgg"
+            android:layout_width="fill_parent"
+            android:layout_height="160dp"
+            android:background="#dc1d47" android:layout_alignParentRight="true"
+            />
+
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Loading Service"
             android:id="@+id/service2" android:layout_gravity="center_horizontal|top" android:layout_marginTop="0dp"
-            android:textSize="@dimen/abc_text_size_small_material"/>
+            android:textSize="@dimen/abc_text_size_small_material" android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" android:visibility="invisible"/>
 
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/members"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="201dp" android:layout_gravity="center_horizontal|bottom"/>
+            android:layout_height="201dp" android:layout_below="@+id/bgg" android:layout_marginTop="6dp"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Loading Account"
-            android:id="@+id/ac2" android:layout_gravity="center_horizontal|top" android:layout_marginTop="30dp"
-            android:textSize="@dimen/abc_text_size_small_material"/>
+            android:textColor="#ffffff"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/ac2"
+            android:textSize="@dimen/abc_text_size_small_material"
+            android:layout_alignParentEnd="false" android:layout_alignTop="@+id/bgg" android:layout_margin="10dp"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_centerHorizontal="true"
             android:text="Loading Meeting"
-            android:id="@+id/meeting" android:layout_gravity="center_horizontal|top" android:layout_marginTop="60dp"
-            android:textSize="@dimen/abc_text_size_small_material"/>
-    <com.rey.material.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="right|bottom"
-            android:id="@+id/accept"/>
+            android:textColor="#ffffff"
+            android:id="@+id/meeting"
+            android:textSize="20dp" android:layout_alignTop="@+id/bgg" android:layout_margin="60dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="@color/colorAccent"
+            android:src="@drawable/ic_add_white_24dp"
+            android:id="@+id/accept" android:layout_above="@+id/check" android:layout_alignEnd="@+id/check"
+    />
+
+    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number"
+              android:ems="10" android:id="@+id/recend"
+              android:text="When end recruiting" android:layout_below="@+id/auctime"
+              android:layout_alignParentStart="true"/>
+
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
-            android:id="@+id/auctime" android:layout_gravity="left|center_vertical" android:text="How long to decide"/>
-    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number"
-              android:ems="10" android:id="@+id/recend" android:layout_gravity="left|center_vertical"
-              android:layout_marginBottom="50dp" android:text="When end recruiting"/>
+            android:id="@+id/auctime" android:text="How long to decide"
+            android:layout_alignTop="@+id/members" android:layout_alignParentStart="true"/>
+
+
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="set"
-            android:id="@+id/submit" android:layout_gravity="right|center_vertical"/>
+            android:id="@+id/submit"
+            android:textColor="#ffffff"
+            android:backgroundTint="@color/abc_btn_colored_borderless_text_material" android:layout_below="@+id/auctime"
+            android:layout_alignEnd="@+id/check"/>
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Loading Starttime"
+              android:id="@+id/startTime"
+              android:layout_above="@+id/accept" android:layout_toStartOf="@+id/ac2"/>
+
+
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:textAppearance="?android:attr/textAppearanceLarge" android:text="Loading Starttime"
-              android:id="@+id/startTime" android:layout_gravity="center_horizontal|top" android:layout_marginTop="90dp"
-              android:textSize="@dimen/abc_text_size_small_material"/>
+              android:text="Loading Next Time"
+              android:id="@+id/nextTime"
+              android:textSize="@dimen/abc_text_size_small_material"
+              android:layout_above="@+id/check" android:layout_alignStart="@+id/startTime"/>
+
+
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:textAppearance="?android:attr/textAppearanceLarge" android:text="Loading Next Time"
-              android:id="@+id/nextTime" android:layout_gravity="center_horizontal|top" android:layout_marginTop="120dp"
-              android:textSize="@dimen/abc_text_size_small_material"/>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:textAppearance="?android:attr/textAppearanceLarge" android:text="Loading Stage"
-              android:id="@+id/stage" android:layout_gravity="center_horizontal|top"
-              android:layout_marginTop="150dp" android:textSize="@dimen/abc_text_size_small_material"/>
-    <Button
+               android:text="Loading Stage"
+              android:id="@+id/stage"
+              android:layout_alignTop="@+id/check" android:layout_alignStart="@+id/startTime"/>
+
+    <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Check"
-            android:id="@+id/check" android:layout_gravity="center"/>
+            android:src="@drawable/ic_autorenew_white_24dp"
+            android:id="@+id/check"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true" android:layout_margin="30dp"/>
 
-</FrameLayout>
+</RelativeLayout>

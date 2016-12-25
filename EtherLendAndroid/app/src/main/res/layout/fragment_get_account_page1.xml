@@ -1,19 +1,21 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Loading Service"
-            android:id="@+id/service1" android:layout_gravity="center_horizontal|top"/>
-
+            android:text="Accounts"
+            android:id="@+id/textView" android:layout_alignParentTop="true" android:layout_alignParentStart="true"
+            android:textSize="18dp" android:layout_marginLeft="15dp" android:layout_marginTop="14dp"/>
     <android.support.v7.widget.RecyclerView
             android:id="@+id/accounts"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="418dp" android:layout_gravity="center"/>
-</FrameLayout>
+            android:layout_height="fill_parent" android:layout_gravity="center" android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false" android:layout_below="@+id/textView" android:layout_marginTop="25dp"
+            android:layout_centerVertical="true"
+    />
+</RelativeLayout>

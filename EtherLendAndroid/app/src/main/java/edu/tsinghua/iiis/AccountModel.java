@@ -223,7 +223,7 @@ public class AccountModel{
     private void _updateMeeting(){
         //TODO
         //if(stage != -1) {
-            isManager[whichMeeting] = false;
+            isManager[whichMeeting] = true;
             startTimes = new BigInteger("2016");
 
 
@@ -376,12 +376,15 @@ public class AccountModel{
     }
 
     public String who(){
-        //return accounts[whichAccount];
-        return "0xe4a5ab5a8e89bc9f34de5bd21bc51a11d5071dd2";
+        return accounts[whichAccount];
     }
 
     public void vote(Updatable obj){
         _vote();
         obj.message("voted");
+    }
+
+    public String whoIsService(){
+        return serviceAddr;
     }
 }

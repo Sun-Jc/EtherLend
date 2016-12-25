@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.content.Context;
 
 import android.os.Bundle;
+import android.os.Looper;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.rey.material.widget.FloatingActionButton;
 
 import java.math.BigInteger;
 
@@ -33,9 +34,24 @@ public class ManageMeeting extends Fragment {
     private EditText howLongRec;
     private EditText howLongAuc;
 
-    private Button check;
+    private FloatingActionButton check;
+
+    FloatingActionButton appBtn;
 
     private Button submit;
+
+    public void notsetted(){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                howLongRec.setVisibility(View.VISIBLE);
+                howLongAuc.setVisibility(View.VISIBLE);
+                submit.setVisibility(View.VISIBLE);
+                appBtn.setVisibility(View.INVISIBLE);
+                mRecyclerView.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
 
     public void setted(){
         getActivity().runOnUiThread(new Runnable() {
@@ -44,6 +60,22 @@ public class ManageMeeting extends Fragment {
                 howLongRec.setVisibility(View.INVISIBLE);
                 howLongAuc.setVisibility(View.INVISIBLE);
                 submit.setVisibility(View.INVISIBLE);
+                appBtn.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+            }
+        });
+
+    }
+
+    public void beginauction(){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                howLongRec.setVisibility(View.INVISIBLE);
+                howLongAuc.setVisibility(View.INVISIBLE);
+                submit.setVisibility(View.INVISIBLE);
+                appBtn.setVisibility(View.INVISIBLE);
+                mRecyclerView.setVisibility(View.VISIBLE);
             }
         });
 
@@ -57,10 +89,10 @@ public class ManageMeeting extends Fragment {
             @Override
             public void run() {
                 serviceAddr.setText("service: "+service);
-                accountAddr.setText("account: "+address);
-                meeting.setText("meeting: " +_meeting);
-                startTime.setText("start: "+ _starttime);
-                nextTime.setText("next :" + _nextTime);
+                accountAddr.setText(address);
+                meeting.setText(_meeting);
+                startTime.setText("This meeting starts at "+ _starttime + " s");
+                nextTime.setText("The next time is " + _nextTime + "s");
                 stage.setText("stage: "+ _stage);
             }
         });
@@ -117,22 +149,26 @@ public class ManageMeeting extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        Looper.prepare();
                         callback.model.set(recrutime,auctime,callback);
+                        Looper.loop();
                     }
                 }).start();
 
             }
         });
 
-        check = (Button)mRootView.findViewById(R.id.check);
+        check = (FloatingActionButton) mRootView.findViewById(R.id.check);
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        Looper.prepare();
                         callback.model.getMembers(callback);
                         callback.check();
+                        Looper.loop();
                     }
                 }).start();
             }
@@ -143,7 +179,7 @@ public class ManageMeeting extends Fragment {
         mLayoutManager = new LinearLayoutManager(this.getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        FloatingActionButton appBtn = (FloatingActionButton)mRootView.findViewById(R.id.accept);
+        appBtn = (FloatingActionButton)mRootView.findViewById(R.id.accept);
         appBtn.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -157,8 +193,10 @@ public class ManageMeeting extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Looper.prepare();
                 callback.model.getMembers(callback);
                 callback.model.checkMeeting(callback);
+                Looper.loop();
             }
         }).start();
 

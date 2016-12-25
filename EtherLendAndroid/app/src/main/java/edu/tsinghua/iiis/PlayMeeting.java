@@ -3,6 +3,7 @@ package edu.tsinghua.iiis;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.math.BigInteger;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
@@ -204,8 +207,10 @@ public class PlayMeeting extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        Looper.prepare();
                         callback.model.suggest(p,b,callback);
                         callback.model.checkMeeting(callback);
+                        Looper.loop();
                     }
                 }).start();
             }
@@ -216,13 +221,22 @@ public class PlayMeeting extends Fragment {
             public void onClick(View view) {
                 final String selfintro = selfIntro.getText().toString();
 
+                final ReentrantLock l = new ReentrantLock();
+                final Condition c = l.newCondition();
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        //
+                        Looper.prepare();
+
                         callback.model.joinMeeting(selfintro,callback);
                         callback.check();
                         callback.message("Please show this code to your manager");
+
                         callback.displayQR();
+
+                        Looper.loop();
                     }
                 }).start();
             }
@@ -234,7 +248,9 @@ public class PlayMeeting extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        Looper.prepare();
                         callback.model.vote(callback);
+                        Looper.loop();
                     }
                 }).start();
 
@@ -248,7 +264,9 @@ public class PlayMeeting extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        Looper.prepare();
                         callback.model.bid(amount,callback);
+                        Looper.loop();
                     }
                 }).start();
             }
@@ -262,7 +280,9 @@ public class PlayMeeting extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        Looper.prepare();
                         callback.model.reveal(amount,callback);
+                        Looper.loop();
                     }
                 }).start();
             }
@@ -274,7 +294,9 @@ public class PlayMeeting extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        Looper.prepare();
                         callback.check();
+                        Looper.loop();
                     }
                 }).start();
             }
@@ -284,7 +306,9 @@ public class PlayMeeting extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Looper.prepare();
                 callback.check();
+                Looper.loop();
             }
         }).start();
 

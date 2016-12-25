@@ -5,29 +5,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.rey.material.widget.FloatingActionButton;
 
 
 public class ChoosingMeeting extends Fragment {
 
     private View mRootView;
 
-    private TextView serviceAddr;
     private TextView accountAddr;
     private TextView balanceT;
     public void setServiceAccountBalance(final String service,final String address,final String balance){
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                serviceAddr.setText("service: "+service);
-                accountAddr.setText("account: "+address);
-                balanceT.setText("balance: "+balance);
+                accountAddr.setText(ChooseAccount.format(address));
+                balanceT.setText("$ "+balance +" wei");
             }
         });
 
@@ -68,7 +67,6 @@ public class ChoosingMeeting extends Fragment {
         // Inflate the layout for this fragment
 
         mRootView = inflater.inflate(R.layout.meeting_choose, container, false);
-        serviceAddr = (TextView)mRootView.findViewById(R.id.service);
         accountAddr = (TextView)mRootView.findViewById(R.id.ac);
         balanceT = (TextView)mRootView.findViewById(R.id.bal);
 
@@ -85,7 +83,9 @@ public class ChoosingMeeting extends Fragment {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
+                                Looper.prepare();
                                 callback.model.applyMeeting(callback);
+                                Looper.loop();
                             }
                         }).start();
                     }
@@ -96,7 +96,9 @@ public class ChoosingMeeting extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Looper.prepare();
                 callback.model.loadMeetings(callback);
+                Looper.loop();
             }
         }).start();
 

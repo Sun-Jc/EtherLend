@@ -6,15 +6,13 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-import com.rey.material.widget.FloatingActionButton;
 
 
 
@@ -25,13 +23,16 @@ public class ChooseAccount extends Fragment{
 
     private View mRootView;
 
-    private TextView serviceAddr;
+    static public String format(String str){
+        return str.substring(0,str.length()/2) + "\n" + str.substring(str.length()/2+1,str.length());
+    }
+
 
     public void changeService(final String str){
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                serviceAddr.setText(str);
+
             }
         });
 
@@ -67,19 +68,21 @@ public class ChooseAccount extends Fragment{
         // Inflate the layout for this fragment
 
         mRootView = inflater.inflate(R.layout.fragment_get_account_page1, container, false);
-        serviceAddr = (TextView)mRootView.findViewById(R.id.service1);
+
 
         mRecyclerView = (RecyclerView)mRootView.findViewById(R.id.accounts);
         // use a linear layout manager
 
-        Log.d("sunjc",serviceAddr.getText().toString());
+
 
 
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Looper.prepare();
                 callback.model.loadService(callback);
                 callback.model.loadAccounts(callback);
+                Looper.loop();
             }
         }).start();
 
