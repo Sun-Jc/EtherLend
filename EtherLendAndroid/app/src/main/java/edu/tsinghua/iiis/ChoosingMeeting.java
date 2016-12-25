@@ -20,26 +20,40 @@ public class ChoosingMeeting extends Fragment {
 
     private TextView serviceAddr;
     private TextView accountAddr;
-    private TextView balance;
-    public void setServiceAccountBalance(String service,String address,long balance){
-        serviceAddr.setText("service: "+service);
-        accountAddr.setText("account: "+address);
-        this.balance.setText("balance: "+balance);
+    private TextView balanceT;
+    public void setServiceAccountBalance(final String service,final String address,final String balance){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                serviceAddr.setText("service: "+service);
+                accountAddr.setText("account: "+address);
+                balanceT.setText("balance: "+balance);
+            }
+        });
+
     }
     private RecyclerView mRecyclerView;
     MainActivity callback;
     public void setCallback(MainActivity activity){
         callback = activity;
     }
-    public void setAdapter(MyAdapter adpter,Context context){
-        mRecyclerView.setAdapter(adpter);
-        mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-                        callback.meetingChosen(position);
-                    }
-                })
-        );
+    public void setAdapter(final MyAdapter adpter, final Context context){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mLayoutManager = new LinearLayoutManager(callback);
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                mRecyclerView.setAdapter(adpter);
+                mRecyclerView.addOnItemTouchListener(
+                        new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override public void onItemClick(View view, int position) {
+                                callback.meetingChosen(position);
+                            }
+                        })
+                );
+            }
+        });
+
     }
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -56,7 +70,7 @@ public class ChoosingMeeting extends Fragment {
         mRootView = inflater.inflate(R.layout.meeting_choose, container, false);
         serviceAddr = (TextView)mRootView.findViewById(R.id.service);
         accountAddr = (TextView)mRootView.findViewById(R.id.ac);
-        balance = (TextView)mRootView.findViewById(R.id.bal);
+        balanceT = (TextView)mRootView.findViewById(R.id.bal);
 
         mRecyclerView = (RecyclerView)mRootView.findViewById(R.id.meetings);
         // use a linear layout manager
@@ -68,25 +82,23 @@ public class ChoosingMeeting extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        (new Runnable() {
+                        new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 callback.model.applyMeeting(callback);
                             }
-                        }).run();
+                        }).start();
                     }
                 }
 
         );
 
-        (new Runnable() {
-
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 callback.model.loadMeetings(callback);
             }
-        }).run();
-
+        }).start();
 
         return mRootView;
     }

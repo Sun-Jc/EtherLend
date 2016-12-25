@@ -26,21 +26,34 @@ public class ChooseAccount extends Fragment{
     private View mRootView;
 
     private TextView serviceAddr;
-    public void changeService(String str){
-        serviceAddr.setText(str);
+
+    public void changeService(final String str){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                serviceAddr.setText(str);
+            }
+        });
+
     }
     private RecyclerView mRecyclerView;
-    public void setAdapter(MyAdapter adpter,Context context){
-        mLayoutManager = new LinearLayoutManager(callback);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(adpter);
-        mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-                        callback.accountChosen(position);
-                    }
-                })
-        );
+    public void setAdapter(final MyAdapter adpter,final Context context){
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mLayoutManager = new LinearLayoutManager(callback);
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                mRecyclerView.setAdapter(adpter);
+                mRecyclerView.addOnItemTouchListener(
+                        new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override public void onItemClick(View view, int position) {
+                                callback.accountChosen(position);
+                            }
+                        })
+                );
+            }
+        });
     }
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -61,14 +74,14 @@ public class ChooseAccount extends Fragment{
 
         Log.d("sunjc",serviceAddr.getText().toString());
 
-        (new Runnable() {
 
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 callback.model.loadService(callback);
                 callback.model.loadAccounts(callback);
             }
-        }).run();
+        }).start();
 
         return mRootView;
     }

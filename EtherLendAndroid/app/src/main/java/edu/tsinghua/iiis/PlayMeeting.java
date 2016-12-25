@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.math.BigInteger;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,20 +39,27 @@ public class PlayMeeting extends Fragment {
     Button   vote;
 
     public void updateSerAccBalMeetNtMsg(
-            String serviceAddr,
-            String accountAddr,
-            long balance,
-            String meeting,
-            long nextTime,
-            String msg
+            final String serviceAddr,
+            final String accountAddr,
+            final BigInteger balance,
+            final String meeting,
+            final BigInteger nextTime,
+            final String msg
     ){
-        this.serviceAddr.setText("service: "+serviceAddr);
-        this.accountAddr.setText("account: "+accountAddr);
-        this.balance.setText("balance: "+balance);
-        this.meeting.setText("meeting: "+meeting);
-        this.nextTime.setText("Bid before "+nextTime);
-        if(!msg.equals(""))
-            this.msg.setText(msg);
+        final PlayMeeting th = this;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                th.serviceAddr.setText("service: "+serviceAddr);
+                th.accountAddr.setText("account: "+accountAddr);
+                th.balance.setText("balance: "+balance);
+                th.meeting.setText("meeting: "+meeting);
+                th.nextTime.setText("Bid before "+nextTime);
+                if(!msg.equals(""))
+                    th.msg.setText(msg);
+            }
+        });
+
 
     }
 
@@ -66,69 +75,99 @@ public class PlayMeeting extends Fragment {
     }
 
     public void NotJoinable(){
-        nextTime.setVisibility(View.INVISIBLE);
-        msg.setText("cannot join this meeting");
-        selfIntro.setVisibility(View.INVISIBLE);;
-        period.setVisibility(View.INVISIBLE);;
-        base.setVisibility(View.INVISIBLE);;
-        suggest.setVisibility(View.INVISIBLE);;
-        join.setVisibility(View.INVISIBLE);;
-        bid.setVisibility(View.INVISIBLE);;
-        reveal.setVisibility(View.INVISIBLE);;
-        check.setVisibility(View.INVISIBLE);;
-        vote.setVisibility(View.INVISIBLE);;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                nextTime.setVisibility(View.INVISIBLE);
+                msg.setText("cannot join this meeting");
+                selfIntro.setVisibility(View.INVISIBLE);;
+                period.setVisibility(View.INVISIBLE);;
+                base.setVisibility(View.INVISIBLE);;
+                suggest.setVisibility(View.INVISIBLE);;
+                join.setVisibility(View.INVISIBLE);;
+                bid.setVisibility(View.INVISIBLE);;
+                reveal.setVisibility(View.INVISIBLE);;
+                check.setVisibility(View.INVISIBLE);;
+                vote.setVisibility(View.INVISIBLE);;
+            }
+        });
+
     }
 
     public void toJoin(){
-        msg.setText("input self intro and join");
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                msg.setText("input self intro and join");
 
-        join.setVisibility(View.VISIBLE);
-        selfIntro.setVisibility(View.VISIBLE);
+                join.setVisibility(View.VISIBLE);
+                selfIntro.setVisibility(View.VISIBLE);
 
-        period.setVisibility(View.INVISIBLE);
-        base.setVisibility(View.INVISIBLE);;
-        suggest.setVisibility(View.INVISIBLE);;
-        bid.setVisibility(View.INVISIBLE);;
-        reveal.setVisibility(View.INVISIBLE);;
-        check.setVisibility(View.INVISIBLE);;
-        vote.setVisibility(View.INVISIBLE);;
+                period.setVisibility(View.INVISIBLE);
+                base.setVisibility(View.INVISIBLE);;
+                suggest.setVisibility(View.INVISIBLE);;
+                bid.setVisibility(View.INVISIBLE);;
+                reveal.setVisibility(View.INVISIBLE);;
+                check.setVisibility(View.INVISIBLE);;
+                vote.setVisibility(View.INVISIBLE);;
+            }
+        });
+
     }
 
     public void toSuggest(){
-        msg.setText("Suggest");
-        period.setVisibility(View.VISIBLE);
-        base.setVisibility(View.VISIBLE);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                msg.setText("Suggest");
+                period.setVisibility(View.VISIBLE);
+                base.setVisibility(View.VISIBLE);
 
-        selfIntro.setVisibility(View.INVISIBLE);
-        join.setVisibility(View.INVISIBLE);;
-        bid.setVisibility(View.INVISIBLE);;
-        reveal.setVisibility(View.INVISIBLE);;
-        check.setVisibility(View.INVISIBLE);;
-        vote.setVisibility(View.INVISIBLE);;
+                selfIntro.setVisibility(View.INVISIBLE);
+                join.setVisibility(View.INVISIBLE);;
+                bid.setVisibility(View.INVISIBLE);;
+                reveal.setVisibility(View.INVISIBLE);;
+                check.setVisibility(View.INVISIBLE);;
+                vote.setVisibility(View.INVISIBLE);;
+            }
+        });
+
     }
 
     public void toVote(){
-        selfIntro.setVisibility(View.INVISIBLE);
-        period.setVisibility(View.INVISIBLE);;
-        base.setVisibility(View.INVISIBLE);;
-        suggest.setVisibility(View.INVISIBLE);;
-        join.setVisibility(View.INVISIBLE);;
-        bid.setVisibility(View.INVISIBLE);;
-        reveal.setVisibility(View.INVISIBLE);;
-        check.setVisibility(View.INVISIBLE);;
-        vote.setVisibility(View.VISIBLE);;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                selfIntro.setVisibility(View.INVISIBLE);
+                period.setVisibility(View.INVISIBLE);;
+                base.setVisibility(View.INVISIBLE);;
+                suggest.setVisibility(View.INVISIBLE);;
+                join.setVisibility(View.INVISIBLE);;
+                bid.setVisibility(View.INVISIBLE);;
+                reveal.setVisibility(View.INVISIBLE);;
+                check.setVisibility(View.INVISIBLE);;
+                vote.setVisibility(View.VISIBLE);;
+            }
+        });
+
     }
 
     public void toBid(){
-        selfIntro.setVisibility(View.INVISIBLE);
-        period.setVisibility(View.INVISIBLE);;
-        base.setVisibility(View.VISIBLE);;
-        suggest.setVisibility(View.INVISIBLE);;
-        join.setVisibility(View.INVISIBLE);;
-        bid.setVisibility(View.VISIBLE);;
-        reveal.setVisibility(View.VISIBLE);;
-        check.setVisibility(View.INVISIBLE);;
-        vote.setVisibility(View.VISIBLE);;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                selfIntro.setVisibility(View.INVISIBLE);
+                period.setVisibility(View.INVISIBLE);;
+                base.setVisibility(View.VISIBLE);;
+                suggest.setVisibility(View.INVISIBLE);;
+                join.setVisibility(View.INVISIBLE);;
+                bid.setVisibility(View.VISIBLE);;
+                reveal.setVisibility(View.VISIBLE);;
+                check.setVisibility(View.INVISIBLE);;
+                vote.setVisibility(View.VISIBLE);;
+            }
+        });
+
     }
 
 
@@ -159,15 +198,16 @@ public class PlayMeeting extends Fragment {
         suggest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final long p = Long.parseLong(period.getText().toString());
-                final long b = Long.parseLong(base.getText().toString());
-                (new Runnable() {
+                final BigInteger p = new BigInteger(period.getText().toString());
+                final BigInteger b = new BigInteger(base.getText().toString());
+
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         callback.model.suggest(p,b,callback);
                         callback.model.checkMeeting(callback);
                     }
-                }).run();
+                }).start();
             }
         });
 
@@ -175,7 +215,8 @@ public class PlayMeeting extends Fragment {
             @Override
             public void onClick(View view) {
                 final String selfintro = selfIntro.getText().toString();
-                (new Runnable() {
+
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         callback.model.joinMeeting(selfintro,callback);
@@ -183,68 +224,69 @@ public class PlayMeeting extends Fragment {
                         callback.message("Please show this code to your manager");
                         callback.displayQR();
                     }
-                }).run();
+                }).start();
             }
         });
 
         vote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Runnable() {
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         callback.model.vote(callback);
                     }
-                }.run();
+                }).start();
+
             }
         });
 
         bid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final long amount = Long.parseLong(base.getText().toString());
-                new Runnable() {
+                final BigInteger amount = new BigInteger(base.getText().toString());
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         callback.model.bid(amount,callback);
                     }
-                }.run();
+                }).start();
             }
         });
 
         reveal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final long amount = Long.parseLong(base.getText().toString());
-                new Runnable() {
+                final BigInteger amount = new BigInteger(base.getText().toString());
+
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         callback.model.reveal(amount,callback);
                     }
-                }.run();
+                }).start();
             }
         });
 
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Runnable() {
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         callback.check();
                     }
-                }.run();
+                }).start();
             }
         });
 
 
-        new Runnable(){
-
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 callback.check();
             }
-        }.run();
+        }).start();
 
         return mRootView;
     }

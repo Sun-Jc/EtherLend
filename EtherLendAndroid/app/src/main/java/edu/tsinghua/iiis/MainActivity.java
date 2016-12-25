@@ -15,16 +15,26 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.Volley;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.rey.material.app.Dialog;
+import org.json.JSONObject;
 
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
+import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 import static edu.tsinghua.iiis.AccountModel.BID;
 import static edu.tsinghua.iiis.AccountModel.SUGGEST;
 import static edu.tsinghua.iiis.AccountModel.VOTE;
@@ -39,7 +49,7 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
     ManageMeeting meetingManage;
     PlayMeeting meetingPlay;
 
-    public AccountModel model = new AccountModel();
+    public AccountModel model;
 
     private Fragment currentPage = accountsChoosing;
 
@@ -47,6 +57,8 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
     public void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.activity_main);
+
+        model = new AccountModel(this);
 
         registerPages();
 
@@ -79,7 +91,6 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.mainContainer, i);
         ft.commit();
-        getFragmentManager().executePendingTransactions();
     }
 
     private void registerPages(){
@@ -103,14 +114,14 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
     }
 
     @Override
-    public void updateMeetings(String service, String address, long balance, String[] meetings, boolean[] isManager) {
-        meetingChoosing.setServiceAccountBalance(service,address,balance);
-        MyAdapter adpter = new MyAdapter(meetings);
-        meetingChoosing.setAdapter(adpter,getBaseContext());
+    public void updateMeetings(String service, String address, BigInteger balance, String[] meetings, boolean[] isManager) {
+        meetingChoosing.setServiceAccountBalance(service,address,balance.toString());
+        MyAdapter adapter = new MyAdapter(meetings);
+        meetingChoosing.setAdapter(adapter,getBaseContext());
     }
 
     @Override
-    public void updateSingle(String service, String address, long balance, String meeting, boolean isManager, long startTimes, long auctionVoteDur, long numOfMembers, long fristAuctionTime, long base, long period, int whenBorrow, long[] interests, long toEarns, long nextddl, int whatTodo, boolean isMember, int stage) {
+    public void updateSingle(String service, String address, BigInteger balance, String meeting, boolean isManager, BigInteger startTimes, BigInteger auctionVoteDur, BigInteger numOfMembers, BigInteger fristAuctionTime, BigInteger base, BigInteger period, int whenBorrow, BigInteger[] interests, BigInteger toEarns, BigInteger nextddl, int whatTodo, boolean isMember, int stage) {
         if(currentPage == meetingChoosing){
             if(isManager){
                 manageMeeting3();
@@ -118,7 +129,7 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
                 playMeetings3();
             }
         }else if(currentPage == meetingManage){
-            meetingManage.setServiceAccountMeetingStartTimeNextTimeStage(service,address,meeting,startTimes,nextddl,stage);
+            meetingManage.setServiceAccountMeetingStartTimeNextTimeStage(service,address,meeting,startTimes,nextddl.toString(),stage);
             if(stage>0){
                 meetingManage.setted();
             }
@@ -156,13 +167,13 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
     }
 
     public void accountChosen(final int which) {
-        (new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 model.chooseAccount(which);
                 getMeetings2();
             }
-        }).run();
+        }).start();
     }
 
     public void check(){
@@ -170,13 +181,13 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
     }
 
     public void meetingChosen(final int which) {
-        (new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 model.chooseMeeting(which);
                 check();
             }
-        }).run();
+        }).start();
     }
 
     public void displayQR(){
@@ -233,12 +244,12 @@ public class MainActivity extends Activity implements Updatable, SimpleScannerAc
     @Override
     public void qrGot(final String resultText) {
         if(currentPage == meetingManage){
-            (new Runnable() {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     accept(resultText);
                 }
-            }).run();
+            }).start();
         }
     }
 }

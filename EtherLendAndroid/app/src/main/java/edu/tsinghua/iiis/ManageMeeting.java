@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.rey.material.widget.FloatingActionButton;
 
+import java.math.BigInteger;
+
 
 public class ManageMeeting extends Fragment {
 
@@ -36,20 +38,33 @@ public class ManageMeeting extends Fragment {
     private Button submit;
 
     public void setted(){
-        howLongRec.setVisibility(View.INVISIBLE);
-        howLongAuc.setVisibility(View.INVISIBLE);
-        submit.setVisibility(View.INVISIBLE);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                howLongRec.setVisibility(View.INVISIBLE);
+                howLongAuc.setVisibility(View.INVISIBLE);
+                submit.setVisibility(View.INVISIBLE);
+            }
+        });
+
     }
 
     public void setServiceAccountMeetingStartTimeNextTimeStage(
-            String service,String address,String _meeting,
-            long _starttime, long _nextTime, int _stage){
-        serviceAddr.setText("service: "+service);
-        accountAddr.setText("account: "+address);
-        meeting.setText("meeting: " +_meeting);
-        startTime.setText("start: "+ _starttime);
-        nextTime.setText("next :" + _nextTime);
-        stage.setText("stage: "+ _stage);
+            final String service, final String address,final String _meeting,
+            final BigInteger _starttime, final String _nextTime, final int _stage){
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                serviceAddr.setText("service: "+service);
+                accountAddr.setText("account: "+address);
+                meeting.setText("meeting: " +_meeting);
+                startTime.setText("start: "+ _starttime);
+                nextTime.setText("next :" + _nextTime);
+                stage.setText("stage: "+ _stage);
+            }
+        });
+
     }
 
     private RecyclerView mRecyclerView;
@@ -57,8 +72,15 @@ public class ManageMeeting extends Fragment {
     public void setCallback(MainActivity activity){
         callback = activity;
     }
-    public void setAdapter(MyAdapter adpter,Context context){
-        mRecyclerView.setAdapter(adpter);
+
+    public void setAdapter(final MyAdapter adpter,Context context){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mRecyclerView.setAdapter(adpter);
+            }
+        });
+
     }
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -90,14 +112,14 @@ public class ManageMeeting extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final long auctime = Long.parseLong(howLongAuc.getText().toString());
-                final long recrutime = Long.parseLong(howLongRec.getText().toString());
-                (new Runnable() {
+                final BigInteger auctime = new BigInteger(howLongAuc.getText().toString());
+                final BigInteger recrutime = new BigInteger(howLongRec.getText().toString());
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         callback.model.set(recrutime,auctime,callback);
                     }
-                }).run();
+                }).start();
 
             }
         });
@@ -106,13 +128,13 @@ public class ManageMeeting extends Fragment {
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                (new Runnable() {
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         callback.model.getMembers(callback);
                         callback.check();
                     }
-                }).run();
+                }).start();
             }
         });
 
@@ -132,14 +154,13 @@ public class ManageMeeting extends Fragment {
 
         );
 
-        (new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 callback.model.getMembers(callback);
                 callback.model.checkMeeting(callback);
             }
-        }).run();
-
+        }).start();
 
 
         return mRootView;

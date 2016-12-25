@@ -1,17 +1,11 @@
 package edu.tsinghua.iiis;
 
-import android.content.Context;
-import android.location.Address;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.util.Log;
-import com.google.android.gms.nearby.messages.internal.Update;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.math.BigInteger;
 import java.util.Vector;
-import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -44,17 +38,17 @@ public class AccountModel{
     private int whichAccount = -1;
     private int whichMeeting = -1;
 
-    private long startTimes;
+    private BigInteger startTimes;
     private int stage;
-    private long auctionVoteDur;
-    private long numOfMembers;
-    private long fristAuctionTime;
-    private long base;
-    private long period;
+    private BigInteger auctionVoteDur;
+    private BigInteger numOfMembers;
+    private BigInteger fristAuctionTime;
+    private BigInteger base;
+    private BigInteger period;
     private int whenBorrow; // default 0 for this not borrowed
-    private long[] interests;
-    private long toEarns;
-    private long nextddl;
+    private BigInteger[] interests;
+    private BigInteger toEarns;
+    private BigInteger nextddl;
     private int whatTodo;
 
     private boolean isMember;
@@ -143,35 +137,68 @@ public class AccountModel{
         v.add(app);
         return v.toArray(new String[v.size()]);
     }*/
+    NetComm netComm;
 
+    String url(String route){
+        return "http://taoli.tsinghuax.org:8085/"+route;
+    }
+
+    AccountModel(MainActivity callback){
+        netComm = new NetComm(callback);
+    }
+
+    private String parseString(JSONObject j,String key){
+        String res ="";
+        try {
+            res =  j.getString(key);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    private String[] parseArray(JSONObject j, String key){
+        Vector<String> res = new Vector<>();
+        try {
+            JSONArray ja =  j.getJSONArray(key);
+            for (int i = 0; i < ja.length(); i++) {
+                res.add(ja.getString(i));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return res.toArray(new String[res.size()]);
+    }
 
     private void _getService(){
-        //TODO
-        this.serviceAddr = "0xbebc628b9a0cc26a98b7fd8dc9a4f554c7eef02f";
+        JSONObject jsonObject = netComm.getJSON(url("getService"));
+        this.serviceAddr = parseString(jsonObject,"deployedAddress");
     }
 
     private void _getAccounts(){
-        // TODO
-        this.accounts =  new String[]{
+        JSONObject jsonObject = netComm.getJSON(url("getAccounts"));
+        this.accounts = parseArray(jsonObject,"accounts");
+
+        /*this.accounts =  new String[]{
                 "0x1db0a93276a3819cec2b37a0e010e517465d7d68",
                 "0x54399b39acf443788351abb3a98606219e697bf6",
                 "0xe4a5ab5a8e89bc9f34de5bd21bc51a11d5071dd2",
-                "0xcb6d552cb12b67d77037b8ae5c5a967f7d967713"};
+                "0xcb6d552cb12b67d77037b8ae5c5a967f7d967713"};*/
     }
 
-    private long _getBalance(){
-        // TODO
-        return 0;
+    private BigInteger _getBalance(){
+        JSONObject jsonObject = netComm.getJSON(url("getBalance/"+whichAccount));
+        return new BigInteger(parseString(jsonObject,"balance"));
     }
 
     private void _join(String intro){
-        //TODO
+        netComm.getJSON(url("join/"+meetings[whichMeeting]+"/"+whichAccount));
     }
 
     private void _getMeetings(){
         //TODO
-        if(this.meetings!=null && this.meetings.length>0)
-            return;
+        /*if(this.meetings!=null && this.meetings.length>0)
+            return;*/
         this.meetings= new String[]{
                 "0x883eb0952dc97dd1b62c98fa77363b8af597556a",
                 "0x18a7e513a0d114062489dcaa260c3256e8d424ed",
@@ -181,46 +208,46 @@ public class AccountModel{
     }
 
     private void _applyMeeting(){
-        this.meetings = new String[]{
+
+        netComm.getJSON(url("applyMeeting/"+whichAccount));
+
+
+        /*this.meetings = new String[]{
                 "0x883eb0952dc97dd1b62c98fa77363b8af597556a",
                 "0x18a7e513a0d114062489dcaa260c3256e8d424ed",
                 "0x7b39df9b93f3fad5dcea72bbde34f99c5445c807",
                 "0x7b39df9b93f3fad5dcea72bbde34f99c5445cNEW"
-        };
-        //TODO
+        };*/
     }
 
     private void _updateMeeting(){
         //TODO
         //if(stage != -1) {
             isManager[whichMeeting] = false;
-            startTimes = 2016;
+            startTimes = new BigInteger("2016");
 
 
-            auctionVoteDur = -1;
-            numOfMembers = 0;
-            fristAuctionTime = -1;
-            base = -1;
-            period = -1;
+            auctionVoteDur = new BigInteger("-1");
+            numOfMembers = new BigInteger("0");;
+            fristAuctionTime = new BigInteger("-1");;
+            base = new BigInteger("-1");;
+            period = new BigInteger("-1");
             whenBorrow = -1;
-            interests = new long[0];
-            toEarns = 0;
-            nextddl = 10;
+            interests = new BigInteger[0];
+            toEarns = new BigInteger("0");
+            nextddl = new BigInteger("10");
             whatTodo = 0;
             isMember = false;
             stage = -1;
         //}
     }
 
-    private void _set(long whenEndR, long howLongAuc){
-        //TODO
-        nextddl = whenEndR;
-        auctionVoteDur = howLongAuc;
-        stage = -1;
+    private void _set(BigInteger whenEndR, BigInteger howLongAuc){
+        netComm.getJSON(url("set/"+meetings[whichMeeting]+"/"+whichAccount+"/"+whenEndR+"/"+howLongAuc));
     }
 
-    private void _suggest(long period, long base){
-        //TODO
+    private void _suggest(BigInteger period, BigInteger base){
+        netComm.getJSON(url("suggest/"+meetings[whichMeeting]+"/"+whichAccount+"/"+period+"/"+base));
     }
 
     private void _vote(){
@@ -228,16 +255,15 @@ public class AccountModel{
     }
 
     private void _accept(String who){
-        //TODO
-
+        netComm.getJSON(url("accept/"+meetings[whichMeeting]+"/"+who+"/"+accounts[whichAccount]));
     }
 
-    private void _bid(long howMuch){
-        //TODO
+    private void _bid(BigInteger howMuch){
+        netComm.getJSON(url("bid/"+meetings[whichMeeting]+"/"+whichAccount+"/"+stage+"/"+howMuch+"/"+howMuch));
     }
 
-    private void _reveal(long howMuch){
-        //TODO
+    private void _reveal(BigInteger howMuch){
+        netComm.getJSON(url("reaveal/"+meetings[whichMeeting]+"/"+whichAccount+"/"+stage+"/"+howMuch));
     }
 
     private String[] _getUsers(){
@@ -321,25 +347,25 @@ public class AccountModel{
             whatTodo,isMember,stage);
     }
 
-    public void set(long whenEndR, long howLongAuc, Updatable obj){
+    public void set(BigInteger whenEndR, BigInteger howLongAuc, Updatable obj){
         _set(whenEndR,howLongAuc);
         obj.message("set");
         checkMeeting(obj);
     }
 
-    public void suggest(long period, long base, Updatable obj){
+    public void suggest(BigInteger period, BigInteger base, Updatable obj){
         _suggest(period,base);
         obj.message("suggest");
         checkMeeting(obj);
     }
 
-    public void bid(long howMuch, Updatable obj){
+    public void bid(BigInteger howMuch, Updatable obj){
         _bid(howMuch);
         obj.message("bid");
         checkMeeting(obj);
     }
 
-    public void reveal(long howMuch, Updatable obj){
+    public void reveal(BigInteger howMuch, Updatable obj){
         _reveal(howMuch);
         obj.message("reveal");
         checkMeeting(obj);

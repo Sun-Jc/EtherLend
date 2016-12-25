@@ -1,5 +1,7 @@
 package edu.tsinghua.iiis;
 
+import java.math.BigInteger;
+
 /**
  * Created by SunJc on 24/12/16.
  */
@@ -11,23 +13,23 @@ public interface Updatable {
 
     void updateMeetings(
             String service,
-            String address, long balance,
+            String address, BigInteger balance,
             String[] meetings, boolean[] isManager);
 
     void updateSingle(
             String service,
-            String address, long balance,
+            String address, BigInteger balance,
             String meeting,  boolean isManager,
-                    long startTimes,
-                    long auctionVoteDur,
-                    long numOfMembers,
-                    long fristAuctionTime,
-                    long base,
-                    long period,
+                    BigInteger startTimes,
+                    BigInteger auctionVoteDur,
+                    BigInteger numOfMembers,
+                    BigInteger fristAuctionTime,
+                    BigInteger base,
+                    BigInteger period,
                     int whenBorrow, // default 0 for this not borrowed
-                    long[] interests,
-                    long toEarns,
-                    long nextddl,
+                    BigInteger[] interests,
+                    BigInteger toEarns,
+                    BigInteger nextddl,
                     int whatTodo,boolean isMember,int stage);
 
     void message(String msg);
