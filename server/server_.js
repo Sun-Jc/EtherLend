@@ -81,6 +81,7 @@ function js_push(_meeting,_account){
 
 
 var js_events = new Array();
+var meeting2index = {}
 
 function js_allEvents(_contract, _whichJsEvents, _logOut){
   js_events[_whichJsEvents] = new Array();
@@ -265,11 +266,15 @@ app.get("/applyMeeting/:id", function(req, res) {
           console.log('new meeting got');
 
           meetingAddr = js_lastEventsOf(0).args.newContract;
+          
+          index = Object.keys(meeting2index).length + 1;
+          meeting2index[meetingAddr] = index;
+
           console.log(meetingAddr);
 
           meeting = SmallMeeting.at(meetingAddr);
 
-          js_allEvents(meeting,1,true);
+          js_allEvents(meeting, index, true);
           //res.writeHead(200, {'Content-Type': 'text/plain'});
           res.end(JSON.stringify({'meetingAddr': meetingAddr}));
     }).catch(function(e){
@@ -285,7 +290,7 @@ app.get("/join/:meetingAddr/:id", function(req, res) {
 })
 
 app.get("/getMeetings", function(req, res) {
-  // TODO
+  res.end(JSON.stringify(Object.keys(meeting2index)));
 })
 
 app.get("/set/:meetingAddr/:id/:whenEnd/:howLong", function(req, res) {
@@ -317,6 +322,21 @@ app.get("/reaveal/:meetingAddr/:id/:round/:revealHowMuch", function(req, res) {
                   req.params.revealHowMuch).
                   then(function(){ console.log("revealed");});
 })
+
+
+app.get("/getEvents/:meetingAddr", function(req, res) {
+    index = meeting2index[req.params.meetingAddr];
+    array = new Array();
+    for (var i = 0; i < js_events[index].length; i++) {
+        array.push(js_events[index][i]);
+        //array.push(JSON.stringify(js_events[index][i]));
+    }
+    res.end(JSON.stringify(array));
+})
+//app.get("/getEvents/:which/:index", function(req, res) {
+//    console.log(js_events[req.params.which][req.params.index]);
+//    res.end(JSON.stringify(js_events[req.params.which][req.params.index]));
+//})
 
 app.get("/vote", function(req, res) {vote_all()})
 app.get("/check", function(req, res) {get_stage()})
