@@ -112,8 +112,8 @@ public class ManageMeeting extends Fragment {
                 serviceAddr.setText("service: "+service);
                 accountAddr.setText(address);
                 meeting.setText(_meeting);
-                startTime.setText("This meeting starts at "+ _starttime + " s");
-                nextTime.setText("The next time is " + _nextTime + "s");
+                startTime.setText("This meeting starts at "+ new java.util.Date(_starttime.longValue()*1000).toString() );
+                nextTime.setText("The next time is " + new java.util.Date(new BigInteger(_nextTime).longValue()*1000).toString() );
                 stage.setText("stage: "+ _stage);
             }
         });

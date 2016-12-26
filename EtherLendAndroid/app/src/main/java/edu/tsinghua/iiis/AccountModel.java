@@ -144,6 +144,7 @@ public class AccountModel{
     public String BASEURL = "http://taoli.tsinghuax.org:8085/";
 
     String url(String route){
+        Log.d(TAG,BASEURL+route);
         return BASEURL+route;
     }
 
@@ -191,24 +192,36 @@ public class AccountModel{
     }
 
     private BigInteger _getBalance(){
-        JSONObject jsonObject = netComm.getJSON(url("getBalance/"+whichAccount));
+        JSONObject jsonObject = netComm.getJSON(url("getBalance/"+accounts[whichAccount]));
         return new BigInteger(parseString(jsonObject,"balance"));
     }
 
     private void _join(String intro){
-        netComm.getJSON(url("join/"+meetings[whichMeeting]+"/"+whichAccount));
+        netComm.getJSON(url("join/"+meetings[whichMeeting]+"/"+accounts[whichAccount]));
     }
 
     private void _getMeetings(){
-        //TODO
         /*if(this.meetings!=null && this.meetings.length>0)
             return;*/
-        JSONObject jsonObject = netComm.getJSON(url("getMeetings"));
+        /*JSONObject jsonObject = netComm.getJSON(url("getMeetings"));
         Vector<String> ms = new Vector<>();
         Iterator<?> it = jsonObject.keys();
 
-        while(it.hasNext())
-            ms.add((String) it.next());
+        while(it.hasNext()) {
+            String str = (String) it.next();
+            ms.add(str);
+            Log.d(TAG,str);
+        }*/
+        JSONObject jsonObject = netComm.getJSON(url("getMeetings_"));
+        Vector<String> ms = new Vector<>();
+        try {
+            JSONArray ja = jsonObject.getJSONArray("meetings");
+            for (int i = 0; i < ja.length(); i++) {
+                ms.add(ja.getString(i));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         this.meetings = ms.toArray(new String[ms.size()]);
         this.isManager = new boolean[meetings.length];
@@ -216,7 +229,7 @@ public class AccountModel{
 
     private void _applyMeeting(){
 
-        netComm.getJSON(url("applyMeeting/"+whichAccount));
+        netComm.getJSON(url("applyMeeting/"+accounts[whichAccount]));
 
 
         /*this.meetings = new String[]{
@@ -245,8 +258,11 @@ public class AccountModel{
         nextddl = new BigInteger("0");
         whatTodo = -1;
 
-        JSONObject s = netComm.getJSON(url("check/" + meetings[whichMeeting] + "/" + whichAccount));
 
+        netComm.getJSON(url("push/" + meetings[whichMeeting] + "/" + accounts[whichAccount]));
+
+
+        JSONObject s = netComm.getJSON(url("check/" + meetings[whichMeeting] + "/" + accounts[whichAccount]));
 
         JSONObject result = netComm.getJSON(url("getEvents/" + meetings[whichMeeting]));
         try {
@@ -255,7 +271,7 @@ public class AccountModel{
 
             JSONArray events = result.getJSONArray("events");
 
-            for (int i = 0; i < result.length(); i++) {
+            for (int i = 0; i < events.length(); i++) {
                 JSONObject e = events.getJSONObject(i);
                 String type = e.getString("event");
                 JSONObject args = e.getJSONObject("args");
@@ -325,6 +341,7 @@ public class AccountModel{
                     stage = Integer.parseInt(args.getString("stage"));
                     msg = args.getString("winner") + " won this auction, who will pay " + args.getString("interest") + " wei for others as interest";
                 }
+                Log.d(TAG,"whattoDo:" + whatTodo);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -334,15 +351,15 @@ public class AccountModel{
 
 
     private void _set(BigInteger whenEndR, BigInteger howLongAuc){
-        netComm.getJSON(url("set/"+meetings[whichMeeting]+"/"+whichAccount+"/"+whenEndR+"/"+howLongAuc));
+        netComm.getJSON(url("set/"+meetings[whichMeeting]+"/"+accounts[whichAccount]+"/"+whenEndR+"/"+howLongAuc));
     }
 
     private void _suggest(BigInteger period, BigInteger base){
-        netComm.getJSON(url("suggest/"+meetings[whichMeeting]+"/"+whichAccount+"/"+period+"/"+base));
+        netComm.getJSON(url("suggest/"+meetings[whichMeeting]+"/"+accounts[whichAccount]+"/"+period+"/"+base));
     }
 
     private void _vote(){
-        netComm.getJSON(url("vote/"+meetings[whichMeeting]+"/"+whichAccount+"+/aye"));
+        netComm.getJSON(url("vote/"+meetings[whichMeeting]+"/"+accounts[whichAccount]+"+/aye"));
     }
 
     private void _accept(String who){
@@ -350,19 +367,35 @@ public class AccountModel{
     }
 
     private void _bid(BigInteger howMuch){
-        netComm.getJSON(url("bid/"+meetings[whichMeeting]+"/"+whichAccount+"/"+stage+"/"+howMuch+"/"+howMuch));
+        netComm.getJSON(url("bid/"+meetings[whichMeeting]+"/"+accounts[whichAccount]+"/"+stage+"/"+howMuch+"/"+howMuch));
     }
 
     private void _reveal(BigInteger howMuch){
-        netComm.getJSON(url("reaveal/"+meetings[whichMeeting]+"/"+whichAccount+"/"+stage+"/"+howMuch));
+        netComm.getJSON(url("reaveal/"+meetings[whichMeeting]+"/"+accounts[whichAccount]+"/"+stage+"/"+howMuch));
     }
 
     private String[] _getUsers(){
-        return  new String[]{
-                "0x1db0a93276a3819cec2b37a0e010e517465d7d68",
-                "0x54399b39acf443788351abb3a98606219e697bf6",
-                "0xe4a5ab5a8e89bc9f34de5bd21bc51a11d5071dd2",
-                "0xcb6d552cb12b67d77037b8ae5c5a967f7d967713"};
+
+        Vector<String> mems = new Vector<>();
+
+        JSONObject result = netComm.getJSON(url("getEvents/" + meetings[whichMeeting]));
+        try {
+
+            JSONArray events = result.getJSONArray("events");
+
+            for (int i = 0; i < events.length(); i++) {
+                JSONObject e = events.getJSONObject(i);
+                String type = e.getString("event");
+                JSONObject args = e.getJSONObject("args");
+
+                if (type.equals("NewMember")) {
+                    mems.add(args.getString("who"));
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  mems.toArray(new String[mems.size()]);
     }
 
 

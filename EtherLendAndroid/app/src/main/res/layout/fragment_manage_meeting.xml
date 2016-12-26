@@ -44,8 +44,8 @@
             android:text="Loading Meeting"
             android:textColor="#ffffff"
             android:id="@+id/meeting"
-            android:textSize="20dp" android:layout_alignTop="@+id/bgg" android:layout_marginLeft="60dp"
-            android:layout_marginTop="55dp"/>
+            android:textSize="18dp" android:layout_alignTop="@+id/bgg" android:layout_marginLeft="60dp"
+            android:layout_marginTop="40dp"/>
 
     <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
 
     <EditText android:layout_width="fill_parent" android:layout_height="wrap_content" android:inputType="number"
               android:ems="10" android:id="@+id/recend"
-              android:text="When end recruiting"
+              android:hint="When end recruiting"
               android:layout_below="@+id/bgg"
               android:layout_marginTop="10dp"
               android:textColor="@color/switch_thumb_disabled_material_dark"/>
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
-            android:id="@+id/auctime" android:text="How long to decide"
+            android:id="@+id/auctime" android:hint="How long to decide"
             android:layout_below="@id/recend"
             android:layout_marginTop="10dp" android:textColor="@color/switch_thumb_disabled_material_dark"/>
 
@@ -98,7 +98,7 @@
 
     <TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="Loading Starttime"
+              android:hint="Loading Starttime"
               android:id="@+id/startTime"
               android:textSize="16dp"
               android:textColor="#ffffff" android:layout_alignBottom="@+id/bgg" android:layout_marginBottom="20dp"

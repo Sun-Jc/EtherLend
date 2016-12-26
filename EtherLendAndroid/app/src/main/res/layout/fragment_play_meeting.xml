@@ -42,14 +42,14 @@
     <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/period" android:layout_gravity="left|center_vertical" android:text="How Long"
+            android:id="@+id/period" android:layout_gravity="left|center_vertical" android:hint="How Long"
             android:layout_alignParentLeft="false" android:layout_alignParentTop="false"
             android:layout_below="@+id/base" android:layout_marginTop="10dp"/>
     <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/base" android:layout_gravity="left|center_vertical"
-            android:text="How Much" android:layout_alignParentLeft="false"
+            android:hint="How Much" android:layout_alignParentLeft="false"
             android:layout_alignParentTop="false" android:layout_below="@+id/bgg" android:layout_marginTop="10dp"/>
     <Button
             android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentTop="false" android:backgroundTint="@color/abc_btn_colored_borderless_text_material" android:textColor="#ffffff"/>
     <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/intro"
-              android:layout_gravity="left|center_vertical" android:text="Self Intro"
+              android:layout_gravity="left|center_vertical" android:hint="Self Intro"
               android:layout_alignParentLeft="false" android:layout_alignParentTop="false"
               android:layout_below="@+id/bgg" android:layout_marginTop="10dp"/>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Message"

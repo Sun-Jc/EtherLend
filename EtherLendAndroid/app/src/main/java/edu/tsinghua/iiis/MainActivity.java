@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -153,10 +154,11 @@ public class MainActivity extends AppCompatActivity implements Updatable, Simple
 
     @Override
     public void updateAccounts(String service, String[] accounts) {
+        String[] mdata = new String[accounts.length];
         for (int i = 0; i < accounts.length; i++) {
-            accounts[i] = ChooseAccount.format(accounts[i]);
+            mdata[i] = ChooseAccount.format(accounts[i]);
         }
-        MyAdapter adpter = new MyAdapter(accounts,1);
+        MyAdapter adpter = new MyAdapter(mdata,1);
         accountsChoosing.changeService("service: "+service);
 
         accountsChoosing.setAdapter(adpter,getBaseContext());
@@ -164,11 +166,12 @@ public class MainActivity extends AppCompatActivity implements Updatable, Simple
 
     @Override
     public void updateMeetings(String service, String address, BigInteger balance, String[] meetings, boolean[] isManager) {
+        String[] mdata = new String[meetings.length];
         meetingChoosing.setServiceAccountBalance(service,address,balance.toString());
-        MyAdapter adapter = new MyAdapter(meetings,2);
         for (int i = 0; i < meetings.length; i++) {
-            meetings[i] = ChooseAccount.format(meetings[i]);
+            mdata[i] = ChooseAccount.format(meetings[i]);
         }
+        MyAdapter adapter = new MyAdapter(mdata,2);
         meetingChoosing.setAdapter(adapter,getBaseContext());
     }
 
@@ -245,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements Updatable, Simple
                 Looper.prepare();
                 model.chooseMeeting(which);
                 check();
+                Log.d("SUnjcDEbug","meetchosen");
                 Looper.loop();
             }
         }).start();

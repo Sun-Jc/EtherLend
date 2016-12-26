@@ -56,7 +56,7 @@ public class PlayMeeting extends Fragment {
                 th.accountAddr.setText(accountAddr);
                 th.balance.setText("$ "+balance +" wei");
                 th.meeting.setText(meeting);
-                th.nextTime.setText("Next time: "+nextTime);
+                th.nextTime.setText("Next time: "+ new java.util.Date(nextTime.longValue()*1000).toString() );
                 if(!msg.equals(""))
                     th.msg.setText(msg);
             }
