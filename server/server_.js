@@ -95,7 +95,7 @@ function initMeetings(service){
           js_allEvents(meeting, index, true);
       }
     }else{
-      console.log("wrong event at "+_contract);
+      console.log("wrong event at "+_contract.address);
       console.error(error);
     }
   });
@@ -104,21 +104,21 @@ var service = SmallEthLendService.deployed();
 initMeetings(service);
 
 function js_allEvents(_contract, _whichJsEvents, _logOut){
-  js_events[_whichJsEvents] = new Array();
+  console.log('whichJsEvents:', _whichJsEvents);
+  if (js_events[_whichJsEvents] == undefined)
+      js_events[_whichJsEvents] = new Array();
 
   var events = _contract.allEvents({fromBlock: 0, toBlock: 'latest'});
-  
-  console.log(events)
 
   events.watch(function(error, result){
     if (!error){
       if(_logOut){
-        console.log('event at '+_contract)
+        console.log('event at '+_contract.address)
         console.log(result);
       }
       js_events[_whichJsEvents].push(result);
     }else{
-      console.log("wrong event at "+_contract);
+      console.log("wrong event at "+_contract.address);
       console.error(error);
     }
   });
@@ -262,6 +262,7 @@ app.get("/applyMeeting/:id", function(req, res) {
     js_applyMeeting(service,accounts[req.params.id]).then(
         function(){
           console.log('new meeting got');
+          res.end(JSON.stringify({'res': 'done'}));
     }).catch(function(e){
         console.error(e.stack)
     });
@@ -282,9 +283,14 @@ app.get("/getMeetings", function(req, res) {
 
 app.get("/set/:meetingAddr/:id/:whenEnd/:howLong", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
-  startTime = js_lastEventsOf(meeting2index[req.params.meetingAddr]).args.startTime;
-  js_setBasicTime(meeting, account[req.params.id], startTime.toNumber() + web3.toBigNumber(req.params.whenEnd) , web3.toBigNumber(req.params.howLong));
-  res.end(JSON.stringify({'res':'done'}));
+  startTime = js_events[meeting2index[req.params.meetingAddr]][0].args.startTime;
+  whenEnd = parseInt(startTime) + parseInt(req.params.whenEnd)
+  howLong = parseInt(req.params.howLong)
+  //whenEnd = web3.toBigNumber(startTime) + web3.toBigNumber(req.params.whenEnd)
+  //whenEnd = web3.toBigNumber(req.params.whenEnd)
+  //howLong = web3.toBigNumber(req.params.howLong)
+  js_setBasicTime(meeting, account[req.params.id], whenEnd, howLong);
+  res.end(JSON.stringify({startTime: startTime, whenEnd: whenEnd, howLong: howLong}));
 })
 
 app.get("/suggest/:meetingAddr/:id/:howLong/:howMuch", function(req, res) {

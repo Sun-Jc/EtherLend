@@ -1,1 +1,1 @@
-nodemon server_.js
+nodemon server_.js | tee server.log

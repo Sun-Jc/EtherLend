@@ -1,3 +1,4 @@
+*.log
 *.swp
 ethereum-android-lib/
 ethereum-android-sample/
