@@ -277,7 +277,6 @@ app.get("/applyMeeting/:id", function(req, res) {
           meeting = SmallMeeting.at(meetingAddr);
 
           js_allEvents(meeting, index, true);
-          //res.writeHead(200, {'Content-Type': 'text/plain'});
           res.end(JSON.stringify({'meetingAddr': meetingAddr}));
     }).catch(function(e){
         console.error(e.stack)
@@ -299,16 +298,19 @@ app.get("/set/:meetingAddr/:id/:whenEnd/:howLong", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
   startTime = js_lastEventsOf(meeting2index[req.params.meetingAddr]).args.startTime;
   js_setBasicTime(meeting, account[req.params.id], startTime.toNumber() + parseInt(req.params.whenEnd) , parseInt(req.params.howLong));
+  res.end(JSON.stringify({'res':'done'}));
 })
 
 app.get("/suggest/:meetingAddr/:id/:howLong/:howMuch", function(req, res) {
     meeting = SmallMeeting.at(req.params.meetingAddr);
     js_suggest(meeting, req.params.id, parseInt(req.params.howLong), parseInt(req.params.howMuch))
+  res.end(JSON.stringify({'res':'done'}));
 })
 
 app.get("/accept/:meetingAddr/:member/:manager", function(req, res) {
     meeting = SmallMeeting.at(req.params.meetingAddr);
     js_accept(meeting, accounts[req.params.member], accounts[req.params.manager]);
+  res.end(JSON.stringify({'res':'done'}));
 })
 
 app.get("/bid/:meetingAddr/:id/:round/:bidHowMuch/:payHowMuch", function(req, res) {
@@ -316,7 +318,7 @@ app.get("/bid/:meetingAddr/:id/:round/:bidHowMuch/:payHowMuch", function(req, re
     js_bidEther(meeting, accounts[req.params.id], req.params.round, 
                 req.params.bidHowMuch, req.params.payHowMuch).
                 then(function(){ console.log("bidded");});
-
+  res.end(JSON.stringify({'res':'done'}));
 })
 
 app.get("/reaveal/:meetingAddr/:id/:round/:revealHowMuch", function(req, res) {
@@ -324,6 +326,7 @@ app.get("/reaveal/:meetingAddr/:id/:round/:revealHowMuch", function(req, res) {
   js_showBidEther(meeting, accounts[req.params.id], req.params.round, 
                   req.params.revealHowMuch).
                   then(function(){ console.log("revealed");});
+  res.end(JSON.stringify({'res':'done'}));
 })
 
 
@@ -341,7 +344,13 @@ app.get("/getEvents/:meetingAddr", function(req, res) {
 //    res.end(JSON.stringify(js_events[req.params.which][req.params.index]));
 //})
 
-app.get("/vote", function(req, res) {vote_all()})
+app.get("/vote/:meetingAddr/:id/:aye", function(req, res) {
+  meeting = SmallMeeting.at(req.params.meetingAddr);
+  console.log(req.params.aye == 'aye')
+  js_voteFor(meeting, accounts[req.params.id], req.params.aye == 'aye' ? true: false);
+  res.end(JSON.stringify({'res':'done'}));
+})
+
 app.get("/check", function(req, res) {get_stage()})
 app.get("/push_get", function(req, res) {push_get()})
 app.get("/push", function(req, res) {push_try()})
