@@ -47,6 +47,7 @@ function js_applyMeeting(_service, _managerSelf){
 
 // when: seconds
 function js_setBasicTime(_meeting, _managerSelf, _whenEndRecruiting, _howLongAuctionVote){
+  console.log(_managerSelf, _whenEndRecruiting, _howLongAuctionVote, _meeting.address)
   _meeting.setRecuritAndVoteAuctionTime(_whenEndRecruiting , _howLongAuctionVote , {from:_managerSelf, gas:3000000});
 }
 
@@ -170,71 +171,6 @@ function js_getAccounts(req, res){
 
 ////////////////////////////////////////
 
-function set_recurit_vote_auction_time(meeting, id, whenEnd, howLong){
-  startTime = js_lastEventsOf(1).args.startTime;
-  js_setBasicTime(meeting, account[id], startTime.toNumber() + whenEnd , howLong);
-}
-
-function join_all(){
-  js_join(meeting, accounts[1], "I AM FIRST");
-  js_join(meeting, accounts[2], "I AM SECOND");
-  js_join(meeting, accounts[3], "I AM THIRD");
-}
-
-function accept_all(){
-  js_accept(meeting, accounts[1], account);
-  js_accept(meeting, accounts[2], account);
-  js_accept(meeting, accounts[3], account);
-}
-
-function suggest1(meeting, id, howLong, howMuch){
-  js_suggest(meeting, accounts[id], howLong, howMuch);
-}
-
-function vote_all(){
-  js_voteFor(meeting, accounts[1], true);
-  js_voteFor(meeting, accounts[2], true);
-  js_voteFor(meeting, accounts[3], true);
-}
-
-function bid_next(){
-  js_bidEther(meeting,accounts[1],round,13,13);
-  js_bidEther(meeting,accounts[3],round,11,11);
-  js_bidEther(meeting,accounts[2],round,12,12);
-}
-
-function reveal_next(){
-  js_showBidEther(meeting,accounts[1], round, 13).then(function(){console.log("revealed");});
-  js_showBidEther(meeting,accounts[3], round, 11).then(function(){console.log("revealed");});
-  js_showBidEther(meeting,accounts[2], round, 12).then(function(){console.log("revealed");});
-  round ++;
-}
-
-function push_try(){
-  js_push(meeting,account);
-}
-
-function get_stage(){
-  meeting.getState.call({from:account}).then(
-    function(v){
-      console.log("\n")
-      var a = ["stage", "finishedOrVoting", "auctionStage", "startTime", "recuritingEndTime", "firstAuctionTime", "thisVoteEndTime", "period", "base", "period_s", "base_s", "auctionVoteDuration", "checked", "doubleChecked"]
-      for(var i = 0;i<a.length;i++){
-        console.log(a[i].toString()+": "+v[i].toString());
-      }
-      //console.log(v.toString());
-    }).catch(function(e){
-      console.log("bad");
-      console.error(e);});
-}
-
-function push_get(){
-  push_try();
-  get_stage();
-}
-
-////////////////////////////////////////
-
 //Lets define a port we want to listen to
 const PORT=8085; 
 
@@ -289,7 +225,7 @@ app.get("/set/:meetingAddr/:id/:whenEnd/:howLong", function(req, res) {
   //whenEnd = web3.toBigNumber(startTime) + web3.toBigNumber(req.params.whenEnd)
   //whenEnd = web3.toBigNumber(req.params.whenEnd)
   //howLong = web3.toBigNumber(req.params.howLong)
-  js_setBasicTime(meeting, account[req.params.id], whenEnd, howLong);
+  js_setBasicTime(meeting, accounts[req.params.id], whenEnd, howLong);
   res.end(JSON.stringify({startTime: startTime, whenEnd: whenEnd, howLong: howLong}));
 })
 
