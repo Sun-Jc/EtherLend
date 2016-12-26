@@ -4,6 +4,7 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.Vector;
@@ -193,7 +194,7 @@ public class AccountModel{
 
     private BigInteger _getBalance(){
         JSONObject jsonObject = netComm.getJSON(url("getBalance/"+accounts[whichAccount]));
-        return new BigInteger(parseString(jsonObject,"balance"));
+        return new BigDecimal(parseString(jsonObject,"balance")).toBigInteger();
     }
 
     private void _join(String intro){
@@ -244,18 +245,18 @@ public class AccountModel{
 
         //isManager = new boolean[meetings.length];
         isManager[whichMeeting] = false;
-        startTimes = new BigInteger("-1");
+        startTimes = new BigDecimal("-1").toBigInteger();
         stage = -3;
-        auctionVoteDur = new BigInteger("-1");
-        numOfMembers = new BigInteger("0");
-        firstAuctionTime = new BigInteger("-1");
+        auctionVoteDur = new BigDecimal("-1").toBigInteger();
+        numOfMembers = new BigDecimal("0").toBigInteger();
+        firstAuctionTime = new BigDecimal("-1").toBigInteger();
         isMember = false;
-        base = new BigInteger("-1");
-        period = new BigInteger("-1");
+        base = new BigDecimal("-1").toBigInteger();
+        period = new BigDecimal("-1").toBigInteger();
         whenBorrow = 0; // default
         interests = new BigInteger[0];
-        toEarns = new BigInteger("0");
-        nextddl = new BigInteger("0");
+        toEarns = new BigDecimal("0").toBigInteger();
+        nextddl = new BigDecimal("0").toBigInteger();
         whatTodo = -1;
 
 
@@ -267,25 +268,29 @@ public class AccountModel{
         JSONObject result = netComm.getJSON(url("getEvents/" + meetings[whichMeeting]));
         try {
 
-            firstAuctionTime = new BigInteger(s.getJSONObject("state").getString("firstAuctionTime"));
+            firstAuctionTime = new BigDecimal(s.getJSONObject("state").getString("firstAuctionTime")).toBigInteger();
 
             JSONArray events = result.getJSONArray("events");
+
+            Log.d(TAG,"length:"+events.length());
 
             for (int i = 0; i < events.length(); i++) {
                 JSONObject e = events.getJSONObject(i);
                 String type = e.getString("event");
                 JSONObject args = e.getJSONObject("args");
 
+                Log.d(TAG,type);
+
                 if (type.equals("Established")) {
                     String manager = args.getString("manager");
                     this.isManager[whichMeeting] = manager.equals(accounts[whichAccount]);
-                    this.startTimes = new BigInteger(args.getString("startTime"));
+                    this.startTimes = new BigDecimal(args.getString("startTime")).toBigInteger();
                     stage = -2;
                     whatTodo = SET;
                     msg = "Manager needs to decide before when should new members join in and how long will an auction or voting last.";
                 } else if (type.equals("RecruitAndDecisionTimeSet")) {
-                    this.auctionVoteDur = new BigInteger(args.getString("decisonTime"));
-                    this.nextddl = new BigInteger(args.getString("endTimeRecruit"));
+                    this.auctionVoteDur = new BigDecimal(args.getString("decisonTime")).toBigInteger();
+                    this.nextddl = new BigDecimal(args.getString("endTimeRecruit")).toBigInteger();
                     stage = -1;
                     whatTodo = WAITtoACCEPTorJOIN;
                     msg = "Members should join in before " + nextddl.toString() + " s";
@@ -295,7 +300,7 @@ public class AccountModel{
                         msg = "Your application has been submitted.";
                     }
                 } else if (type.equals("NewMember")) {
-                    numOfMembers.add(new BigInteger("1"));
+                    numOfMembers.add(new BigDecimal("1").toBigInteger());
                     stage = 0;
                     if (args.getString("who").equals(accounts[whichAccount])) {
                         isMember = true;
@@ -311,17 +316,24 @@ public class AccountModel{
                     stage = 0;
                     whatTodo = PUSH;
                     msg = "You have voted successfully";
+                } else if(type.equals("FailSuggest")){
+                    stage = 0;
+                    whatTodo = SUGGEST;
+                    msg = "Pleas give your suggest";
                 } else if (type.equals("FormSet")) {
-                    base = new BigInteger(args.getString("base"));
-                    period = new BigInteger(args.getString("period"));
+                    base = new BigDecimal(args.getString("base")).toBigInteger();
+                    period = new BigDecimal(args.getString("period")).toBigInteger();
                     stage = 1;
                     whatTodo = BID;
                 } else if (type.equals("BeginAuction")) {
+
+                    Log.d(TAG,"auction begined");
+
                     stage = Integer.parseInt(args.getString("round"));
                     whatTodo = BID;
 
                     nextddl = firstAuctionTime.add(
-                            (period.add(auctionVoteDur)).multiply(new BigInteger(Integer.toString(stage - 1))).add(auctionVoteDur));
+                            (period.add(auctionVoteDur)).multiply(new BigDecimal(Integer.toString(stage - 1)).toBigInteger()).add(auctionVoteDur));
                     msg = "Please bid for round " + stage + " before " + nextddl + " s";
 
                 } else if (type.equals("Bidded")) {
@@ -359,7 +371,7 @@ public class AccountModel{
     }
 
     private void _vote(){
-        netComm.getJSON(url("vote/"+meetings[whichMeeting]+"/"+accounts[whichAccount]+"+/aye"));
+        netComm.getJSON(url("vote/"+meetings[whichMeeting]+"/"+accounts[whichAccount]+"/aye"));
     }
 
     private void _accept(String who){

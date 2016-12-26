@@ -95,8 +95,8 @@
               android:id="@+id/nexttime" android:layout_gravity="center_horizontal|top"
               android:layout_alignParentLeft="false"
               android:layout_alignParentTop="false"
-              android:textColor="#000000" android:textSize="14dp" android:layout_below="@+id/suggest"
-              android:layout_marginLeft="20dp"/>
+              android:textColor="#000000" android:textSize="14dp" android:layout_below="@+id/bid"
+              android:layout_marginLeft="20dp" android:layout_marginTop="20dp"/>
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Join"
             android:id="@+id/join" android:layout_gravity="right|center_vertical" android:layout_alignParentLeft="false"
             android:layout_centerHorizontal="true"

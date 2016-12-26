@@ -201,7 +201,12 @@ public class MainActivity extends AppCompatActivity implements Updatable, Simple
             }else if(whatTodo == SUGGEST){
               meetingPlay.toSuggest();
             }else if(whatTodo == BID){
-                meetingPlay.toBid();
+                if(numOfMembers.intValue() < stage){
+                    meetingPlay.NotJoinable();
+                    meetingPlay.updateSerAccBalMeetNtMsg(service,address,balance,meeting,nextddl,"Meeting ended. Thanks!");
+                }else {
+                    meetingPlay.toBid();
+                }
             }else if(whatTodo == PUSH || whatTodo == SET){
                 meetingPlay.NotJoinable();
             }
