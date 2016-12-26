@@ -223,7 +223,7 @@ public class AccountModel{
     private void _updateMeeting(){
         //TODO
         //if(stage != -1) {
-            isManager[whichMeeting] = true;
+            isManager[whichMeeting] = false;
             startTimes = new BigInteger("2016");
 
 

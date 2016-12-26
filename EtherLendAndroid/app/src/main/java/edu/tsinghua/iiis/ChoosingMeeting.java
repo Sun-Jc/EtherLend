@@ -93,6 +93,24 @@ public class ChoosingMeeting extends Fragment {
 
         );
 
+        FloatingActionButton renewBtn = (FloatingActionButton)mRootView.findViewById(R.id.refresh);
+        renewBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Looper.prepare();
+                                callback.model.loadMeetings(callback);
+                                Looper.loop();
+                            }
+                        }).start();
+                    }
+                }
+
+        );
+
         new Thread(new Runnable() {
             @Override
             public void run() {

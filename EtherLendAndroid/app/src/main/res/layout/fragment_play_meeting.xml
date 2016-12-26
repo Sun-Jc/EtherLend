@@ -1,54 +1,115 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="edu.tsinghua.iiis.PlayMeeting">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+                tools:context="edu.tsinghua.iiis.PlayMeeting">
 
     <!-- TODO: Update blank fragment layout -->
+
+
+    <View
+            android:id="@+id/bgg"
+            android:layout_width="fill_parent"
+            android:layout_height="160dp"
+            android:background="#1976d2" android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true" android:layout_marginLeft="0dp" android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp"/>
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loading Service"
-            android:id="@+id/ser" android:layout_gravity="center_horizontal|top"/>
+            android:id="@+id/ser" android:layout_gravity="center_horizontal|top" android:layout_alignParentLeft="true"
+            android:layout_marginLeft="284dp" android:layout_alignParentTop="true" android:layout_marginTop="0dp"/>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Loading Address"
               android:id="@+id/acc" android:layout_gravity="center_horizontal|top"
-              android:layout_marginTop="30dp"/>
+              android:layout_alignParentLeft="false"
+              android:layout_centerHorizontal="true"
+              android:layout_alignParentTop="false" android:layout_alignTop="@+id/bgg" android:textColor="#ffffff"
+              android:layout_marginTop="10dp"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Loading Meeting"
+              android:id="@+id/m" android:layout_gravity="center_horizontal|top"
+              android:layout_alignParentLeft="false"
+              android:layout_centerHorizontal="true"
+              android:layout_alignParentTop="false" android:textColor="#ffffff" android:layout_below="@+id/acc"
+              android:layout_marginTop="20dp" android:textSize="20dp"/>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Loading Balance"
               android:id="@+id/balance" android:layout_gravity="center_horizontal|top"
-              android:layout_marginTop="60dp"/>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Loading Meeting"
-              android:id="@+id/m" android:layout_gravity="center_horizontal|top" android:layout_marginTop="90dp"/>
+              android:layout_alignParentLeft="false"
+              android:layout_alignParentTop="false" android:textColor="#ffffff"
+              android:layout_alignBottom="@+id/bgg" android:layout_marginBottom="10dp"
+              android:layout_marginLeft="20dp"/>
     <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/period" android:layout_gravity="left|center_vertical" android:text="How Long"/>
+            android:id="@+id/period" android:layout_gravity="left|center_vertical" android:text="How Long"
+            android:layout_alignParentLeft="false" android:layout_alignParentTop="false"
+            android:layout_below="@+id/base" android:layout_marginTop="10dp"/>
     <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/base" android:layout_gravity="left|center_vertical" android:layout_marginTop="30dp"
-            android:text="How Much"/>
+            android:id="@+id/base" android:layout_gravity="left|center_vertical"
+            android:text="How Much" android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false" android:layout_below="@+id/bgg" android:layout_marginTop="10dp"/>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Suggest"
-            android:id="@+id/suggest" android:layout_gravity="center"/>
+            android:id="@+id/suggest" android:layout_gravity="center" android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false" android:layout_below="@+id/period"
+            android:layout_alignParentRight="true" android:layout_margin="20dp" android:textColor="#ffffff"
+            android:backgroundTint="@color/abc_btn_colored_borderless_text_material"/>
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="VOte"
-            android:id="@+id/vote" android:layout_gravity="right|center_vertical"/>
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/vote" android:layout_gravity="right|center_vertical" android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false"
+            android:backgroundTint="@color/abc_btn_colored_borderless_text_material"
+            android:textColor="#ffffff"/>
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bid"
             android:id="@+id/bid" android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginBottom="60dp"/>
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false"
+            android:textColor="#ffffff"
+            android:layout_alignParentRight="false" android:layout_toLeftOf="@+id/reveal"
+            android:layout_alignParentEnd="false" android:layout_alignParentStart="false"
+            android:layout_below="@+id/base" android:layout_marginTop="20dp"
+            android:backgroundTint="#009688"/>
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Reveal"
-            android:id="@+id/reveal" android:layout_gravity="right|bottom" android:layout_marginBottom="60dp"/>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="check"
-            android:id="@+id/chk" android:layout_gravity="left|bottom" android:layout_marginBottom="60dp"/>
+            android:id="@+id/reveal" android:layout_gravity="right|bottom"
+            android:layout_alignParentLeft="false" android:layout_alignParentTop="false"
+            android:layout_below="@+id/base" android:layout_alignParentRight="true" android:layout_margin="20dp"
+            android:backgroundTint="#009688"
+            android:textColor="#ffffff"/>
+
+    <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:src="@drawable/ic_autorenew_white_24dp"
+            android:id="@+id/chk" android:layout_gravity="left|bottom"
+            android:layout_alignParentLeft="false" android:layout_alignParentTop="false"
+            android:layout_alignParentBottom="true" android:layout_alignParentRight="true"
+            app:backgroundTint="@color/colorAccent"
+            android:layout_margin="40dp"/>
+
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bid Before"
-              android:id="@+id/nexttime" android:layout_gravity="center_horizontal|top" android:layout_marginTop="120dp"/>
+              android:id="@+id/nexttime" android:layout_gravity="center_horizontal|top"
+              android:layout_alignParentLeft="false"
+              android:layout_alignParentTop="false"
+              android:textColor="#000000" android:textSize="14dp" android:layout_below="@+id/suggest"
+              android:layout_marginLeft="20dp"/>
     <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Join"
-            android:id="@+id/join" android:layout_gravity="right|center_vertical"/>
-    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/intro"
-              android:layout_gravity="left|center_vertical" android:text="Self Intro" android:layout_marginBottom="30dp"/>
+            android:id="@+id/join" android:layout_gravity="right|center_vertical" android:layout_alignParentLeft="false"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_alignParentTop="false" android:backgroundTint="@color/abc_btn_colored_borderless_text_material" android:textColor="#ffffff"/>
+    <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/intro"
+              android:layout_gravity="left|center_vertical" android:text="Self Intro"
+              android:layout_alignParentLeft="false" android:layout_alignParentTop="false"
+              android:layout_below="@+id/bgg" android:layout_marginTop="10dp"/>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Message"
               android:id="@+id/msg" android:layout_gravity="center"
-              android:layout_marginTop="0dp" android:layout_marginBottom="40dp"/>
-</FrameLayout>
+              android:layout_alignParentLeft="false"
+              android:layout_alignParentTop="false" android:layout_below="@+id/nexttime"
+              android:textColor="#000000" android:textSize="14dp" android:layout_marginLeft="20dp"
+              android:layout_marginTop="20dp"/>
+</RelativeLayout>

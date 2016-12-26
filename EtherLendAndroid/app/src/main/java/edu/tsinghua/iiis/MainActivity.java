@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements Updatable, Simple
         for (int i = 0; i < accounts.length; i++) {
             accounts[i] = ChooseAccount.format(accounts[i]);
         }
-        MyAdapter adpter = new MyAdapter(accounts);
+        MyAdapter adpter = new MyAdapter(accounts,1);
         accountsChoosing.changeService("service: "+service);
 
         accountsChoosing.setAdapter(adpter,getBaseContext());
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements Updatable, Simple
     @Override
     public void updateMeetings(String service, String address, BigInteger balance, String[] meetings, boolean[] isManager) {
         meetingChoosing.setServiceAccountBalance(service,address,balance.toString());
-        MyAdapter adapter = new MyAdapter(meetings);
+        MyAdapter adapter = new MyAdapter(meetings,2);
         for (int i = 0; i < meetings.length; i++) {
             meetings[i] = ChooseAccount.format(meetings[i]);
         }
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements Updatable, Simple
             meetingManage.setServiceAccountMeetingStartTimeNextTimeStage(service,address,meeting,startTimes,nextddl.toString(),stage);
             if(stage == -2){
                 meetingManage.notsetted();
-            } if(stage==-1){
+            }else if(stage==-1){
                 meetingManage.setted();
             }else{
                 meetingManage.beginauction();
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements Updatable, Simple
 
     @Override
     public void membersGot(String[] members) {
-        MyAdapter adpter = new MyAdapter(members);
+        MyAdapter adpter = new MyAdapter(members,1);
         meetingManage.setAdapter(adpter,getBaseContext());
     }
 
