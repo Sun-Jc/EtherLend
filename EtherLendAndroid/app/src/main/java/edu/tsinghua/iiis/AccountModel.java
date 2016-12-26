@@ -20,9 +20,8 @@ public class AccountModel{
 
     // what to do
     public static final int SET = 1;
-    public static final int WAITtoACCEPT = 2;
-    public static final int WAITtoJOIN = 3;
-    public static final int WAITtoBeACCEPT = 4;
+    public static final int WAITtoACCEPTorJOIN = 2;
+    public static final int WAITtoBeACCEPTED = 4;
     public static final int SUGGEST = 5;
     public static final int VOTE = 6;
     public static final int BID = 7;
@@ -42,7 +41,7 @@ public class AccountModel{
     private int stage;
     private BigInteger auctionVoteDur;
     private BigInteger numOfMembers;
-    private BigInteger fristAuctionTime;
+    private BigInteger firstAuctionTime;
     private BigInteger base;
     private BigInteger period;
     private int whenBorrow; // default 0 for this not borrowed
@@ -52,6 +51,8 @@ public class AccountModel{
     private int whatTodo;
 
     private boolean isMember;
+
+    private String msg = "";
 
     /*public static void writeFile(String str, String fileName, Context context){
         try{
@@ -220,65 +221,111 @@ public class AccountModel{
         };*/
     }
 
-    private void _updateMeeting(){
+    private void _updateMeeting() {
 
-        JSONObject result = netComm.getJSON(url("getEvents/"+meetings[whichMeeting]));
+        isManager = new boolean[meetings.length];
+        isManager[whichMeeting] = false;
+        startTimes = new BigInteger("-1");
+        stage = -3;
+        auctionVoteDur = new BigInteger("-1");
+        numOfMembers = new BigInteger("0");
+        firstAuctionTime = new BigInteger("-1");
+        isMember = false;
+        base = new BigInteger("-1");
+        period = new BigInteger("-1");
+        whenBorrow = 0; // default
+        interests = new BigInteger[0];
+        toEarns = new BigInteger("0");
+        nextddl = new BigInteger("0");
+        whatTodo = -1;
+
+        JSONObject s = netComm.getJSON(url("check/" + meetings[whichMeeting] + "/" + whichAccount));
+
+
+        JSONObject result = netComm.getJSON(url("getEvents/" + meetings[whichMeeting]));
         try {
+
+            firstAuctionTime = new BigInteger(s.getJSONObject("state").getString("firstAuctionTime"));
+
             JSONArray events = result.getJSONArray("events");
 
             for (int i = 0; i < result.length(); i++) {
                 JSONObject e = events.getJSONObject(i);
                 String type = e.getString("event");
                 JSONObject args = e.getJSONObject("args");
-                if(type.equals("Established")){
+
+                if (type.equals("Established")) {
                     String manager = args.getString("manager");
                     this.isManager[whichMeeting] = manager.equals(accounts[whichAccount]);
                     this.startTimes = new BigInteger(args.getString("startTime"));
+                    stage = -2;
+                    whatTodo = SET;
+                    msg = "Manager needs to decide before when should new members join in and how long will an auction or voting last.";
+                } else if (type.equals("RecruitAndDecisionTimeSet")) {
+                    this.auctionVoteDur = new BigInteger(args.getString("decisonTime"));
+                    this.nextddl = new BigInteger(args.getString("endTimeRecruit"));
+                    stage = -1;
+                    whatTodo = WAITtoACCEPTorJOIN;
+                    msg = "Members should join in before " + nextddl.toString() + " s";
+                } else if (type.equals("JoinApplied")) {
+                    if (args.getString("agent").equals(accounts[whichAccount])) {
+                        whatTodo = WAITtoBeACCEPTED;
+                        msg = "Your application has been submitted.";
+                    }
+                } else if (type.equals("NewMember")) {
+                    numOfMembers.add(new BigInteger("1"));
+                    stage = 0;
+                    if (args.getString("who").equals(accounts[whichAccount])) {
+                        isMember = true;
+                        whatTodo = SUGGEST;
+                        msg = "You are already a member";
+                    }
+                } else if (type.equals("Suggested")) {
+                    stage = 0;
+                    whatTodo = VOTE;
+                    msg = "Please Vote for this suggestion: Our meeting will held every " +
+                            args.getString("period") + " s and basic amount is " + args.getString("base") + " wei";
+                } else if (type.equals("Voted")) {
+                    stage = 0;
+                    whatTodo = PUSH;
+                    msg = "You have voted successfully";
+                } else if (type.equals("FormSet")) {
+                    base = new BigInteger(args.getString("base"));
+                    period = new BigInteger(args.getString("period"));
+                    stage = 1;
+                    whatTodo = BID;
+                } else if (type.equals("BeginAuction")) {
+                    stage = Integer.parseInt(args.getString("round"));
+                    whatTodo = BID;
+
+                    nextddl = firstAuctionTime.add(
+                            (period.add(auctionVoteDur)).multiply(new BigInteger(Integer.toString(stage - 1))).add(auctionVoteDur));
+                    msg = "Please bid for round " + stage + " before " + nextddl + " s";
+
+                } else if (type.equals("Bidded")) {
+                    stage = Integer.parseInt(args.getString("stage"));
+                    if (args.getString("agent").equals(accounts[whichAccount])) {
+                        whatTodo = BID;
+                        msg = "Please reveal for round " + stage + " before " + nextddl + " s";
+                    }
+                } else if (type.equals("Revealed")) {
+                    stage = Integer.parseInt(args.getString("stage"));
+                    if (args.getString("agent").equals(accounts[whichAccount])) {
+                        whatTodo = PUSH;
+                        msg = "Please push for result";
+                    }
+                } else if (type.equals("AuctionSuccess")) {
+                    whatTodo = PUSH;
+                    stage = Integer.parseInt(args.getString("stage"));
+                    msg = args.getString("winner") + " won this auction, who will pay " + args.getString("interest") + " wei for others as interest";
                 }
             }
-
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-        private boolean[] isManager;
-
-        private BigInteger startTimes;
-        private int stage;
-        private BigInteger auctionVoteDur;
-        private BigInteger numOfMembers;
-        private BigInteger fristAuctionTime;
-        private BigInteger base;
-        private BigInteger period;
-        private int whenBorrow; // default 0 for this not borrowed
-        private BigInteger[] interests;
-        private BigInteger toEarns;
-        private BigInteger nextddl;
-        private int whatTodo;
-
-        private boolean isMember;
-
-        //TODO
-        //if(stage != -1) {
-            isManager[whichMeeting] = false;
-            startTimes = new BigInteger("2016");
-
-
-            auctionVoteDur = new BigInteger("-1");
-            numOfMembers = new BigInteger("0");;
-            fristAuctionTime = new BigInteger("-1");;
-            base = new BigInteger("-1");;
-            period = new BigInteger("-1");
-            whenBorrow = -1;
-            interests = new BigInteger[0];
-            toEarns = new BigInteger("0");
-            nextddl = new BigInteger("10");
-            whatTodo = 0;
-            isMember = false;
-            stage = -1;
-        //}
     }
+
+
 
     private void _set(BigInteger whenEndR, BigInteger howLongAuc){
         netComm.getJSON(url("set/"+meetings[whichMeeting]+"/"+whichAccount+"/"+whenEndR+"/"+howLongAuc));
@@ -375,14 +422,14 @@ public class AccountModel{
             startTimes,
             auctionVoteDur,
             numOfMembers,
-            fristAuctionTime,
+                firstAuctionTime,
             base,
             period,
             whenBorrow, // default 0 for this not borrowed
             interests,
             toEarns,
             nextddl,
-            whatTodo,isMember,stage);
+            whatTodo,isMember,stage,msg);
     }
 
     public void set(BigInteger whenEndR, BigInteger howLongAuc, Updatable obj){

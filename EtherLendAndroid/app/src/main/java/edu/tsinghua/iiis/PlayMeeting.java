@@ -97,7 +97,7 @@ public class PlayMeeting extends Fragment {
                 check.setVisibility(View.VISIBLE);;
                 vote.setVisibility(View.INVISIBLE);
 
-                msg.setText("cannot join this meeting");
+                ////msg.setText("cannot join this meeting");
             }
         });
 
@@ -107,7 +107,7 @@ public class PlayMeeting extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                msg.setText("input self intro and join");
+                ////msg.setText("input self intro and join");
 
                 serviceAddr.setVisibility(View.INVISIBLE);
                 accountAddr.setVisibility(View.VISIBLE);;
@@ -133,7 +133,7 @@ public class PlayMeeting extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                msg.setText("Suggest");
+                //msg.setText("Suggest");
 
                 serviceAddr.setVisibility(View.INVISIBLE);
                 accountAddr.setVisibility(View.VISIBLE);;
@@ -348,7 +348,7 @@ public class PlayMeeting extends Fragment {
         balance.setVisibility(View.VISIBLE);;
         meeting.setVisibility(View.VISIBLE);;
         nextTime.setVisibility(View.INVISIBLE);
-        msg.setVisibility(View.INVISIBLE);;
+        msg.setVisibility(View.VISIBLE);;
         selfIntro.setVisibility(View.INVISIBLE);
         period.setVisibility(View.INVISIBLE);
         base.setVisibility(View.INVISIBLE);

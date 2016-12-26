@@ -30,7 +30,7 @@ public interface Updatable {
                     BigInteger[] interests,
                     BigInteger toEarns,
                     BigInteger nextddl,
-                    int whatTodo,boolean isMember,int stage);
+                    int whatTodo,boolean isMember,int stage,String msg);
 
     void message(String msg);
 

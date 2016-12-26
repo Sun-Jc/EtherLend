@@ -24,9 +24,7 @@ import com.google.zxing.common.BitMatrix;
 
 import java.math.BigInteger;
 
-import static edu.tsinghua.iiis.AccountModel.BID;
-import static edu.tsinghua.iiis.AccountModel.SUGGEST;
-import static edu.tsinghua.iiis.AccountModel.VOTE;
+import static edu.tsinghua.iiis.AccountModel.*;
 
 public class MainActivity extends AppCompatActivity implements Updatable, SimpleScannerActivity.qrNeeded {
 
@@ -175,33 +173,33 @@ public class MainActivity extends AppCompatActivity implements Updatable, Simple
     }
 
     @Override
-    public void updateSingle(String service, String address, BigInteger balance, String meeting, boolean isManager, BigInteger startTimes, BigInteger auctionVoteDur, BigInteger numOfMembers, BigInteger fristAuctionTime, BigInteger base, BigInteger period, int whenBorrow, BigInteger[] interests, BigInteger toEarns, BigInteger nextddl, int whatTodo, boolean isMember, int stage) {
+    public void updateSingle(String service, String address, BigInteger balance, String meeting, boolean isManager, BigInteger startTimes, BigInteger auctionVoteDur, BigInteger numOfMembers, BigInteger fristAuctionTime, BigInteger base, BigInteger period, int whenBorrow, BigInteger[] interests, BigInteger toEarns, BigInteger nextddl, int whatTodo, boolean isMember, int stage,String msg) {
         if(currentPage == meetingChoosing){
             if(isManager){
                 manageMeeting3();
-            }else{
+            }else {
                 playMeetings3();
             }
         }else if(currentPage == meetingManage){
             meetingManage.setServiceAccountMeetingStartTimeNextTimeStage(service,address,meeting,startTimes,nextddl.toString(),stage);
-            if(stage == -2){
+            if(whatTodo == SET){
                 meetingManage.notsetted();
-            }else if(stage==-1){
+            }else if(whatTodo == WAITtoBeACCEPTED || whatTodo == WAITtoACCEPTorJOIN){
                 meetingManage.setted();
             }else{
                 meetingManage.beginauction();
             }
         }else if(currentPage == meetingPlay){
-            meetingPlay.updateSerAccBalMeetNtMsg(service,address,balance,meeting,nextddl,"");
-            if(stage==-1){
+            meetingPlay.updateSerAccBalMeetNtMsg(service,address,balance,meeting,nextddl,msg);
+            if(whatTodo == WAITtoACCEPTorJOIN || whatTodo == WAITtoBeACCEPTED){
                 meetingPlay.toJoin();
-            }else if(stage==0 && whatTodo == VOTE){
+            }else if(whatTodo == VOTE){
                 meetingPlay.toVote();
-            }else if(stage == 0 && whatTodo == SUGGEST){
+            }else if(whatTodo == SUGGEST){
               meetingPlay.toSuggest();
-            }else if(stage>1 && whatTodo == BID){
+            }else if(whatTodo == BID){
                 meetingPlay.toBid();
-            }else if(stage > -1 &&!isMember){
+            }else if(whatTodo == PUSH || whatTodo == SET){
                 meetingPlay.NotJoinable();
             }
         }
