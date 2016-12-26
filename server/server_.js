@@ -83,6 +83,9 @@ function js_push(_meeting,_account){
 var js_events = new Array();
 var meeting2index = {}
 
+function initEvents (){
+}
+
 function js_allEvents(_contract, _whichJsEvents, _logOut){
   js_events[_whichJsEvents] = new Array();
 
@@ -351,9 +354,26 @@ app.get("/vote/:meetingAddr/:id/:aye", function(req, res) {
   res.end(JSON.stringify({'res':'done'}));
 })
 
-app.get("/check", function(req, res) {get_stage()})
+app.get("/push/:meetingAddr/:id", function(req, res) {
+  meeting = SmallMeeting.at(req.params.meetingAddr);
+   js_push(meeting,accounts[req.params.id]);
+})
+app.get("/check/:meetingAddr/:id", function(req, res) {
+   meeting = SmallMeeting.at(req.params.meetingAddr);
+   meeting.getState.call({from:accounts[req.params.id]}).then(
+    function(v){
+      state = {}
+      console.log("\n")
+      var a = ["stage", "finishedOrVoting", "auctionStage", "startTime", "recuritingEndTime", "firstAuctionTime", "thisVoteEndTime", "period", "base", "period_s", "base_s", "auctionVoteDuration", "checked", "doubleChecked"]
+      for(var i = 0;i<a.length;i++){
+        state[a[i].toString()] = v[i].toString();
+      }
+      res.end(JSON.stringify({'state':state}));
+    }).catch(function(e){
+      console.log("bad");
+      console.error(e);});
+})
 app.get("/push_get", function(req, res) {push_get()})
-app.get("/push", function(req, res) {push_try()})
 
 
 ////////////////////////////////////////
