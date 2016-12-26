@@ -221,6 +221,44 @@ public class AccountModel{
     }
 
     private void _updateMeeting(){
+
+        JSONObject result = netComm.getJSON(url("getEvents/"+meetings[whichMeeting]));
+        try {
+            JSONArray events = result.getJSONArray("events");
+
+            for (int i = 0; i < result.length(); i++) {
+                JSONObject e = events.getJSONObject(i);
+                String type = e.getString("event");
+                JSONObject args = e.getJSONObject("args");
+                if(type.equals("Established")){
+                    String manager = args.getString("manager");
+                    this.isManager[whichMeeting] = manager.equals(accounts[whichAccount]);
+                    this.startTimes = new BigInteger(args.getString("startTime"));
+                }
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        private boolean[] isManager;
+
+        private BigInteger startTimes;
+        private int stage;
+        private BigInteger auctionVoteDur;
+        private BigInteger numOfMembers;
+        private BigInteger fristAuctionTime;
+        private BigInteger base;
+        private BigInteger period;
+        private int whenBorrow; // default 0 for this not borrowed
+        private BigInteger[] interests;
+        private BigInteger toEarns;
+        private BigInteger nextddl;
+        private int whatTodo;
+
+        private boolean isMember;
+
         //TODO
         //if(stage != -1) {
             isManager[whichMeeting] = false;
