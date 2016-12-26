@@ -84,6 +84,7 @@ function js_push(_meeting,_account){
 
 var js_events = new Array();
 var meeting2index = {} 
+var meetings = []
 
 function initMeetings(service){
   js_events[0] = new Array();
@@ -92,6 +93,7 @@ function initMeetings(service){
     if (!error){
       if (result.event == 'NewMeeting') {
           index = Object.keys(meeting2index).length+1;
+          meetings.push(result.args.newContract);
           meeting2index[result.args.newContract] = index;
           meeting = SmallMeeting.at(result.args.newContract);
           js_allEvents(meeting, index, true);
@@ -180,6 +182,10 @@ var app = express();
 
 app.get("/getAccounts", function(req, res) {
     res.end(JSON.stringify({'accounts': accounts}));
+})
+
+app.get("/getMeetings_", function(req, res) {
+    res.end(JSON.stringify({'meetings': meetings}));
 })
 
 app.get("/getService", function(req, res) {
