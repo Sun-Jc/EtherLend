@@ -87,6 +87,8 @@ function js_allEvents(_contract, _whichJsEvents, _logOut){
   js_events[_whichJsEvents] = new Array();
 
   var events = _contract.allEvents({fromBlock: 0, toBlock: 'latest'});
+  
+  console.log(events)
 
   events.watch(function(error, result){
     if (!error){
@@ -290,18 +292,18 @@ app.get("/join/:meetingAddr/:id", function(req, res) {
 })
 
 app.get("/getMeetings", function(req, res) {
-  res.end(JSON.stringify(Object.keys(meeting2index)));
+  res.end(JSON.stringify({'meetingAddrs': Object.keys(meeting2index)}));
 })
 
 app.get("/set/:meetingAddr/:id/:whenEnd/:howLong", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
   startTime = js_lastEventsOf(meeting2index[req.params.meetingAddr]).args.startTime;
-  js_setBasicTime(meeting, account[req.params.id], startTime.toNumber() + req.params.whenEnd , req.params.howLong);
+  js_setBasicTime(meeting, account[req.params.id], startTime.toNumber() + parseInt(req.params.whenEnd) , parseInt(req.params.howLong));
 })
 
 app.get("/suggest/:meetingAddr/:id/:howLong/:howMuch", function(req, res) {
     meeting = SmallMeeting.at(req.params.meetingAddr);
-    js_suggest(meeting, req.params.id, req.params.howLong, req.params.howMuch)
+    js_suggest(meeting, req.params.id, parseInt(req.params.howLong), parseInt(req.params.howMuch))
 })
 
 app.get("/accept/:meetingAddr/:member/:manager", function(req, res) {
@@ -332,7 +334,7 @@ app.get("/getEvents/:meetingAddr", function(req, res) {
         array.push(js_events[index][i]);
         //array.push(JSON.stringify(js_events[index][i]));
     }
-    res.end(JSON.stringify(array));
+    res.end(JSON.stringify({'events':array}));
 })
 //app.get("/getEvents/:which/:index", function(req, res) {
 //    console.log(js_events[req.params.which][req.params.index]);
