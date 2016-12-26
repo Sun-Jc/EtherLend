@@ -295,12 +295,13 @@ app.get("/getMeetings", function(req, res) {
 
 app.get("/set/:meetingAddr/:id/:whenEnd/:howLong", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
-  set_recurit_vote_auction_time(meeting, req.params.id, req.params.whenEnd, req.params.howLong)
+  startTime = js_lastEventsOf(meeting2index[req.params.meetingAddr]).args.startTime;
+  js_setBasicTime(meeting, account[req.params.id], startTime.toNumber() + req.params.whenEnd , req.params.howLong);
 })
 
 app.get("/suggest/:meetingAddr/:id/:howLong/:howMuch", function(req, res) {
     meeting = SmallMeeting.at(req.params.meetingAddr);
-    suggest1(meeting, req.params.id, req.params.howLong, req.params.howMuch)
+    js_suggest(meeting, req.params.id, req.params.howLong, req.params.howMuch)
 })
 
 app.get("/accept/:meetingAddr/:member/:manager", function(req, res) {
