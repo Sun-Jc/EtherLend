@@ -34,7 +34,7 @@
             android:text="Loading Balance"
             android:id="@+id/bal" android:layout_gravity="center_horizontal|top"
             android:layout_above="@+id/textView2" android:layout_centerHorizontal="true"
-            android:layout_marginBottom="12dp" android:textSize="16dp"/>
+            android:layout_marginBottom="9dp" android:textSize="16dp"/>
     <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,9 +42,21 @@
             android:id="@+id/apply" android:layout_alignParentLeft="false"
             android:layout_alignParentTop="false" android:layout_alignParentStart="false"
             android:layout_alignParentBottom="true" android:layout_alignParentRight="true"
-            android:layout_margin="30dp"
             android:src="@drawable/ic_add_white_24dp"
-            app:backgroundTint="@color/colorAccent"/>
+            app:backgroundTint="@color/colorAccent" android:layout_marginRight="30dp"
+            android:layout_marginBottom="30dp" android:layout_marginTop="20dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:id="@+id/refresh" android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false" android:layout_alignParentStart="false"
+            android:layout_alignParentBottom="false" android:layout_alignParentRight="true"
+            android:src="@drawable/ic_autorenew_white_24dp"
+            app:backgroundTint="#FF6E40" android:layout_marginBottom="0dp"
+            android:layout_marginRight="30dp" android:layout_above="@+id/apply"
+            android:layout_alignWithParentIfMissing="false"/>
 
 
     <TextView

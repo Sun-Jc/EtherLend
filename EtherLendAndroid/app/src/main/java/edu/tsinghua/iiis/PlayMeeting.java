@@ -4,6 +4,7 @@ package edu.tsinghua.iiis;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,16 +30,14 @@ public class PlayMeeting extends Fragment {
     TextView meeting;
     TextView nextTime;
     TextView msg;
-
     EditText selfIntro;
     EditText period;
     EditText base;
-
     Button   suggest;
     Button   join;
     Button   bid;
     Button   reveal;
-    Button   check;
+    FloatingActionButton check;
     Button   vote;
 
     public void updateSerAccBalMeetNtMsg(
@@ -53,11 +52,11 @@ public class PlayMeeting extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                th.serviceAddr.setText("service: "+serviceAddr);
-                th.accountAddr.setText("account: "+accountAddr);
-                th.balance.setText("balance: "+balance);
-                th.meeting.setText("meeting: "+meeting);
-                th.nextTime.setText("Bid before "+nextTime);
+                th.serviceAddr.setText(serviceAddr);
+                th.accountAddr.setText(accountAddr);
+                th.balance.setText("$ "+balance +" wei");
+                th.meeting.setText(meeting);
+                th.nextTime.setText("Next time: "+nextTime);
                 if(!msg.equals(""))
                     th.msg.setText(msg);
             }
@@ -81,17 +80,24 @@ public class PlayMeeting extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+                serviceAddr.setVisibility(View.INVISIBLE);
+                accountAddr.setVisibility(View.VISIBLE);;
+                balance.setVisibility(View.VISIBLE);;
+                meeting.setVisibility(View.VISIBLE);;
                 nextTime.setVisibility(View.INVISIBLE);
+                msg.setVisibility(View.VISIBLE);;
+                selfIntro.setVisibility(View.INVISIBLE);
+                period.setVisibility(View.INVISIBLE);
+                base.setVisibility(View.INVISIBLE);
+                suggest.setVisibility(View.INVISIBLE);
+                join.setVisibility(View.INVISIBLE);
+                bid.setVisibility(View.INVISIBLE);
+                reveal.setVisibility(View.INVISIBLE);
+                check.setVisibility(View.VISIBLE);;
+                vote.setVisibility(View.INVISIBLE);
+
                 msg.setText("cannot join this meeting");
-                selfIntro.setVisibility(View.INVISIBLE);;
-                period.setVisibility(View.INVISIBLE);;
-                base.setVisibility(View.INVISIBLE);;
-                suggest.setVisibility(View.INVISIBLE);;
-                join.setVisibility(View.INVISIBLE);;
-                bid.setVisibility(View.INVISIBLE);;
-                reveal.setVisibility(View.INVISIBLE);;
-                check.setVisibility(View.INVISIBLE);;
-                vote.setVisibility(View.INVISIBLE);;
             }
         });
 
@@ -103,16 +109,21 @@ public class PlayMeeting extends Fragment {
             public void run() {
                 msg.setText("input self intro and join");
 
-                join.setVisibility(View.VISIBLE);
+                serviceAddr.setVisibility(View.INVISIBLE);
+                accountAddr.setVisibility(View.VISIBLE);;
+                balance.setVisibility(View.VISIBLE);;
+                meeting.setVisibility(View.VISIBLE);;
+                nextTime.setVisibility(View.VISIBLE);
+                msg.setVisibility(View.VISIBLE);;
                 selfIntro.setVisibility(View.VISIBLE);
-
                 period.setVisibility(View.INVISIBLE);
-                base.setVisibility(View.INVISIBLE);;
-                suggest.setVisibility(View.INVISIBLE);;
-                bid.setVisibility(View.INVISIBLE);;
-                reveal.setVisibility(View.INVISIBLE);;
-                check.setVisibility(View.INVISIBLE);;
-                vote.setVisibility(View.INVISIBLE);;
+                base.setVisibility(View.INVISIBLE);
+                suggest.setVisibility(View.INVISIBLE);
+                join.setVisibility(View.VISIBLE);
+                bid.setVisibility(View.INVISIBLE);
+                reveal.setVisibility(View.INVISIBLE);
+                check.setVisibility(View.VISIBLE);;
+                vote.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -123,15 +134,22 @@ public class PlayMeeting extends Fragment {
             @Override
             public void run() {
                 msg.setText("Suggest");
+
+                serviceAddr.setVisibility(View.INVISIBLE);
+                accountAddr.setVisibility(View.VISIBLE);;
+                balance.setVisibility(View.VISIBLE);;
+                meeting.setVisibility(View.VISIBLE);;
+                nextTime.setVisibility(View.INVISIBLE);
+                msg.setVisibility(View.VISIBLE);;
+                selfIntro.setVisibility(View.INVISIBLE);
                 period.setVisibility(View.VISIBLE);
                 base.setVisibility(View.VISIBLE);
-
-                selfIntro.setVisibility(View.INVISIBLE);
-                join.setVisibility(View.INVISIBLE);;
-                bid.setVisibility(View.INVISIBLE);;
-                reveal.setVisibility(View.INVISIBLE);;
-                check.setVisibility(View.INVISIBLE);;
-                vote.setVisibility(View.INVISIBLE);;
+                suggest.setVisibility(View.VISIBLE);
+                join.setVisibility(View.INVISIBLE);
+                bid.setVisibility(View.INVISIBLE);
+                reveal.setVisibility(View.INVISIBLE);
+                check.setVisibility(View.VISIBLE);;
+                vote.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -141,15 +159,21 @@ public class PlayMeeting extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                serviceAddr.setVisibility(View.INVISIBLE);
+                accountAddr.setVisibility(View.VISIBLE);;
+                balance.setVisibility(View.VISIBLE);;
+                meeting.setVisibility(View.VISIBLE);;
+                nextTime.setVisibility(View.VISIBLE);
+                msg.setVisibility(View.VISIBLE);;
                 selfIntro.setVisibility(View.INVISIBLE);
-                period.setVisibility(View.INVISIBLE);;
-                base.setVisibility(View.INVISIBLE);;
-                suggest.setVisibility(View.INVISIBLE);;
-                join.setVisibility(View.INVISIBLE);;
-                bid.setVisibility(View.INVISIBLE);;
-                reveal.setVisibility(View.INVISIBLE);;
-                check.setVisibility(View.INVISIBLE);;
-                vote.setVisibility(View.VISIBLE);;
+                period.setVisibility(View.INVISIBLE);
+                base.setVisibility(View.INVISIBLE);
+                suggest.setVisibility(View.INVISIBLE);
+                join.setVisibility(View.INVISIBLE);
+                bid.setVisibility(View.INVISIBLE);
+                reveal.setVisibility(View.INVISIBLE);
+                check.setVisibility(View.VISIBLE);;
+                vote.setVisibility(View.VISIBLE);
             }
         });
 
@@ -159,15 +183,21 @@ public class PlayMeeting extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                serviceAddr.setVisibility(View.INVISIBLE);
+                accountAddr.setVisibility(View.VISIBLE);;
+                balance.setVisibility(View.VISIBLE);;
+                meeting.setVisibility(View.VISIBLE);;
+                nextTime.setVisibility(View.VISIBLE);
+                msg.setVisibility(View.VISIBLE);;
                 selfIntro.setVisibility(View.INVISIBLE);
-                period.setVisibility(View.INVISIBLE);;
-                base.setVisibility(View.VISIBLE);;
-                suggest.setVisibility(View.INVISIBLE);;
-                join.setVisibility(View.INVISIBLE);;
-                bid.setVisibility(View.VISIBLE);;
-                reveal.setVisibility(View.VISIBLE);;
-                check.setVisibility(View.INVISIBLE);;
-                vote.setVisibility(View.VISIBLE);;
+                period.setVisibility(View.INVISIBLE);
+                base.setVisibility(View.VISIBLE);
+                suggest.setVisibility(View.INVISIBLE);
+                join.setVisibility(View.INVISIBLE);
+                bid.setVisibility(View.VISIBLE);
+                reveal.setVisibility(View.VISIBLE);
+                check.setVisibility(View.VISIBLE);;
+                vote.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -195,7 +225,7 @@ public class PlayMeeting extends Fragment {
         join=(Button) mRootView.findViewById(R.id.join);
         bid=(Button) mRootView.findViewById(R.id.bid);
         reveal=(Button) mRootView.findViewById(R.id.reveal);
-        check=(Button) mRootView.findViewById(R.id.chk);
+        check=(FloatingActionButton) mRootView.findViewById(R.id.chk);
         vote=(Button) mRootView.findViewById(R.id.vote);
 
         suggest.setOnClickListener(new View.OnClickListener() {
@@ -311,6 +341,23 @@ public class PlayMeeting extends Fragment {
                 Looper.loop();
             }
         }).start();
+
+
+        serviceAddr.setVisibility(View.INVISIBLE);
+        accountAddr.setVisibility(View.VISIBLE);;
+        balance.setVisibility(View.VISIBLE);;
+        meeting.setVisibility(View.VISIBLE);;
+        nextTime.setVisibility(View.INVISIBLE);
+        msg.setVisibility(View.INVISIBLE);;
+        selfIntro.setVisibility(View.INVISIBLE);
+        period.setVisibility(View.INVISIBLE);
+        base.setVisibility(View.INVISIBLE);
+        suggest.setVisibility(View.INVISIBLE);
+        join.setVisibility(View.INVISIBLE);
+        bid.setVisibility(View.INVISIBLE);
+        reveal.setVisibility(View.INVISIBLE);
+        check.setVisibility(View.VISIBLE);;
+        vote.setVisibility(View.INVISIBLE);
 
         return mRootView;
     }

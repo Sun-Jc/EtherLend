@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 
 import java.math.BigInteger;
 
+import static edu.tsinghua.iiis.SimpleScannerActivity.TAG;
+
 
 public class ManageMeeting extends Fragment {
 
@@ -24,31 +27,33 @@ public class ManageMeeting extends Fragment {
 
     private TextView serviceAddr;
     private TextView accountAddr;
-
     private TextView meeting;
-
     private TextView startTime;
     private TextView nextTime;
     private TextView stage;
-
     private EditText howLongRec;
     private EditText howLongAuc;
-
     private FloatingActionButton check;
-
     FloatingActionButton appBtn;
-
-    private Button submit;
+    private Button    submit;
 
     public void notsetted(){
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                howLongRec.setVisibility(View.VISIBLE);
-                howLongAuc.setVisibility(View.VISIBLE);
-                submit.setVisibility(View.VISIBLE);
-                appBtn.setVisibility(View.INVISIBLE);
+                serviceAddr.setVisibility(View.INVISIBLE);;
+                accountAddr.setVisibility(View.VISIBLE);;
+                meeting.setVisibility(View.VISIBLE);;
+                startTime.setVisibility(View.VISIBLE);
+                nextTime.setVisibility(View.INVISIBLE);;
+                stage.setVisibility(View.INVISIBLE);;
+                howLongRec.setVisibility(View.VISIBLE);;
+                howLongAuc.setVisibility(View.VISIBLE);;
+                check.setVisibility(View.VISIBLE);;
+                appBtn.setVisibility(View.INVISIBLE);;
+                submit.setVisibility(View.VISIBLE);;
                 mRecyclerView.setVisibility(View.INVISIBLE);
+                Log.d(TAG,"notsetted");
             }
         });
     }
@@ -57,11 +62,19 @@ public class ManageMeeting extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                howLongRec.setVisibility(View.INVISIBLE);
-                howLongAuc.setVisibility(View.INVISIBLE);
-                submit.setVisibility(View.INVISIBLE);
-                appBtn.setVisibility(View.VISIBLE);
                 mRecyclerView.setVisibility(View.VISIBLE);
+                serviceAddr.setVisibility(View.INVISIBLE);;
+                accountAddr.setVisibility(View.VISIBLE);;
+                meeting.setVisibility(View.VISIBLE);;
+                startTime.setVisibility(View.VISIBLE);
+                nextTime.setVisibility(View.VISIBLE);;
+                stage.setVisibility(View.VISIBLE);;
+                howLongRec.setVisibility(View.INVISIBLE);
+                howLongAuc.setVisibility(View.INVISIBLE);;
+                check.setVisibility(View.VISIBLE);;
+                appBtn.setVisibility(View.VISIBLE);;
+                submit.setVisibility(View.INVISIBLE);;
+                Log.d(TAG,"setted");
             }
         });
 
@@ -71,11 +84,19 @@ public class ManageMeeting extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                howLongRec.setVisibility(View.INVISIBLE);
-                howLongAuc.setVisibility(View.INVISIBLE);
-                submit.setVisibility(View.INVISIBLE);
-                appBtn.setVisibility(View.INVISIBLE);
+                serviceAddr.setVisibility(View.INVISIBLE);;
+                accountAddr.setVisibility(View.VISIBLE);;
+                meeting.setVisibility(View.VISIBLE);;
+                startTime.setVisibility(View.VISIBLE);
+                nextTime.setVisibility(View.VISIBLE);;
+                stage.setVisibility(View.VISIBLE);;
+                howLongRec.setVisibility(View.INVISIBLE);;
+                howLongAuc.setVisibility(View.INVISIBLE);;
+                check.setVisibility(View.VISIBLE);;
+                appBtn.setVisibility(View.INVISIBLE);;
+                submit.setVisibility(View.INVISIBLE);;
                 mRecyclerView.setVisibility(View.VISIBLE);
+                Log.d(TAG,"beigin");
             }
         });
 
@@ -199,6 +220,14 @@ public class ManageMeeting extends Fragment {
                 Looper.loop();
             }
         }).start();
+
+
+        nextTime.setVisibility(View.INVISIBLE);
+        stage.setVisibility(View.INVISIBLE);
+        howLongRec.setVisibility(View.INVISIBLE);;
+        howLongAuc.setVisibility(View.INVISIBLE);;
+        appBtn.setVisibility(View.INVISIBLE);;
+        submit.setVisibility(View.INVISIBLE);;
 
 
         return mRootView;

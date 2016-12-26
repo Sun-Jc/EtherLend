@@ -9,7 +9,7 @@
             android:id="@+id/bgg"
             android:layout_width="fill_parent"
             android:layout_height="160dp"
-            android:background="#dc1d47" android:layout_alignParentRight="true"
+            android:background="#1976d2" android:layout_alignParentRight="true"
             />
 
     <TextView
@@ -26,7 +26,7 @@
             android:id="@+id/members"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="201dp" android:layout_below="@+id/bgg" android:layout_marginTop="6dp"/>
+            android:layout_height="201dp" android:layout_alignParentBottom="true" android:layout_below="@+id/submit"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,28 +44,43 @@
             android:text="Loading Meeting"
             android:textColor="#ffffff"
             android:id="@+id/meeting"
-            android:textSize="20dp" android:layout_alignTop="@+id/bgg" android:layout_margin="60dp"/>
+            android:textSize="20dp" android:layout_alignTop="@+id/bgg" android:layout_marginLeft="60dp"
+            android:layout_marginTop="55dp"/>
+
+    <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_autorenew_white_24dp"
+            android:id="@+id/check"
+            app:backgroundTint="#FF6E40"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true" android:layout_margin="30dp"/>
 
     <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:backgroundTint="@color/colorAccent"
             android:src="@drawable/ic_add_white_24dp"
-            android:id="@+id/accept" android:layout_above="@+id/check" android:layout_alignEnd="@+id/check"
-    />
+            android:id="@+id/accept"
+            android:layout_above="@id/check"
+            android:layout_marginBottom="0dp" android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"/>
 
-    <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:inputType="number"
+    <EditText android:layout_width="fill_parent" android:layout_height="wrap_content" android:inputType="number"
               android:ems="10" android:id="@+id/recend"
-              android:text="When end recruiting" android:layout_below="@+id/auctime"
-              android:layout_alignParentStart="true"/>
+              android:text="When end recruiting"
+              android:layout_below="@+id/bgg"
+              android:layout_marginTop="10dp"
+              android:textColor="@color/switch_thumb_disabled_material_dark"/>
 
     <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
             android:id="@+id/auctime" android:text="How long to decide"
-            android:layout_alignTop="@+id/members" android:layout_alignParentStart="true"/>
+            android:layout_below="@id/recend"
+            android:layout_marginTop="10dp" android:textColor="@color/switch_thumb_disabled_material_dark"/>
 
 
     <Button
@@ -74,33 +89,42 @@
             android:text="set"
             android:id="@+id/submit"
             android:textColor="#ffffff"
-            android:backgroundTint="@color/abc_btn_colored_borderless_text_material" android:layout_below="@+id/auctime"
-            android:layout_alignEnd="@+id/check"/>
+            android:layout_below="@id/auctime"
+            android:layout_alignParentRight
+                    ="true"
+            android:backgroundTint="@color/abc_btn_colored_borderless_text_material"
+
+            android:layout_marginRight="20dp" android:layout_marginTop="20dp"/>
+
     <TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="Loading Starttime"
               android:id="@+id/startTime"
-              android:layout_above="@+id/accept" android:layout_toStartOf="@+id/ac2"/>
+              android:textSize="16dp"
+              android:textColor="#ffffff" android:layout_alignBottom="@+id/bgg" android:layout_marginBottom="20dp"
+              android:layout_marginLeft="20dp"/>
 
 
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
               android:text="Loading Next Time"
               android:id="@+id/nextTime"
-              android:textSize="@dimen/abc_text_size_small_material"
-              android:layout_above="@+id/check" android:layout_alignStart="@+id/startTime"/>
+              android:layout_below="@+id/stage"
+              android:layout_margin="12dp" android:textSize="16dp"
+              android:textColor="@color/abc_search_url_text_pressed"/>
 
 
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-               android:text="Loading Stage"
+              android:text="Loading Stage"
               android:id="@+id/stage"
-              android:layout_alignTop="@+id/check" android:layout_alignStart="@+id/startTime"/>
+              android:layout_below="@+id/bgg"
+              android:layout_margin="12dp" android:textColor="@color/abc_search_url_text_pressed"
+              android:textSize="16dp"/>
 
-    <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_autorenew_white_24dp"
-            android:id="@+id/check"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true" android:layout_margin="30dp"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Members"
+              android:id="@+id/textView3"
+              android:layout_above="@+id/members"
+
+              android:layout_marginBottom="10dp" android:layout_marginLeft="10dp"
+    />
 
 </RelativeLayout>
