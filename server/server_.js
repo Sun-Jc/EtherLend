@@ -81,10 +81,27 @@ function js_push(_meeting,_account){
 
 
 var js_events = new Array();
-var meeting2index = {}
+var meeting2index = {} 
 
-function initEvents (){
+function initMeetings(service){
+  js_events[0] = new Array();
+  var events = service.allEvents({fromBlock: 0, toBlock: 'latest'});
+  events.watch(function(error, result){
+    if (!error){
+      if (result.event == 'NewMeeting') {
+          index = Object.keys(meeting2index).length+1;
+          meeting2index[result.args.newContract] = index;
+          meeting = SmallMeeting.at(result.args.newContract);
+          js_allEvents(meeting, index, true);
+      }
+    }else{
+      console.log("wrong event at "+_contract);
+      console.error(error);
+    }
+  });
 }
+var service = SmallEthLendService.deployed();
+initMeetings(service);
 
 function js_allEvents(_contract, _whichJsEvents, _logOut){
   js_events[_whichJsEvents] = new Array();
@@ -152,29 +169,6 @@ function js_getAccounts(req, res){
 }
 
 ////////////////////////////////////////
-
-function new_meeting(req, res, id){
-  var service = SmallEthLendService.deployed();
-  console.log(service);
-
-  js_allEvents(service,0,true);
-
-  js_applyMeeting(service,accounts[id]).then(
-    function(){
-      console.log('new meeting got');
-
-      meetingAddr = js_lastEventsOf(0).args.newContract;
-      console.log(meetingAddr);
-
-      meeting = SmallMeeting.at(meetingAddr);
-
-      js_allEvents(meeting,1,true);
-      //res.writeHead(200, {'Content-Type': 'text/plain'});
-      res.end(JSON.stringify({'meetingAddr': meetingAddr}));
-  }).catch(function(e){
-    console.error(e.stack)
-  });
-}
 
 function set_recurit_vote_auction_time(meeting, id, whenEnd, howLong){
   startTime = js_lastEventsOf(1).args.startTime;
@@ -264,23 +258,10 @@ app.get("/getBalance/:id", function(req, res) {
 
 app.get("/applyMeeting/:id", function(req, res) {
     var service = SmallEthLendService.deployed();
-    js_allEvents(service,0,true);
 
     js_applyMeeting(service,accounts[req.params.id]).then(
         function(){
           console.log('new meeting got');
-
-          meetingAddr = js_lastEventsOf(0).args.newContract;
-          
-          index = Object.keys(meeting2index).length + 1;
-          meeting2index[meetingAddr] = index;
-
-          console.log(meetingAddr);
-
-          meeting = SmallMeeting.at(meetingAddr);
-
-          js_allEvents(meeting, index, true);
-          res.end(JSON.stringify({'meetingAddr': meetingAddr}));
     }).catch(function(e){
         console.error(e.stack)
     });
@@ -290,23 +271,25 @@ app.get("/join/:meetingAddr/:id", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
   ret = js_join(meeting, accounts[req.params.id], "I AM "+req.params.id);
   // TODO
-  res.end(JSON.stringify({'promise': ret.toString()}));
+  res.end(JSON.stringify({'res': 'done'}));
 })
 
 app.get("/getMeetings", function(req, res) {
-  res.end(JSON.stringify({'meetingAddrs': Object.keys(meeting2index)}));
+  console.log(meeting2index);
+  //res.end(JSON.stringify({'meetingAddrs': Object.keys(meeting2index)}));
+  res.end(JSON.stringify(meeting2index));
 })
 
 app.get("/set/:meetingAddr/:id/:whenEnd/:howLong", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
   startTime = js_lastEventsOf(meeting2index[req.params.meetingAddr]).args.startTime;
-  js_setBasicTime(meeting, account[req.params.id], startTime.toNumber() + parseInt(req.params.whenEnd) , parseInt(req.params.howLong));
+  js_setBasicTime(meeting, account[req.params.id], startTime.toNumber() + web3.toBigNumber(req.params.whenEnd) , web3.toBigNumber(req.params.howLong));
   res.end(JSON.stringify({'res':'done'}));
 })
 
 app.get("/suggest/:meetingAddr/:id/:howLong/:howMuch", function(req, res) {
     meeting = SmallMeeting.at(req.params.meetingAddr);
-    js_suggest(meeting, req.params.id, parseInt(req.params.howLong), parseInt(req.params.howMuch))
+    js_suggest(meeting, req.params.id, web3.toBigNumber(req.params.howLong), web3.toBigNumber(req.params.howMuch))
   res.end(JSON.stringify({'res':'done'}));
 })
 
@@ -342,10 +325,6 @@ app.get("/getEvents/:meetingAddr", function(req, res) {
     }
     res.end(JSON.stringify({'events':array}));
 })
-//app.get("/getEvents/:which/:index", function(req, res) {
-//    console.log(js_events[req.params.which][req.params.index]);
-//    res.end(JSON.stringify(js_events[req.params.which][req.params.index]));
-//})
 
 app.get("/vote/:meetingAddr/:id/:aye", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
@@ -358,6 +337,7 @@ app.get("/push/:meetingAddr/:id", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
    js_push(meeting,accounts[req.params.id]);
 })
+
 app.get("/check/:meetingAddr/:id", function(req, res) {
    meeting = SmallMeeting.at(req.params.meetingAddr);
    meeting.getState.call({from:accounts[req.params.id]}).then(
@@ -373,8 +353,6 @@ app.get("/check/:meetingAddr/:id", function(req, res) {
       console.log("bad");
       console.error(e);});
 })
-app.get("/push_get", function(req, res) {push_get()})
-
 
 ////////////////////////////////////////
 
