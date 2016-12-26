@@ -314,8 +314,10 @@ public class AccountModel{
                             args.getString("period") + " s and basic amount is " + args.getString("base") + " wei";
                 } else if (type.equals("Voted")) {
                     stage = 0;
-                    whatTodo = PUSH;
-                    msg = "You have voted successfully";
+                    if(args.getString("agent").equals(accounts[whichAccount])){
+                        whatTodo = PUSH;
+                        msg = "You have voted successfully";
+                    }
                 } else if(type.equals("FailSuggest")){
                     stage = 0;
                     whatTodo = SUGGEST;
