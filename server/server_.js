@@ -192,14 +192,19 @@ app.get("/getService", function(req, res) {
     js_getService(req, res)
 })
 
-app.get("/getBalance/:id", function(req, res) {
+app.get("/getBalance_/:id", function(req, res) {
     var account = web3.eth.accounts[req.params.id];
     var balance = web3.eth.getBalance(account);
     res.writeHead(200, {'Content-Type': 'text/plain'});
     res.end(JSON.stringify({'balance': balance.toString()}));
 });    
+app.get("/getBalance/:id", function(req, res) {
+    var balance = web3.eth.getBalance(req.params.id);
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end(JSON.stringify({'balance': balance.toString()}));
+});    
 
-app.get("/applyMeeting/:id", function(req, res) {
+app.get("/applyMeeting_/:id", function(req, res) {
     var service = SmallEthLendService.deployed();
 
     js_applyMeeting(service,accounts[req.params.id]).then(
@@ -210,11 +215,26 @@ app.get("/applyMeeting/:id", function(req, res) {
         console.error(e.stack)
     });
 })
+app.get("/applyMeeting/:id", function(req, res) {
+    var service = SmallEthLendService.deployed();
 
-app.get("/join/:meetingAddr/:id", function(req, res) {
+    js_applyMeeting(service,req.params.id).then(
+        function(){
+          console.log('new meeting got');
+          res.end(JSON.stringify({'res': 'done'}));
+    }).catch(function(e){
+        console.error(e.stack)
+    });
+})
+
+app.get("/join_/:meetingAddr/:id", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
   ret = js_join(meeting, accounts[req.params.id], "I AM "+req.params.id);
-  // TODO
+  res.end(JSON.stringify({'res': 'done'}));
+})
+app.get("/join/:meetingAddr/:id", function(req, res) {
+  meeting = SmallMeeting.at(req.params.meetingAddr);
+  ret = js_join(meeting, req.params.id, "I AM "+req.params.id);
   res.end(JSON.stringify({'res': 'done'}));
 })
 
@@ -224,41 +244,70 @@ app.get("/getMeetings", function(req, res) {
   res.end(JSON.stringify(meeting2index));
 })
 
+app.get("/set_/:meetingAddr/:id/:whenEnd/:howLong", function(req, res) {
+  meeting = SmallMeeting.at(req.params.meetingAddr);
+  startTime = js_events[meeting2index[req.params.meetingAddr]][0].args.startTime;
+  whenEnd = parseInt(startTime) + parseInt(req.params.whenEnd)
+  howLong = parseInt(req.params.howLong)
+  js_setBasicTime(meeting, accounts[req.params.id], whenEnd, howLong);
+  res.end(JSON.stringify({startTime: startTime, whenEnd: whenEnd, howLong: howLong}));
+})
 app.get("/set/:meetingAddr/:id/:whenEnd/:howLong", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
   startTime = js_events[meeting2index[req.params.meetingAddr]][0].args.startTime;
   whenEnd = parseInt(startTime) + parseInt(req.params.whenEnd)
   howLong = parseInt(req.params.howLong)
-  //whenEnd = web3.toBigNumber(startTime) + web3.toBigNumber(req.params.whenEnd)
-  //whenEnd = web3.toBigNumber(req.params.whenEnd)
-  //howLong = web3.toBigNumber(req.params.howLong)
-  js_setBasicTime(meeting, accounts[req.params.id], whenEnd, howLong);
+  js_setBasicTime(meeting, req.params.id, whenEnd, howLong);
   res.end(JSON.stringify({startTime: startTime, whenEnd: whenEnd, howLong: howLong}));
 })
 
-app.get("/suggest/:meetingAddr/:id/:howLong/:howMuch", function(req, res) {
+app.get("/suggest_/:meetingAddr/:id/:howLong/:howMuch", function(req, res) {
     meeting = SmallMeeting.at(req.params.meetingAddr);
     js_suggest(meeting, accounts[req.params.id], parseInt(req.params.howLong), parseInt(req.params.howMuch))
   res.end(JSON.stringify({'res':'done'}));
 })
+app.get("/suggest/:meetingAddr/:id/:howLong/:howMuch", function(req, res) {
+    meeting = SmallMeeting.at(req.params.meetingAddr);
+    js_suggest(meeting, req.params.id, parseInt(req.params.howLong), parseInt(req.params.howMuch))
+  res.end(JSON.stringify({'res':'done'}));
+})
 
-app.get("/accept/:meetingAddr/:member/:manager", function(req, res) {
+app.get("/accept_/:meetingAddr/:member/:manager", function(req, res) {
     meeting = SmallMeeting.at(req.params.meetingAddr);
     js_accept(meeting, accounts[req.params.member], accounts[req.params.manager]);
   res.end(JSON.stringify({'res':'done'}));
 })
+app.get("/accept/:meetingAddr/:member/:manager", function(req, res) {
+    meeting = SmallMeeting.at(req.params.meetingAddr);
+    js_accept(meeting, req.params.member, req.params.manager);
+  res.end(JSON.stringify({'res':'done'}));
+})
 
-app.get("/bid/:meetingAddr/:id/:round/:bidHowMuch/:payHowMuch", function(req, res) {
+app.get("/bid_/:meetingAddr/:id/:round/:bidHowMuch/:payHowMuch", function(req, res) {
     meeting = SmallMeeting.at(req.params.meetingAddr);
     js_bidEther(meeting, accounts[req.params.id], req.params.round, 
                 req.params.bidHowMuch, req.params.payHowMuch).
                 then(function(){ console.log("bidded");});
   res.end(JSON.stringify({'res':'done'}));
 })
+app.get("/bid/:meetingAddr/:id/:round/:bidHowMuch/:payHowMuch", function(req, res) {
+    meeting = SmallMeeting.at(req.params.meetingAddr);
+    js_bidEther(meeting, req.params.id, req.params.round, 
+                req.params.bidHowMuch, req.params.payHowMuch).
+                then(function(){ console.log("bidded");});
+  res.end(JSON.stringify({'res':'done'}));
+})
 
-app.get("/reaveal/:meetingAddr/:id/:round/:revealHowMuch", function(req, res) {
+app.get("/reaveal_/:meetingAddr/:id/:round/:revealHowMuch", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
   js_showBidEther(meeting, accounts[req.params.id], req.params.round, 
+                  req.params.revealHowMuch).
+                  then(function(){ console.log("revealed");});
+  res.end(JSON.stringify({'res':'done'}));
+})
+app.get("/reaveal/:meetingAddr/:id/:round/:revealHowMuch", function(req, res) {
+  meeting = SmallMeeting.at(req.params.meetingAddr);
+  js_showBidEther(meeting, req.params.id, req.params.round, 
                   req.params.revealHowMuch).
                   then(function(){ console.log("revealed");});
   res.end(JSON.stringify({'res':'done'}));
@@ -275,23 +324,48 @@ app.get("/getEvents/:meetingAddr", function(req, res) {
     res.end(JSON.stringify({'events':array}));
 })
 
-app.get("/vote/:meetingAddr/:id/:aye", function(req, res) {
+app.get("/vote_/:meetingAddr/:id/:aye", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
   console.log(req.params.aye == 'aye')
   js_voteFor(meeting, accounts[req.params.id], req.params.aye == 'aye' ? true: false);
   res.end(JSON.stringify({'res':'done'}));
 })
+app.get("/vote/:meetingAddr/:id/:aye", function(req, res) {
+  meeting = SmallMeeting.at(req.params.meetingAddr);
+  console.log(req.params.aye == 'aye')
+  js_voteFor(meeting, req.params.id, req.params.aye == 'aye' ? true: false);
+  res.end(JSON.stringify({'res':'done'}));
+})
 
-app.get("/push/:meetingAddr/:id", function(req, res) {
+app.get("/push_/:meetingAddr/:id", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
   js_push(meeting,accounts[req.params.id]);
   res.redirect('/check/'+req.params.meetingAddr+'/'+req.params.id);
-  //res.end(JSON.stringify({'res':'done'}));
+})
+app.get("/push/:meetingAddr/:id", function(req, res) {
+  meeting = SmallMeeting.at(req.params.meetingAddr);
+  js_push(meeting,req.params.id);
+  res.redirect('/check_/'+req.params.meetingAddr+'/'+req.params.id);
 })
 
-app.get("/check/:meetingAddr/:id", function(req, res) {
+app.get("/check_/:meetingAddr/:id", function(req, res) {
    meeting = SmallMeeting.at(req.params.meetingAddr);
    meeting.getState.call({from:accounts[req.params.id]}).then(
+    function(v){
+      state = {}
+      console.log("\n")
+      var a = ["stage", "finishedOrVoting", "auctionStage", "startTime", "recuritingEndTime", "firstAuctionTime", "thisVoteEndTime", "period", "base", "period_s", "base_s", "auctionVoteDuration", "checked", "doubleChecked"]
+      for(var i = 0;i<a.length;i++){
+        state[a[i].toString()] = v[i].toString();
+      }
+      res.end(JSON.stringify({'state':state}));
+    }).catch(function(e){
+      console.log("bad");
+      console.error(e);});
+})
+app.get("/check/:meetingAddr/:id", function(req, res) {
+   meeting = SmallMeeting.at(req.params.meetingAddr);
+   meeting.getState.call({from:req.params.id}).then(
     function(v){
       state = {}
       console.log("\n")
