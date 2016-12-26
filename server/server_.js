@@ -61,6 +61,7 @@ function js_accept(_meeting, _member, _managerSelf){
 
 // how long: seconds
 function js_suggest(_meeting, _account, _howLong, _howMuch){
+  console.log(_meeting.address, _account, _howLong, _howMuch)
   return _meeting.suggestAttr(_howLong, web3.toBigNumber(web3.toWei(_howMuch)),{from:_account, gas:3000000});
 }
 
@@ -231,7 +232,7 @@ app.get("/set/:meetingAddr/:id/:whenEnd/:howLong", function(req, res) {
 
 app.get("/suggest/:meetingAddr/:id/:howLong/:howMuch", function(req, res) {
     meeting = SmallMeeting.at(req.params.meetingAddr);
-    js_suggest(meeting, req.params.id, web3.toBigNumber(req.params.howLong), web3.toBigNumber(req.params.howMuch))
+    js_suggest(meeting, accounts[req.params.id], parseInt(req.params.howLong), parseInt(req.params.howMuch))
   res.end(JSON.stringify({'res':'done'}));
 })
 
@@ -278,6 +279,7 @@ app.get("/vote/:meetingAddr/:id/:aye", function(req, res) {
 app.get("/push/:meetingAddr/:id", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
    js_push(meeting,accounts[req.params.id]);
+  res.end(JSON.stringify({'res':'done'}));
 })
 
 app.get("/check/:meetingAddr/:id", function(req, res) {
