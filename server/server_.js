@@ -278,8 +278,9 @@ app.get("/vote/:meetingAddr/:id/:aye", function(req, res) {
 
 app.get("/push/:meetingAddr/:id", function(req, res) {
   meeting = SmallMeeting.at(req.params.meetingAddr);
-   js_push(meeting,accounts[req.params.id]);
-  res.end(JSON.stringify({'res':'done'}));
+  js_push(meeting,accounts[req.params.id]);
+  res.redirect('/check/'+req.params.meetingAddr+'/'+req.params.id);
+  //res.end(JSON.stringify({'res':'done'}));
 })
 
 app.get("/check/:meetingAddr/:id", function(req, res) {
