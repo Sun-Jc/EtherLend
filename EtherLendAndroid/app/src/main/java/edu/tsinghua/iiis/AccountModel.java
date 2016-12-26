@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.math.BigInteger;
+import java.util.Iterator;
 import java.util.Vector;
 
 
@@ -140,8 +141,10 @@ public class AccountModel{
     }*/
     NetComm netComm;
 
+    public String BASEURL = "http://taoli.tsinghuax.org:8085/";
+
     String url(String route){
-        return "http://taoli.tsinghuax.org:8085/"+route;
+        return BASEURL+route;
     }
 
     AccountModel(MainActivity callback){
@@ -200,11 +203,14 @@ public class AccountModel{
         //TODO
         /*if(this.meetings!=null && this.meetings.length>0)
             return;*/
-        this.meetings= new String[]{
-                "0x883eb0952dc97dd1b62c98fa77363b8af597556a",
-                "0x18a7e513a0d114062489dcaa260c3256e8d424ed",
-                "0x7b39df9b93f3fad5dcea72bbde34f99c5445c807"
-        };
+        JSONObject jsonObject = netComm.getJSON(url("getMeetings"));
+        Vector<String> ms = new Vector<>();
+        Iterator<?> it = jsonObject.keys();
+
+        while(it.hasNext())
+            ms.add((String) it.next());
+
+        this.meetings = ms.toArray(new String[ms.size()]);
         this.isManager = new boolean[meetings.length];
     }
 
@@ -223,7 +229,7 @@ public class AccountModel{
 
     private void _updateMeeting() {
 
-        isManager = new boolean[meetings.length];
+        //isManager = new boolean[meetings.length];
         isManager[whichMeeting] = false;
         startTimes = new BigInteger("-1");
         stage = -3;
@@ -336,7 +342,7 @@ public class AccountModel{
     }
 
     private void _vote(){
-        //TODO
+        netComm.getJSON(url("vote/"+meetings[whichMeeting]+"/"+whichAccount+"+/aye"));
     }
 
     private void _accept(String who){

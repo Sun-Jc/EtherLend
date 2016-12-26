@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements Updatable, Simple
                             TextView t = (TextView)v.findViewById(R.id.topText);
                             TextView bt = (TextView)v.findViewById(R.id.bottomText);
                             t.setText("Your service address is: ");
-                            bt.setText("\nIIIS, Tsinghua University\nBeijing\n2016");
+                            bt.setText("\nThe server side is "+model.BASEURL+"\nIIIS, Tsinghua University\nBeijing\n2016");
 
                             try {
                                 Bitmap b = encodeAsBitmap(model.whoIsService());
