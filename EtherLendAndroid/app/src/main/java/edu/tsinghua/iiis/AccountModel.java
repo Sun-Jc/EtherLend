@@ -194,7 +194,7 @@ public class AccountModel{
 
     private BigInteger _getBalance(){
         JSONObject jsonObject = netComm.getJSON(url("getBalance/"+accounts[whichAccount]));
-        return new BigDecimal(parseString(jsonObject,"balance")).toBigInteger().divide(new BigInteger("1000000000000000000"));
+        return new BigDecimal(parseString(jsonObject,"balance")).toBigInteger().divide(new BigInteger("1000000000000000000")).add(new BigInteger("1"));
     }
 
     private void _join(String intro){
@@ -353,7 +353,7 @@ public class AccountModel{
                 } else if (type.equals("AuctionSuccess")) {
                     whatTodo = PUSH;
                     stage = Integer.parseInt(args.getString("stage"));
-                    msg = args.getString("winner") + " won this auction, who will pay " + args.getString("interest") + " wei for others as interest";
+                    msg = args.getString("winner") + " won this auction, whose bid is " + args.getString("interest") + " wei";
                 }
                 Log.d(TAG,"whattoDo:" + whatTodo);
             }
