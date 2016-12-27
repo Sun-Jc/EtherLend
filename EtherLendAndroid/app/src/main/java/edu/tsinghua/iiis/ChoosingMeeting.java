@@ -26,7 +26,7 @@ public class ChoosingMeeting extends Fragment {
             @Override
             public void run() {
                 accountAddr.setText(ChooseAccount.format(address));
-                balanceT.setText("$ "+balance +" wei");
+                balanceT.setText("Ξ "+ balance);
             }
         });
 

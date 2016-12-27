@@ -194,7 +194,7 @@ public class AccountModel{
 
     private BigInteger _getBalance(){
         JSONObject jsonObject = netComm.getJSON(url("getBalance/"+accounts[whichAccount]));
-        return new BigDecimal(parseString(jsonObject,"balance")).toBigInteger();
+        return new BigDecimal(parseString(jsonObject,"balance")).toBigInteger().divide(new BigInteger("1000000000000000000"));
     }
 
     private void _join(String intro){
@@ -300,7 +300,7 @@ public class AccountModel{
                         msg = "Your application has been submitted.";
                     }
                 } else if (type.equals("NewMember")) {
-                    numOfMembers.add(new BigDecimal("1").toBigInteger());
+                    numOfMembers = numOfMembers.add(new BigDecimal("1").toBigInteger());
                     stage = 0;
                     if (args.getString("who").equals(accounts[whichAccount])) {
                         isMember = true;
